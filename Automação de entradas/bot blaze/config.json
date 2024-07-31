@@ -1,0 +1,22 @@
+{
+    "username": "abiugu@gmail.com   ",
+    "password": "Abiugu0203@",
+    "bet_amount":0.1,
+    "stop_loss_ratio":0.8,
+    "stop_win_ratio":1.1,
+    "wait_after_bet":60,
+    "martingale":1,
+    "headless": false,
+    "language":"pt",
+    "strategies": {
+        "red": [
+            ["B", "R", "B", "R", "B"],
+            ["B", "B", "B", "B"],
+            ["R", "B", "B", "B"]
+        ],
+        "black": [
+            ["R", "B", "R", "B", "R","B","R"],
+            ["R", "R", "R", "R", "R"]
+        ]
+    }
+}
