@@ -32,7 +32,7 @@ acertos_branco = 0
 acertos_gale_branco = 0
 
 # Caminho da área de trabalho
-desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+desktop_path = os.path.join(os.path.expanduser("~"), "OneDrive", "Área de Trabalho")
 
 # Pasta de logs
 logs_path = os.path.join(desktop_path, "LOGS")

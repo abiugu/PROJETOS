@@ -1,7 +1,8 @@
 import os
 
 # Define o caminho para o arquivo de log
-caminho_arquivo = os.path.join(os.path.expanduser('~'), 'Desktop', 'LOGS', 'log 100 direto mod.txt')
+
+caminho_arquivo = os.path.join(os.path.expanduser('~'), 'OneDrive', 'Área de Trabalho', 'LOGS', 'log 100 direto mod.txt')
 
 # Função para extrair as linhas de erro
 def extrair_erros(arquivo_log):
