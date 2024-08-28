@@ -203,7 +203,7 @@ def main():
                             cor_oposta_percentual_25 = int(
                                 percentuais25[['white', 'black', 'red'].index(cor_oposta)])
 
-                            if cor_atual_percentual_25 < 100:
+                            if cor_atual_percentual_25 <= 100:
 
                                 alarm_sound.play()
 
@@ -239,7 +239,7 @@ def main():
                                 print(f"Cor atual: {cor_atual}, Percentual: {
                                       cor_atual_percentual_25}")
 
-                            if cor_atual_percentual_25 < 100:
+                            if cor_atual_percentual_25 <= 100:
 
                                 current_time = datetime.datetime.now(
                                     pytz.timezone('America/Sao_Paulo'))
