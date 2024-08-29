@@ -16,7 +16,11 @@ service = Service()
 # Configurando as opções do Chrome
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")  # Executar em modo headless
-options.add_argument("--start-maximized")  # Maximizar a janela do navegador
+# Desabilitar a GPU (necessário em alguns sistemas)
+options.add_argument("--disable-gpu")
+options.add_argument("--no-sandbox")  # Necessário para contêineres Linux
+# Evita problemas de memória compartilhada
+options.add_argument("--disable-dev-shm-usage")
 
 # Inicializando o driver do Chrome
 driver = webdriver.Chrome(service=service, options=options)
@@ -32,13 +36,14 @@ acertos_branco = 0
 acertos_gale_branco = 0
 
 # Caminho da área de trabalho
-desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+desktop_path = os.path.join(os.path.expanduser(
+    "~"), "OneDrive", "Área de Trabalho")
 
 # Pasta de logs
 logs_path = os.path.join(desktop_path, "LOGS")
 
 # Caminho completo para o arquivo de log
-log_file_path = os.path.join(logs_path, "log global.txt")
+log_file_path = os.path.join(logs_path, "log 40 mod.txt")
 
 # Inicializa o mixer de áudio do pygame
 pygame.mixer.init()
@@ -55,7 +60,7 @@ alarm_sound2 = pygame.mixer.Sound(sound_file_path2)
 
 # Arquivo de log interativo
 log_interativo_path = os.path.join(
-    logs_path, "log interativo 100 direto modded.txt")
+    logs_path, "log interativo 40 mod.txt")
 
 # Dicionário para armazenar valores anteriores
 valores_anteriores = {"acertos_direto": 0, "acertos_gale": 0, "erros": 0}
@@ -201,28 +206,14 @@ def main():
                             cor_oposta_percentual_25 = int(
                                 percentuais25[['white', 'black', 'red'].index(cor_oposta)])
 
-                            if cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 52 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 56 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 == cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 56 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 64 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 68 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 56 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 64 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 == cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 48 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 32 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 == cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 48 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 48 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500):
+                            if cor_atual_percentual_25 is not None and cor_atual_percentual_25 <= 40 and ((cor_atual_percentual_25 < cor_oposta_percentual_25) and
+                                                                                                          (cor_atual_percentual_50 < cor_oposta_percentual_50) and
+                                                                                                          (cor_atual_percentual_100 < cor_oposta_percentual_100) and
+                                                                                                          (cor_atual_percentual_500 < cor_oposta_percentual_500) or
+                                                                                                          (cor_atual_percentual_25 < cor_oposta_percentual_25) and
+                                                                                                          (cor_atual_percentual_50 < cor_oposta_percentual_50) and
+                                                                                                          (cor_atual_percentual_100 < cor_oposta_percentual_100) and
+                                                                                                          (cor_atual_percentual_500 > cor_oposta_percentual_500)):
 
                                 alarm_sound.play()
 
@@ -258,28 +249,14 @@ def main():
                                 print(f"Cor atual: {cor_atual}, Percentual: {
                                       cor_atual_percentual_25}")
 
-                            if cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 52 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 56 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 == cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 56 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 64 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 68 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 60 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 56 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 < cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 64 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 == cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 48 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 > cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 32 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 > cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 44 and (cor_atual_percentual_25 < cor_oposta_percentual_25 and cor_atual_percentual_50 > cor_oposta_percentual_50 and cor_atual_percentual_100 < cor_oposta_percentual_100 and cor_atual_percentual_500 == cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 48 and (cor_atual_percentual_25 > cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500) or \
-                                    cor_atual_percentual_25 == 48 and (cor_atual_percentual_25 == cor_oposta_percentual_25 and cor_atual_percentual_50 == cor_oposta_percentual_50 and cor_atual_percentual_100 == cor_oposta_percentual_100 and cor_atual_percentual_500 < cor_oposta_percentual_500):
+                            if cor_atual_percentual_25 is not None and cor_atual_percentual_25 <= 40 and ((cor_atual_percentual_25 < cor_oposta_percentual_25) and
+                                                                                                          (cor_atual_percentual_50 < cor_oposta_percentual_50) and
+                                                                                                          (cor_atual_percentual_100 < cor_oposta_percentual_100) and
+                                                                                                          (cor_atual_percentual_500 < cor_oposta_percentual_500) or
+                                                                                                          (cor_atual_percentual_25 < cor_oposta_percentual_25) and
+                                                                                                          (cor_atual_percentual_50 < cor_oposta_percentual_50) and
+                                                                                                          (cor_atual_percentual_100 < cor_oposta_percentual_100) and
+                                                                                                          (cor_atual_percentual_500 > cor_oposta_percentual_500)):
 
                                 current_time = datetime.datetime.now(
                                     pytz.timezone('America/Sao_Paulo'))

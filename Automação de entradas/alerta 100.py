@@ -16,9 +16,11 @@ service = Service()
 # Configurando as opções do Chrome
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")  # Executar em modo headless
-options.add_argument("--disable-gpu")  # Desabilitar a GPU (necessário em alguns sistemas)
+# Desabilitar a GPU (necessário em alguns sistemas)
+options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")  # Necessário para contêineres Linux
-options.add_argument("--disable-dev-shm-usage")  # Evita problemas de memória compartilhada
+# Evita problemas de memória compartilhada
+options.add_argument("--disable-dev-shm-usage")
 
 # Inicializando o driver do Chrome
 driver = webdriver.Chrome(service=service, options=options)
@@ -34,7 +36,8 @@ acertos_branco = 0
 acertos_gale_branco = 0
 
 # Caminho da área de trabalho
-desktop_path = os.path.join(os.path.expanduser("~"), "OneDrive", "Área de Trabalho")
+desktop_path = os.path.join(os.path.expanduser(
+    "~"), "OneDrive", "Área de Trabalho")
 
 # Pasta de logs
 logs_path = os.path.join(desktop_path, "LOGS")

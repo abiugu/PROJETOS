@@ -200,7 +200,7 @@ def gerar_planilha_excel(padroes_analise, caminho_arquivo_excel):
     print(f"Planilha Excel gerada com sucesso em: {caminho_arquivo_excel}")
 
 def main():
-    desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
+    desktop_path = os.path.join(os.path.expanduser("~"), "OneDrive", "Área de Trabalho")
     arquivo_log = os.path.join(desktop_path, 'LOGS', 'log global.txt')
     caminho_arquivo_excel = os.path.join(desktop_path, 'LOGS', 'Dados log global.xlsx')
     
