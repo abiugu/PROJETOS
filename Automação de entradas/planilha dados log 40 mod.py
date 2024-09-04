@@ -33,7 +33,7 @@ def comparar_percentuais(atual, oposta):
 def analisar_padroes(resultados, porcentagens_25, porcentagens_50, porcentagens_100, porcentagens_500):
     padroes_analise = defaultdict(lambda: {'acertos': 0, 'acertos_branco': 0, 'erros': 0, 'jogadas': 0, 'erros_consecutivos': 0, 'max_erros_consecutivos': 0})
 
-    for i in range(len(resultados) - 2):  # Alterado para -2 para verificar duas jogadas adiante
+    for i in range(len(resultados) - 2):
         cor_atual = resultados[i][0]
         if resultados[i][0] == resultados[i][1] == resultados[i][2]:
             if cor_atual == "black":
@@ -61,27 +61,24 @@ def analisar_padroes(resultados, porcentagens_25, porcentagens_50, porcentagens_
             comparacao_500 = comparar_percentuais(porcentagem_atual_500, porcentagem_oposta_500)
 
             chave_padrao = (porcentagem_atual_25, comparacao_25, comparacao_50, comparacao_100, comparacao_500)
-            
-            # Verificar os próximos dois resultados
-            if i + 2 < len(resultados):
-                acerto = resultados[i + 1][0] != cor_atual or resultados[i + 2][0] != cor_atual
+            acerto = resultados[i + 1][0] != cor_atual
 
-                padroes_analise[chave_padrao]['jogadas'] += 1
+            padroes_analise[chave_padrao]['jogadas'] += 1
 
-                if acerto:
-                    if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
-                        padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
-                    padroes_analise[chave_padrao]['erros_consecutivos'] = 0
-                    if cor_atual == "white":
-                        padroes_analise[chave_padrao]['acertos_branco'] += 1
-                    else:
-                        padroes_analise[chave_padrao]['acertos'] += 1
+            if acerto:
+                if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
+                    padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
+                padroes_analise[chave_padrao]['erros_consecutivos'] = 0
+                if cor_atual == "white":
+                    padroes_analise[chave_padrao]['acertos_branco'] += 1
                 else:
-                    padroes_analise[chave_padrao]['erros'] += 1
-                    padroes_analise[chave_padrao]['erros_consecutivos'] += 1
+                    padroes_analise[chave_padrao]['acertos'] += 1
+            else:
+                padroes_analise[chave_padrao]['erros'] += 1
+                padroes_analise[chave_padrao]['erros_consecutivos'] += 1
 
-                    if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
-                        padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
+                if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
+                    padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
 
         elif resultados[i][0] == "white" and resultados[i][1] == "black" and resultados[i][2] == "black":
             try:
@@ -102,24 +99,21 @@ def analisar_padroes(resultados, porcentagens_25, porcentagens_50, porcentagens_
             comparacao_500 = comparar_percentuais(porcentagem_atual_500, porcentagem_oposta_500)
 
             chave_padrao = (porcentagem_atual_25, comparacao_25, comparacao_50, comparacao_100, comparacao_500)
-            
-            # Verificar os próximos dois resultados
-            if i + 2 < len(resultados):
-                acerto = resultados[i + 1][0] != "white" or resultados[i + 2][0] != "white"
+            acerto = resultados[i + 1][0] != "white"
 
-                padroes_analise[chave_padrao]['jogadas'] += 1
+            padroes_analise[chave_padrao]['jogadas'] += 1
 
-                if acerto:
-                    if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
-                        padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
-                    padroes_analise[chave_padrao]['erros_consecutivos'] = 0
-                    padroes_analise[chave_padrao]['acertos_branco'] += 1
-                else:
-                    padroes_analise[chave_padrao]['erros'] += 1
-                    padroes_analise[chave_padrao]['erros_consecutivos'] += 1
+            if acerto:
+                if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
+                    padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
+                padroes_analise[chave_padrao]['erros_consecutivos'] = 0
+                padroes_analise[chave_padrao]['acertos_branco'] += 1
+            else:
+                padroes_analise[chave_padrao]['erros'] += 1
+                padroes_analise[chave_padrao]['erros_consecutivos'] += 1
 
-                    if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
-                        padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
+                if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
+                    padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
 
         elif resultados[i][0] == "white" and resultados[i][1] == "red" and resultados[i][2] == "red":
             try:
@@ -140,24 +134,21 @@ def analisar_padroes(resultados, porcentagens_25, porcentagens_50, porcentagens_
             comparacao_500 = comparar_percentuais(porcentagem_atual_500, porcentagem_oposta_500)
 
             chave_padrao = (porcentagem_atual_25, comparacao_25, comparacao_50, comparacao_100, comparacao_500)
-            
-            # Verificar os próximos dois resultados
-            if i + 2 < len(resultados):
-                acerto = resultados[i + 1][0] != "white" or resultados[i + 2][0] != "white"
+            acerto = resultados[i + 1][0] != "white"
 
-                padroes_analise[chave_padrao]['jogadas'] += 1
+            padroes_analise[chave_padrao]['jogadas'] += 1
 
-                if acerto:
-                    if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
-                        padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
-                    padroes_analise[chave_padrao]['erros_consecutivos'] = 0
-                    padroes_analise[chave_padrao]['acertos_branco'] += 1
-                else:
-                    padroes_analise[chave_padrao]['erros'] += 1
-                    padroes_analise[chave_padrao]['erros_consecutivos'] += 1
+            if acerto:
+                if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
+                    padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
+                padroes_analise[chave_padrao]['erros_consecutivos'] = 0
+                padroes_analise[chave_padrao]['acertos_branco'] += 1
+            else:
+                padroes_analise[chave_padrao]['erros'] += 1
+                padroes_analise[chave_padrao]['erros_consecutivos'] += 1
 
-                    if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
-                        padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
+                if padroes_analise[chave_padrao]['erros_consecutivos'] > padroes_analise[chave_padrao]['max_erros_consecutivos']:
+                    padroes_analise[chave_padrao]['max_erros_consecutivos'] = padroes_analise[chave_padrao]['erros_consecutivos']
 
     return padroes_analise
 
@@ -174,6 +165,7 @@ def calcular_assertividade_acertos(padroes_analise):
         dados['assertividade_acertos'] = assertividade_acertos
         dados['assertividade_acertos_branco'] = assertividade_acertos_branco
         dados['assertividade_acertos_total'] = assertividade_acertos_total
+
 
 def gerar_planilha_excel(padroes_analise, caminho_arquivo_excel):
     workbook = Workbook()
@@ -208,9 +200,9 @@ def gerar_planilha_excel(padroes_analise, caminho_arquivo_excel):
     print(f"Planilha Excel gerada com sucesso em: {caminho_arquivo_excel}")
 
 def main():
-    desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
-    arquivo_log = os.path.join(desktop_path, 'LOGS', 'log global.txt')
-    caminho_arquivo_excel = os.path.join(desktop_path, 'LOGS', 'Dados log global gale 23.07.xlsx')
+    desktop_path = os.path.join(os.path.expanduser("~"), "OneDrive", "Área de Trabalho")
+    arquivo_log = os.path.join(desktop_path, 'LOGS', 'log 40 mod.txt')
+    caminho_arquivo_excel = os.path.join(desktop_path, 'LOGS', 'Dados log 40 mod.xlsx')
     
     resultados, porcentagens_25, porcentagens_50, porcentagens_100, porcentagens_500 = ler_e_analisar_log(arquivo_log)
     padroes_analise = analisar_padroes(resultados, porcentagens_25, porcentagens_50, porcentagens_100, porcentagens_500)
