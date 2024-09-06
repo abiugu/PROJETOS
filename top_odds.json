@@ -1,0 +1,4802 @@
+[
+    {
+        "evento": "Montreal Alouettes vs BC Lions",
+        "maior_odd": 2.5,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 25.55
+    },
+    {
+        "evento": "Edmonton Elks vs Calgary Stampeders",
+        "maior_odd": 2.25,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 16.58
+    },
+    {
+        "evento": "Winnipeg Blue Bombers vs Saskatchewan Roughriders",
+        "maior_odd": 2.2,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 14.14
+    },
+    {
+        "evento": "Ottawa Redblacks vs Toronto Argonauts",
+        "maior_odd": 2.06,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 8.14
+    },
+    {
+        "evento": "Oklahoma Sooners vs Houston Cougars",
+        "maior_odd": 41.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 215.23
+    },
+    {
+        "evento": "USC Trojans vs Utah State Aggies",
+        "maior_odd": 24.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 166.49
+    },
+    {
+        "evento": "Louisville Cardinals vs Jacksonville State Gamecocks",
+        "maior_odd": 25.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 127.1
+    },
+    {
+        "evento": "Notre Dame Fighting Irish vs Northern Illinois Huskies",
+        "maior_odd": 34.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 126.55
+    },
+    {
+        "evento": "Washington Huskies vs Eastern Michigan Eagles",
+        "maior_odd": 15.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 113.94
+    },
+    {
+        "evento": "New Mexico State Aggies vs Liberty Flames",
+        "maior_odd": 12.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 112.53
+    },
+    {
+        "evento": "Rutgers Scarlet Knights vs Akron Zips",
+        "maior_odd": 15.0,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 108.64
+    },
+    {
+        "evento": "North Carolina Tar Heels vs Charlotte 49ers",
+        "maior_odd": 12.5,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 105.82
+    },
+    {
+        "evento": "Alabama Crimson Tide vs South Florida Bulls",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 105.02
+    },
+    {
+        "evento": "Toledo Rockets vs UMass Minutemen",
+        "maior_odd": 9.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 102.64
+    },
+    {
+        "evento": "UCF Knights vs Sam Houston State Bearkats",
+        "maior_odd": 12.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 102.27
+    },
+    {
+        "evento": "Ole Miss Rebels vs Middle Tennessee Blue Raiders",
+        "maior_odd": 126.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 98.43
+    },
+    {
+        "evento": "Arizona Wildcats vs Northern Arizona Lumberjacks",
+        "maior_odd": 126.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 98.43
+    },
+    {
+        "evento": "Virginia Tech Hokies vs Marshall Thundering Herd",
+        "maior_odd": 10.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 97.65
+    },
+    {
+        "evento": "Memphis Tigers vs Troy Trojans",
+        "maior_odd": 8.5,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 96.05
+    },
+    {
+        "evento": "Missouri Tigers vs Buffalo Bulls",
+        "maior_odd": 50.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 96.04
+    },
+    {
+        "evento": "Clemson Tigers vs Appalachian State Mountaineers",
+        "maior_odd": 7.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 94.94
+    },
+    {
+        "evento": "Oregon Ducks vs Boise State Broncos",
+        "maior_odd": 8.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 93.04
+    },
+    {
+        "evento": "Ohio State Buckeyes vs Michigan Wolverines",
+        "maior_odd": 6.2,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 78.03
+    },
+    {
+        "evento": "Kennesaw State Owls vs Louisiana Ragin Cajuns",
+        "maior_odd": 6.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 74.26
+    },
+    {
+        "evento": "Utah Utes vs Baylor Bears",
+        "maior_odd": 5.8,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 73.24
+    },
+    {
+        "evento": "Auburn Tigers vs California Golden Bears",
+        "maior_odd": 5.25,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 72.04
+    },
+    {
+        "evento": "SMU Mustangs vs BYU Cougars",
+        "maior_odd": 4.8,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 70.99
+    },
+    {
+        "evento": "Wisconsin Badgers vs Alabama Crimson Tide",
+        "maior_odd": 5.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 70.45
+    },
+    {
+        "evento": "UL Monroe Warhawks vs UAB Blazers",
+        "maior_odd": 5.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 69.71
+    },
+    {
+        "evento": "Navy Midshipmen vs Temple Owls",
+        "maior_odd": 4.8,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 64.76
+    },
+    {
+        "evento": "Georgia Bulldogs vs Tennessee Volunteers",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 62.87
+    },
+    {
+        "evento": "NC State Wolfpack vs Tennessee Volunteers",
+        "maior_odd": 3.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 61.55
+    },
+    {
+        "evento": "Tulane Green Wave vs Kansas State Wildcats",
+        "maior_odd": 4.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 61.2
+    },
+    {
+        "evento": "Kentucky Wildcats vs South Carolina Gamecocks",
+        "maior_odd": 4.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 56.15
+    },
+    {
+        "evento": "Miami Hurricanes vs Florida State Seminoles",
+        "maior_odd": 4.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 53.85
+    },
+    {
+        "evento": "Maryland Terrapins vs Michigan State Spartans",
+        "maior_odd": 3.7,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 53.81
+    },
+    {
+        "evento": "Oklahoma State Cowboys vs Arkansas Razorbacks",
+        "maior_odd": 3.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 53.0
+    },
+    {
+        "evento": "Arkansas State Red Wolves vs Tulsa Golden Hurricane",
+        "maior_odd": 3.4,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 51.91
+    },
+    {
+        "evento": "Michigan Wolverines vs Texas Longhorns",
+        "maior_odd": 3.45,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 48.58
+    },
+    {
+        "evento": "Nebraska Cornhuskers vs Colorado Buffaloes",
+        "maior_odd": 3.2,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 47.08
+    },
+    {
+        "evento": "Air Force Falcons vs San Jose State Spartans",
+        "maior_odd": 3.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 40.93
+    },
+    {
+        "evento": "Florida International Panthers vs Central Michigan Chippewas",
+        "maior_odd": 3.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 40.7
+    },
+    {
+        "evento": "Arizona State Sun Devils vs Mississippi State Bulldogs",
+        "maior_odd": 3.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 39.13
+    },
+    {
+        "evento": "San Diego State Aztecs vs Oregon State Beavers",
+        "maior_odd": 2.87,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 38.81
+    },
+    {
+        "evento": "Oklahoma Sooners vs Texas Longhorns",
+        "maior_odd": 2.9,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 37.06
+    },
+    {
+        "evento": "Illinois Fighting Illini vs Kansas Jayhawks",
+        "maior_odd": 2.8,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 36.18
+    },
+    {
+        "evento": "LSU Tigers vs Alabama Crimson Tide",
+        "maior_odd": 2.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 27.88
+    },
+    {
+        "evento": "Florida Atlantic Owls vs Army Black Knights",
+        "maior_odd": 2.5,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 26.8
+    },
+    {
+        "evento": "Michigan Wolverines vs USC Trojans",
+        "maior_odd": 2.4,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 23.02
+    },
+    {
+        "evento": "Alabama Crimson Tide vs Georgia Bulldogs",
+        "maior_odd": 2.38,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 22.52
+    },
+    {
+        "evento": "Syracuse Orange vs Georgia Tech Yellow Jackets",
+        "maior_odd": 2.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 19.7
+    },
+    {
+        "evento": "LSU Tigers vs Ole Miss Rebels",
+        "maior_odd": 2.25,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 18.06
+    },
+    {
+        "evento": "Florida State Seminoles vs Memphis Tigers",
+        "maior_odd": 2.25,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 17.8
+    },
+    {
+        "evento": "Iowa Hawkeyes vs Iowa State Cyclones",
+        "maior_odd": 2.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 14.85
+    },
+    {
+        "evento": "Old Dominion Monarchs vs East Carolina Pirates",
+        "maior_odd": 2.2,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 14.55
+    },
+    {
+        "evento": "Northwestern Wildcats vs Duke Blue Devils",
+        "maior_odd": 2.16,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 12.96
+    },
+    {
+        "evento": "Texas Longhorns vs Georgia Bulldogs",
+        "maior_odd": 2.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 11.41
+    },
+    {
+        "evento": "Washington State Cougars vs Texas Tech Red Raiders",
+        "maior_odd": 2.1,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 10.85
+    },
+    {
+        "evento": "Penn State Nittany Lions vs Ohio State Buckeyes",
+        "maior_odd": 2.1,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 10.67
+    },
+    {
+        "evento": "Cincinnati Bearcats vs Pittsburgh Panthers",
+        "maior_odd": 2.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 10.53
+    },
+    {
+        "evento": "Ohio Bobcats vs South Alabama Jaguars",
+        "maior_odd": 2.1,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 10.49
+    },
+    {
+        "evento": "Texas Longhorns vs Georgia Bulldogs",
+        "maior_odd": 2.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 10.24
+    },
+    {
+        "evento": "Nevada Wolf Pack vs Georgia Southern Eagles",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 6.95
+    },
+    {
+        "evento": "USC Trojans vs Notre Dame Fighting Irish",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 6.29
+    },
+    {
+        "evento": "Wake Forest Demon Deacons vs Virginia Cavaliers",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 5.93
+    },
+    {
+        "evento": "Oregon Ducks vs Ohio State Buckeyes",
+        "maior_odd": 1.95,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 4.09
+    },
+    {
+        "evento": "Texas State Bobcats vs UTSA Roadrunners",
+        "maior_odd": 1.95,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 3.72
+    },
+    {
+        "evento": "Cincinnati Bengals vs New England Patriots",
+        "maior_odd": 4.7,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 71.77
+    },
+    {
+        "evento": "Baltimore Ravens vs Las Vegas Raiders",
+        "maior_odd": 4.2,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 65.35
+    },
+    {
+        "evento": "Detroit Lions vs Tampa Bay Buccaneers",
+        "maior_odd": 3.65,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 57.76
+    },
+    {
+        "evento": "Dallas Cowboys vs New Orleans Saints",
+        "maior_odd": 3.4,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 54.7
+    },
+    {
+        "evento": "Buffalo Bills vs Arizona Cardinals",
+        "maior_odd": 3.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 53.52
+    },
+    {
+        "evento": "Minnesota Vikings vs San Francisco 49ers",
+        "maior_odd": 3.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 52.84
+    },
+    {
+        "evento": "Dallas Cowboys vs New York Giants",
+        "maior_odd": 4.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 52.38
+    },
+    {
+        "evento": "Seattle Seahawks vs Denver Broncos",
+        "maior_odd": 3.35,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 49.81
+    },
+    {
+        "evento": "Jacksonville Jaguars vs New England Patriots",
+        "maior_odd": 3.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 46.6
+    },
+    {
+        "evento": "San Francisco 49ers vs New York Jets",
+        "maior_odd": 2.92,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 39.88
+    },
+    {
+        "evento": "Green Bay Packers vs Indianapolis Colts",
+        "maior_odd": 2.85,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 37.97
+    },
+    {
+        "evento": "New Orleans Saints vs Carolina Panthers",
+        "maior_odd": 2.88,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 37.77
+    },
+    {
+        "evento": "Detroit Lions vs Los Angeles Rams",
+        "maior_odd": 2.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 36.41
+    },
+    {
+        "evento": "Pittsburgh Steelers vs Kansas City Chiefs",
+        "maior_odd": 3.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 36.36
+    },
+    {
+        "evento": "Tennessee Titans vs New York Jets",
+        "maior_odd": 2.65,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 32.78
+    },
+    {
+        "evento": "Philadelphia Eagles vs Atlanta Falcons",
+        "maior_odd": 2.7,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 32.26
+    },
+    {
+        "evento": "Tampa Bay Buccaneers vs Washington Commanders",
+        "maior_odd": 2.64,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 31.22
+    },
+    {
+        "evento": "Miami Dolphins vs Jacksonville Jaguars",
+        "maior_odd": 2.64,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 30.82
+    },
+    {
+        "evento": "Chicago Bears vs Tennessee Titans",
+        "maior_odd": 2.68,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 30.29
+    },
+    {
+        "evento": "Houston Texans vs Chicago Bears",
+        "maior_odd": 2.62,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 29.93
+    },
+    {
+        "evento": "Minnesota Vikings vs New York Jets",
+        "maior_odd": 2.65,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 29.58
+    },
+    {
+        "evento": "Kansas City Chiefs vs Cincinnati Bengals",
+        "maior_odd": 2.6,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 28.49
+    },
+    {
+        "evento": "Atlanta Falcons vs Pittsburgh Steelers",
+        "maior_odd": 2.58,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 28.43
+    },
+    {
+        "evento": "San Francisco 49ers vs Dallas Cowboys",
+        "maior_odd": 2.62,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 27.18
+    },
+    {
+        "evento": "Detroit Lions vs Chicago Bears",
+        "maior_odd": 2.62,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 27.18
+    },
+    {
+        "evento": "New England Patriots vs Seattle Seahawks",
+        "maior_odd": 2.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 26.54
+    },
+    {
+        "evento": "Indianapolis Colts vs Houston Texans",
+        "maior_odd": 2.46,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 24.9
+    },
+    {
+        "evento": "Los Angeles Chargers vs Las Vegas Raiders",
+        "maior_odd": 2.48,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 24.74
+    },
+    {
+        "evento": "Kansas City Chiefs vs Baltimore Ravens",
+        "maior_odd": 2.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 22.16
+    },
+    {
+        "evento": "Carolina Panthers vs Los Angeles Chargers",
+        "maior_odd": 2.35,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 20.73
+    },
+    {
+        "evento": "Cleveland Browns vs Dallas Cowboys",
+        "maior_odd": 2.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 18.11
+    },
+    {
+        "evento": "Denver Broncos vs Pittsburgh Steelers",
+        "maior_odd": 2.25,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 17.01
+    },
+    {
+        "evento": "Green Bay Packers vs Miami Dolphins",
+        "maior_odd": 2.3,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 16.46
+    },
+    {
+        "evento": "Washington Commanders vs New York Giants",
+        "maior_odd": 2.2,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 15.27
+    },
+    {
+        "evento": "Philadelphia Eagles vs Green Bay Packers",
+        "maior_odd": 2.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 13.72
+    },
+    {
+        "evento": "Arizona Cardinals vs Los Angeles Rams",
+        "maior_odd": 2.14,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 12.93
+    },
+    {
+        "evento": "New York Giants vs Minnesota Vikings",
+        "maior_odd": 2.14,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 11.82
+    },
+    {
+        "evento": "Jacksonville Jaguars vs Cleveland Browns",
+        "maior_odd": 2.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 10.9
+    },
+    {
+        "evento": "Houston Texans vs Baltimore Ravens",
+        "maior_odd": 2.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 9.38
+    },
+    {
+        "evento": "Miami Dolphins vs Buffalo Bills",
+        "maior_odd": 2.02,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 6.92
+    },
+    {
+        "evento": "San Francisco 49ers vs Kansas City Chiefs",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 4.85
+    },
+    {
+        "evento": "Carolina Panthers vs New York Giants",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 4.85
+    },
+    {
+        "evento": "Chicago Bears vs Jacksonville Jaguars",
+        "maior_odd": 1.95,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 2.36
+    },
+    {
+        "evento": "Buffalo Bills vs Kansas City Chiefs",
+        "maior_odd": 1.91,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 0.0
+    },
+    {
+        "evento": "Brisbane Lions vs Carlton Blues",
+        "maior_odd": 3.85,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 57.0
+    },
+    {
+        "evento": "Port Adelaide Power vs Geelong Cats",
+        "maior_odd": 2.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 36.25
+    },
+    {
+        "evento": "Sydney Swans vs Greater Western Sydney Giants",
+        "maior_odd": 2.42,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 24.17
+    },
+    {
+        "evento": "Western Bulldogs vs Hawthorn Hawks",
+        "maior_odd": 2.32,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 20.8
+    },
+    {
+        "evento": "NC Dinos vs Kiwoom Heroes",
+        "maior_odd": 2.45,
+        "bookmaker": "LiveScore Bet",
+        "percentual_acima_media": 25.72
+    },
+    {
+        "evento": "Kia Tigers vs Hanwha Eagles",
+        "maior_odd": 2.23,
+        "bookmaker": "LiveScore Bet",
+        "percentual_acima_media": 16.75
+    },
+    {
+        "evento": "LG Twins vs SSG Landers",
+        "maior_odd": 2.14,
+        "bookmaker": "LiveScore Bet",
+        "percentual_acima_media": 13.91
+    },
+    {
+        "evento": "Lotte Giants vs KT Wiz",
+        "maior_odd": 1.94,
+        "bookmaker": "LiveScore Bet",
+        "percentual_acima_media": 3.81
+    },
+    {
+        "evento": "Reno Aces vs El Paso Chihuahuas",
+        "maior_odd": 2.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 25.0
+    },
+    {
+        "evento": "Louisville Bats vs Jacksonville Jumbo Shrimp",
+        "maior_odd": 2.25,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 17.49
+    },
+    {
+        "evento": "Tacoma Rainiers vs Albuquerque Isotopes",
+        "maior_odd": 2.25,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 16.88
+    },
+    {
+        "evento": "Memphis Redbirds vs Omaha Storm Chasers",
+        "maior_odd": 2.2,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 15.94
+    },
+    {
+        "evento": "Toledo Mud Hens vs Indianapolis Indians",
+        "maior_odd": 2.05,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 9.92
+    },
+    {
+        "evento": "Norfolk Tides vs Charlotte Knights",
+        "maior_odd": 2.05,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 9.48
+    },
+    {
+        "evento": "Syracuse Mets vs Scranton/Wilkes-Barre RailRiders",
+        "maior_odd": 2.05,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 9.48
+    },
+    {
+        "evento": "St. Paul Saints vs Iowa Cubs",
+        "maior_odd": 2.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 8.25
+    },
+    {
+        "evento": "Buffalo Bisons vs Lehigh Valley IronPigs",
+        "maior_odd": 2.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 7.82
+    },
+    {
+        "evento": "Nashville Sounds vs Gwinnett Stripers",
+        "maior_odd": 2.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 7.82
+    },
+    {
+        "evento": "Salt Lake Bees vs Sacramento River Cats",
+        "maior_odd": 2.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 7.53
+    },
+    {
+        "evento": "Las Vegas Aviators vs Round Rock Express",
+        "maior_odd": 2.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 7.24
+    },
+    {
+        "evento": "Oklahoma City Baseball Club vs Sugar Land Space Cowboys",
+        "maior_odd": 1.91,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 2.96
+    },
+    {
+        "evento": "Rochester Red Wings vs Worcester Red Sox",
+        "maior_odd": 1.85,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 0.54
+    },
+    {
+        "evento": "Baltimore Orioles vs Chicago White Sox",
+        "maior_odd": 4.2,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 61.04
+    },
+    {
+        "evento": "Atlanta Braves vs Colorado Rockies",
+        "maior_odd": 3.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 47.83
+    },
+    {
+        "evento": "Atlanta Braves vs Colorado Rockies",
+        "maior_odd": 3.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 45.96
+    },
+    {
+        "evento": "Chicago Cubs vs Pittsburgh Pirates",
+        "maior_odd": 2.92,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 37.33
+    },
+    {
+        "evento": "Los Angeles Angels vs Los Angeles Dodgers",
+        "maior_odd": 2.78,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 33.79
+    },
+    {
+        "evento": "San Diego Padres vs Detroit Tigers",
+        "maior_odd": 2.78,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 33.31
+    },
+    {
+        "evento": "Miami Marlins vs Philadelphia Phillies",
+        "maior_odd": 2.7,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 30.43
+    },
+    {
+        "evento": "San Diego Padres vs Detroit Tigers",
+        "maior_odd": 2.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 21.93
+    },
+    {
+        "evento": "San Francisco Giants vs Arizona Diamondbacks",
+        "maior_odd": 2.3,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 19.33
+    },
+    {
+        "evento": "Oakland Athletics vs Seattle Mariners",
+        "maior_odd": 2.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 17.7
+    },
+    {
+        "evento": "Cincinnati Reds vs Houston Astros",
+        "maior_odd": 2.3,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 17.57
+    },
+    {
+        "evento": "Miami Marlins vs Washington Nationals",
+        "maior_odd": 2.3,
+        "bookmaker": "LiveScore Bet",
+        "percentual_acima_media": 17.25
+    },
+    {
+        "evento": "Cincinnati Reds vs Houston Astros",
+        "maior_odd": 2.28,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 17.18
+    },
+    {
+        "evento": "Oakland Athletics vs Seattle Mariners",
+        "maior_odd": 2.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 14.29
+    },
+    {
+        "evento": "Texas Rangers vs Los Angeles Angels",
+        "maior_odd": 2.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 14.29
+    },
+    {
+        "evento": "San Francisco Giants vs Arizona Diamondbacks",
+        "maior_odd": 2.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 13.51
+    },
+    {
+        "evento": "Kansas City Royals vs Cleveland Guardians",
+        "maior_odd": 2.18,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 12.86
+    },
+    {
+        "evento": "Milwaukee Brewers vs St. Louis Cardinals",
+        "maior_odd": 2.12,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 10.09
+    },
+    {
+        "evento": "Tampa Bay Rays vs Minnesota Twins",
+        "maior_odd": 2.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 9.36
+    },
+    {
+        "evento": "Tampa Bay Rays vs Minnesota Twins",
+        "maior_odd": 2.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 9.09
+    },
+    {
+        "evento": "New York Mets vs Boston Red Sox",
+        "maior_odd": 2.08,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 8.85
+    },
+    {
+        "evento": "Texas Rangers vs New York Yankees",
+        "maior_odd": 2.02,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 5.67
+    },
+    {
+        "evento": "Pittsburgh Pirates vs Washington Nationals",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 5.26
+    },
+    {
+        "evento": "Yomiuri Giants vs Tokyo Yakult Swallows",
+        "maior_odd": 2.7,
+        "bookmaker": "LiveScore Bet",
+        "percentual_acima_media": 32.35
+    },
+    {
+        "evento": "Hanshin Tigers vs Chunichi Dragons",
+        "maior_odd": 2.22,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 16.29
+    },
+    {
+        "evento": "Chiba Lotte Marines vs Tohoku Rakuten Golden Eagles",
+        "maior_odd": 2.1,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 11.23
+    },
+    {
+        "evento": "Yokohama DeNA BayStars vs Hiroshima Toyo Carp",
+        "maior_odd": 2.06,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 9.57
+    },
+    {
+        "evento": "Boston Celtics vs Atlanta Hawks",
+        "maior_odd": 5.75,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 104.63
+    },
+    {
+        "evento": "Washington Wizards vs Boston Celtics",
+        "maior_odd": 6.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 99.85
+    },
+    {
+        "evento": "Milwaukee Bucks vs Toronto Raptors",
+        "maior_odd": 3.6,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 73.18
+    },
+    {
+        "evento": "Orlando Magic vs Charlotte Hornets",
+        "maior_odd": 3.5,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 70.94
+    },
+    {
+        "evento": "Dallas Mavericks vs San Antonio Spurs",
+        "maior_odd": 3.7,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 68.5
+    },
+    {
+        "evento": "Portland Trail Blazers vs Minnesota Timberwolves",
+        "maior_odd": 3.25,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 64.97
+    },
+    {
+        "evento": "New York Knicks vs San Antonio Spurs",
+        "maior_odd": 4.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 61.81
+    },
+    {
+        "evento": "Atlanta Hawks vs Brooklyn Nets",
+        "maior_odd": 3.4,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 60.5
+    },
+    {
+        "evento": "Houston Rockets vs Charlotte Hornets",
+        "maior_odd": 3.1,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 56.3
+    },
+    {
+        "evento": "New Orleans Pelicans vs Chicago Bulls",
+        "maior_odd": 3.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 53.4
+    },
+    {
+        "evento": "New York Knicks vs Atlanta Hawks",
+        "maior_odd": 3.7,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 48.89
+    },
+    {
+        "evento": "Detroit Pistons vs Indiana Pacers",
+        "maior_odd": 2.9,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 48.21
+    },
+    {
+        "evento": "New Orleans Pelicans vs Utah Jazz",
+        "maior_odd": 3.25,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 41.92
+    },
+    {
+        "evento": "Houston Rockets vs Detroit Pistons",
+        "maior_odd": 3.15,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 40.62
+    },
+    {
+        "evento": "Boston Celtics vs New York Knicks",
+        "maior_odd": 2.75,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 40.27
+    },
+    {
+        "evento": "Charlotte Hornets vs Dallas Mavericks",
+        "maior_odd": 3.1,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 39.01
+    },
+    {
+        "evento": "Detroit Pistons vs Miami Heat",
+        "maior_odd": 2.38,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 36.88
+    },
+    {
+        "evento": "Utah Jazz vs Phoenix Suns",
+        "maior_odd": 2.38,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 36.88
+    },
+    {
+        "evento": "Philadelphia 76ers vs Milwaukee Bucks",
+        "maior_odd": 2.62,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 36.78
+    },
+    {
+        "evento": "Toronto Raptors vs Cleveland Cavaliers",
+        "maior_odd": 2.45,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 34.43
+    },
+    {
+        "evento": "Portland Trail Blazers vs Golden State Warriors",
+        "maior_odd": 2.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 33.4
+    },
+    {
+        "evento": "Boston Celtics vs Philadelphia 76ers",
+        "maior_odd": 2.7,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 31.39
+    },
+    {
+        "evento": "Philadelphia 76ers vs New York Knicks",
+        "maior_odd": 2.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 29.99
+    },
+    {
+        "evento": "Golden State Warriors vs Boston Celtics",
+        "maior_odd": 2.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 26.83
+    },
+    {
+        "evento": "Dallas Mavericks vs Minnesota Timberwolves",
+        "maior_odd": 2.45,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 23.61
+    },
+    {
+        "evento": "Utah Jazz vs Memphis Grizzlies",
+        "maior_odd": 2.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 23.54
+    },
+    {
+        "evento": "Golden State Warriors vs Los Angeles Lakers",
+        "maior_odd": 2.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 21.89
+    },
+    {
+        "evento": "Denver Nuggets vs Oklahoma City Thunder",
+        "maior_odd": 2.15,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 21.7
+    },
+    {
+        "evento": "Golden State Warriors vs Dallas Mavericks",
+        "maior_odd": 2.05,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 21.66
+    },
+    {
+        "evento": "Indiana Pacers vs San Antonio Spurs",
+        "maior_odd": 2.3,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 17.95
+    },
+    {
+        "evento": "San Antonio Spurs vs Indiana Pacers",
+        "maior_odd": 2.3,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 17.95
+    },
+    {
+        "evento": "Sacramento Kings vs Minnesota Timberwolves",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 14.29
+    },
+    {
+        "evento": "Miami Heat vs Orlando Magic",
+        "maior_odd": 2.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 13.48
+    },
+    {
+        "evento": "Los Angeles Clippers vs Phoenix Suns",
+        "maior_odd": 2.0,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 10.74
+    },
+    {
+        "evento": "Cleveland Cavaliers vs Phoenix Suns",
+        "maior_odd": 2.1,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 9.66
+    },
+    {
+        "evento": "Phoenix Suns vs Denver Nuggets",
+        "maior_odd": 2.05,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 8.85
+    },
+    {
+        "evento": "Los Angeles Lakers vs Minnesota Timberwolves",
+        "maior_odd": 1.95,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 8.18
+    },
+    {
+        "evento": "Memphis Grizzlies vs Minnesota Timberwolves",
+        "maior_odd": 1.95,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 2.63
+    },
+    {
+        "evento": "Indiana Fever vs Los Angeles Sparks",
+        "maior_odd": 6.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 83.62
+    },
+    {
+        "evento": "New York Liberty vs Seattle Storm",
+        "maior_odd": 3.7,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 52.08
+    },
+    {
+        "evento": "Phoenix Mercury vs Washington Mystics",
+        "maior_odd": 2.75,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 34.43
+    },
+    {
+        "evento": "Jake Paul vs Mike Tyson",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 225.15
+    },
+    {
+        "evento": "Canelo Álvarez vs Edgar Berlanga",
+        "maior_odd": 40.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 214.8
+    },
+    {
+        "evento": "Tyler Denny vs Hamzah Sheeraz",
+        "maior_odd": 27.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 207.72
+    },
+    {
+        "evento": "Caleb Plant vs Trevor McCrumby",
+        "maior_odd": 34.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 184.39
+    },
+    {
+        "evento": "Daniel Dubois vs Anthony Joshua",
+        "maior_odd": 23.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 183.72
+    },
+    {
+        "evento": "Shakur Stevenson vs Joe Cordina",
+        "maior_odd": 38.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 182.42
+    },
+    {
+        "evento": "Liam Smith vs Josh Kelly",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 181.86
+    },
+    {
+        "evento": "Jaime Munguia vs Erik Bazinyan",
+        "maior_odd": 27.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 181.05
+    },
+    {
+        "evento": "Artur Beterbiev vs Dmitry Bivol",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 177.09
+    },
+    {
+        "evento": "Oleksandr Usyk vs Tyson Fury",
+        "maior_odd": 19.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 176.56
+    },
+    {
+        "evento": "Anthony Cacace vs Josh Warrington",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 173.49
+    },
+    {
+        "evento": "Joshua Buatsi vs Willy Hutchinson",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 172.08
+    },
+    {
+        "evento": "Joshua Frankham vs Angel Emilov",
+        "maior_odd": 34.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 171.75
+    },
+    {
+        "evento": "Joseph Parker vs Zhilei Zhang",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 170.31
+    },
+    {
+        "evento": "Joseph Parker vs Daniel Dubois",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 170.06
+    },
+    {
+        "evento": "Katie Taylor vs Chantelle Cameron",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 169.42
+    },
+    {
+        "evento": "Deontay Wilder vs Joe Joyce",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 169.08
+    },
+    {
+        "evento": "Deontay Wilder vs Francis Ngannou",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 167.94
+    },
+    {
+        "evento": "Sandy Ryan vs Mikaela Mayer",
+        "maior_odd": 18.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 167.86
+    },
+    {
+        "evento": "Canelo Álvarez vs David Benavidez",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 167.02
+    },
+    {
+        "evento": "Rolando Romero vs Manuel Jaimes",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 166.94
+    },
+    {
+        "evento": "Tyson Fury vs Anthony Joshua",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 166.26
+    },
+    {
+        "evento": "Fabio Wardley vs Frazer Clarke",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 166.25
+    },
+    {
+        "evento": "Katie Taylor vs Amanda Serrano",
+        "maior_odd": 19.0,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 165.88
+    },
+    {
+        "evento": "Gervonta Davis vs Shakur Stevenson",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 162.15
+    },
+    {
+        "evento": "Anthony Joshua vs Joseph Parker",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 161.39
+    },
+    {
+        "evento": "Tyson Fury vs Francis Ngannou",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 160.43
+    },
+    {
+        "evento": "Anthony Joshua vs Zhilei Zhang",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 153.45
+    },
+    {
+        "evento": "Rhiannon Dixon vs Terri Harper",
+        "maior_odd": 20.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 151.94
+    },
+    {
+        "evento": "Jai Opetaia vs Jack Massey",
+        "maior_odd": 34.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 151.54
+    },
+    {
+        "evento": "Terence Crawford vs Errol Spence Jr",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 145.2
+    },
+    {
+        "evento": "Naoya Inoue vs Jesse Rodriguez",
+        "maior_odd": 19.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 145.2
+    },
+    {
+        "evento": "Skye Nicolson vs Raven Chapman",
+        "maior_odd": 17.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 135.13
+    },
+    {
+        "evento": "Peter Mcgrail vs Brad Foster",
+        "maior_odd": 26.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 122.41
+    },
+    {
+        "evento": "Anthony Joshua vs Deontay Wilder",
+        "maior_odd": 18.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 120.11
+    },
+    {
+        "evento": "Johnny Fisher vs Andrii Rudenko",
+        "maior_odd": 26.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 113.35
+    },
+    {
+        "evento": "Bruce Carrington vs Sulaiman Segawa",
+        "maior_odd": 21.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 112.98
+    },
+    {
+        "evento": "Mark Chamberlain vs Joshua Padley",
+        "maior_odd": 25.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 109.03
+    },
+    {
+        "evento": "Antigua & Barbuda Falcons vs Trinbago Knight Riders",
+        "maior_odd": 2.9,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 38.68
+    },
+    {
+        "evento": "St Kitts & Nevis Patriots vs Guyana Amazon Warriors",
+        "maior_odd": 2.32,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 21.29
+    },
+    {
+        "evento": "Scotland vs Australia",
+        "maior_odd": 14.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 130.7
+    },
+    {
+        "evento": "Northamptonshire vs Somerset",
+        "maior_odd": 41.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 1149.63
+    },
+    {
+        "evento": "Birmingham Bears vs Gloucestershire",
+        "maior_odd": 41.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 849.85
+    },
+    {
+        "evento": "Birmingham Bears vs Gloucestershire",
+        "maior_odd": 2.55,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 26.87
+    },
+    {
+        "evento": "England vs Sri Lanka",
+        "maior_odd": 8.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 57.73
+    },
+    {
+        "evento": "Afghanistan vs New Zealand",
+        "maior_odd": 6.0,
+        "bookmaker": "Virgin Bet",
+        "percentual_acima_media": 42.36
+    },
+    {
+        "evento": "Utah Hockey Club vs Chicago Blackhawks",
+        "maior_odd": 4.5,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 80.31
+    },
+    {
+        "evento": "Florida Panthers vs Boston Bruins",
+        "maior_odd": 4.2,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 74.48
+    },
+    {
+        "evento": "Buffalo Sabres vs New Jersey Devils",
+        "maior_odd": 4.2,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 73.35
+    },
+    {
+        "evento": "Seattle Kraken vs St Louis Blues",
+        "maior_odd": 4.0,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 70.73
+    },
+    {
+        "evento": "Boston Bruins vs Montréal Canadiens",
+        "maior_odd": 2.9,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 33.64
+    },
+    {
+        "evento": "Minnesota Wild vs Columbus Blue Jackets",
+        "maior_odd": 2.9,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 33.64
+    },
+    {
+        "evento": "Winnipeg Jets vs Chicago Blackhawks",
+        "maior_odd": 2.9,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 33.64
+    },
+    {
+        "evento": "Vancouver Canucks vs Calgary Flames",
+        "maior_odd": 2.62,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 27.18
+    },
+    {
+        "evento": "Vegas Golden Knights vs St Louis Blues",
+        "maior_odd": 2.5,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 23.46
+    },
+    {
+        "evento": "Edmonton Oilers vs Winnipeg Jets",
+        "maior_odd": 2.45,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 21.89
+    },
+    {
+        "evento": "Vancouver Canucks vs Philadelphia Flyers",
+        "maior_odd": 2.37,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 19.4
+    },
+    {
+        "evento": "Montréal Canadiens vs Toronto Maple Leafs",
+        "maior_odd": 2.37,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 19.1
+    },
+    {
+        "evento": "San Jose Sharks vs St Louis Blues",
+        "maior_odd": 2.37,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 19.1
+    },
+    {
+        "evento": "New York Islanders vs Utah Hockey Club",
+        "maior_odd": 2.25,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 14.8
+    },
+    {
+        "evento": "New Jersey Devils vs Toronto Maple Leafs",
+        "maior_odd": 2.15,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 10.82
+    },
+    {
+        "evento": "Detroit Red Wings vs Pittsburgh Penguins",
+        "maior_odd": 2.1,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 9.09
+    },
+    {
+        "evento": "Carolina Hurricanes vs Tampa Bay Lightning",
+        "maior_odd": 2.1,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 9.09
+    },
+    {
+        "evento": "Ottawa Senators vs Florida Panthers",
+        "maior_odd": 2.05,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 6.49
+    },
+    {
+        "evento": "Pittsburgh Penguins vs New York Rangers",
+        "maior_odd": 2.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 4.44
+    },
+    {
+        "evento": "Vegas Golden Knights vs Colorado Avalanche",
+        "maior_odd": 1.95,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 2.63
+    },
+    {
+        "evento": "Buffalo Sabres vs Los Angeles Kings",
+        "maior_odd": 1.95,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 2.63
+    },
+    {
+        "evento": "Nashville Predators vs Dallas Stars",
+        "maior_odd": 1.95,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 2.63
+    },
+    {
+        "evento": "Östersunds IK vs Mora IK",
+        "maior_odd": 4.25,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 42.7
+    },
+    {
+        "evento": "AIK vs Södertälje SK",
+        "maior_odd": 4.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 41.57
+    },
+    {
+        "evento": "IK Oskarshamn vs Djurgårdens IF",
+        "maior_odd": 4.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 41.45
+    },
+    {
+        "evento": "Vimmerby HC vs Nybro Vikings IF",
+        "maior_odd": 4.2,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 38.08
+    },
+    {
+        "evento": "Kalmar HC vs Tingsryds AIF",
+        "maior_odd": 4.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 36.62
+    },
+    {
+        "evento": "BIK Karlskoga vs Almtuna IS",
+        "maior_odd": 4.7,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 34.41
+    },
+    {
+        "evento": "IF Björklöven vs Västerås IK",
+        "maior_odd": 4.35,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 30.5
+    },
+    {
+        "evento": "Malmö Redhawks vs Skellefteå AIK",
+        "maior_odd": 4.4,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 55.61
+    },
+    {
+        "evento": "Linköping HC vs Brynäs IF",
+        "maior_odd": 4.25,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 54.17
+    },
+    {
+        "evento": "Örebro HK vs Modo Hockey",
+        "maior_odd": 4.25,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 52.77
+    },
+    {
+        "evento": "Växjö Lakers vs HV71",
+        "maior_odd": 4.4,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 52.1
+    },
+    {
+        "evento": "Färjestad BK vs Rögle BK",
+        "maior_odd": 4.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 51.61
+    },
+    {
+        "evento": "Frölunda HC vs Leksands IF",
+        "maior_odd": 4.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 49.79
+    },
+    {
+        "evento": "Luleå HF vs Timrå IK",
+        "maior_odd": 4.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 48.41
+    },
+    {
+        "evento": "Isaac Dulgarian vs Brendon Marotte",
+        "maior_odd": 13.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 119.16
+    },
+    {
+        "evento": "Morgan Charriere vs A.J. Cunningham",
+        "maior_odd": 8.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 98.37
+    },
+    {
+        "evento": "Matt Schnell vs Alessandro Costa",
+        "maior_odd": 5.7,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 81.38
+    },
+    {
+        "evento": "Raul Rosas Jr vs Aori Qileng",
+        "maior_odd": 6.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 78.41
+    },
+    {
+        "evento": "Kayla Harrison vs Ketlen Vieira",
+        "maior_odd": 5.6,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 70.34
+    },
+    {
+        "evento": "Josh Hokit vs Sean Rose",
+        "maior_odd": 5.5,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 68.28
+    },
+    {
+        "evento": "Bryce Meredith vs John Macalolooy",
+        "maior_odd": 5.25,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 66.75
+    },
+    {
+        "evento": "Alex Pereira vs Khalil Rountree",
+        "maior_odd": 4.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 66.0
+    },
+    {
+        "evento": "Yazmin Jauregui vs Ketlen Souza",
+        "maior_odd": 4.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 65.68
+    },
+    {
+        "evento": "Andre Petroski vs Dylan Budka",
+        "maior_odd": 3.75,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 63.98
+    },
+    {
+        "evento": "Oumar Sy vs Da Un Jung",
+        "maior_odd": 4.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 60.84
+    },
+    {
+        "evento": "Magomed Ankalaev vs Aleksandar Rakic",
+        "maior_odd": 3.75,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 55.28
+    },
+    {
+        "evento": "Ryan Spann vs Ovince St. Preux",
+        "maior_odd": 3.75,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 54.68
+    },
+    {
+        "evento": "Masayuki Kikiuiri vs Herman Terrado",
+        "maior_odd": 3.8,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 53.12
+    },
+    {
+        "evento": "Jaqueline Amorim vs Vanessa Demopoulos",
+        "maior_odd": 3.55,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 52.85
+    },
+    {
+        "evento": "Yancy Medeiros vs Jora Ayvazyan",
+        "maior_odd": 3.65,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 50.21
+    },
+    {
+        "evento": "Mohamed Mezouari vs Cédric Do",
+        "maior_odd": 3.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 50.21
+    },
+    {
+        "evento": "Ciryl Gane vs Alexander Volkov",
+        "maior_odd": 3.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 49.59
+    },
+    {
+        "evento": "Jordan Newman vs Imamshafi Aliev",
+        "maior_odd": 3.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 48.31
+    },
+    {
+        "evento": "Jessica Andrade vs Natalia Silva",
+        "maior_odd": 3.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 48.27
+    },
+    {
+        "evento": "Theodor Berggren vs Moein Ahmadi",
+        "maior_odd": 3.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 48.15
+    },
+    {
+        "evento": "Yi Zha vs Gabriel Santos",
+        "maior_odd": 3.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 47.86
+    },
+    {
+        "evento": "Alex Volkanovski vs Sean O'Malley",
+        "maior_odd": 3.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 45.91
+    },
+    {
+        "evento": "Jon Jones vs Stipe Miocic",
+        "maior_odd": 3.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 45.91
+    },
+    {
+        "evento": "Francis Ngannou vs Renan Ferreira",
+        "maior_odd": 3.35,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 45.86
+    },
+    {
+        "evento": "Matt Schnell vs Cody Durden",
+        "maior_odd": 3.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 44.74
+    },
+    {
+        "evento": "Jon Jones vs Alex Pereira",
+        "maior_odd": 3.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 44.04
+    },
+    {
+        "evento": "Zhu Rong vs Chris Padilla",
+        "maior_odd": 3.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 43.88
+    },
+    {
+        "evento": "Renato Moicano vs Benoit Saint-Denis",
+        "maior_odd": 3.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 43.09
+    },
+    {
+        "evento": "William Gomis vs Joanderson Brito",
+        "maior_odd": 3.05,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 40.99
+    },
+    {
+        "evento": "Daniel Zellhuber vs Esteban Ribovics",
+        "maior_odd": 2.95,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 40.34
+    },
+    {
+        "evento": "Sean Strickland vs Khamzat Chimaev",
+        "maior_odd": 2.9,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 37.44
+    },
+    {
+        "evento": "Ilia Topuria vs Max Holloway",
+        "maior_odd": 2.76,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 34.85
+    },
+    {
+        "evento": "Ailin Perez vs Darya Zheleznyakova",
+        "maior_odd": 2.88,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 34.58
+    },
+    {
+        "evento": "Leon Edwards vs Shavkat Rakhmonov",
+        "maior_odd": 2.65,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 31.73
+    },
+    {
+        "evento": "Nassourdine Imavov vs Brendan Allen",
+        "maior_odd": 2.63,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 31.12
+    },
+    {
+        "evento": "Weili Zhang vs Tatiana Suarez",
+        "maior_odd": 2.6,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 29.89
+    },
+    {
+        "evento": "Gilbert Burns vs Sean Brady",
+        "maior_odd": 2.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 29.81
+    },
+    {
+        "evento": "Brayan Aspegren vs Enes Kollari",
+        "maior_odd": 2.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 28.53
+    },
+    {
+        "evento": "Steve Garcia Jr. vs Kyle Nelson",
+        "maior_odd": 2.54,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 27.41
+    },
+    {
+        "evento": "Andre Lima vs Felipe Dos Santos",
+        "maior_odd": 2.54,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 27.4
+    },
+    {
+        "evento": "Robert Whittaker vs Khamzat Chimaev",
+        "maior_odd": 2.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 27.06
+    },
+    {
+        "evento": "Brian Ortega vs Diego Lopes",
+        "maior_odd": 2.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 25.68
+    },
+    {
+        "evento": "Movsar Evloev vs Aljamain Sterling",
+        "maior_odd": 2.43,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 24.94
+    },
+    {
+        "evento": "Raquel Pennington vs Julianna Pena",
+        "maior_odd": 2.43,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 24.94
+    },
+    {
+        "evento": "José Aldo vs Mario Bautista",
+        "maior_odd": 2.38,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 23.24
+    },
+    {
+        "evento": "Ronaldo Rodriguez vs Ode Osbourne",
+        "maior_odd": 2.38,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 23.19
+    },
+    {
+        "evento": "Kevin Tariq Osaro vs Uku Jurjendal",
+        "maior_odd": 2.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 21.27
+    },
+    {
+        "evento": "Zygimantas Ramaska vs Nathan Fletcher",
+        "maior_odd": 2.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 20.1
+    },
+    {
+        "evento": "Islam Makhachev vs Arman Tsarukyan",
+        "maior_odd": 2.28,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 19.79
+    },
+    {
+        "evento": "Alexa Grasso vs Erin Blanchfield",
+        "maior_odd": 2.23,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 17.27
+    },
+    {
+        "evento": "Dustin Poirier vs Colby Covington",
+        "maior_odd": 2.25,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 16.88
+    },
+    {
+        "evento": "Edgar Chairez vs Kevin Borjas",
+        "maior_odd": 2.25,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 16.28
+    },
+    {
+        "evento": "Stephen Thompson vs Joaquin Buckley",
+        "maior_odd": 2.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 16.25
+    },
+    {
+        "evento": "Roman Dolidze vs Kevin Holland",
+        "maior_odd": 2.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 16.25
+    },
+    {
+        "evento": "Germaine de Randamie vs Nora Cornolle",
+        "maior_odd": 2.2,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 15.69
+    },
+    {
+        "evento": "Nordine Mahieddine vs Nikola Filipovic",
+        "maior_odd": 2.15,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 15.49
+    },
+    {
+        "evento": "Martin Corney vs Saba Sozashvili",
+        "maior_odd": 2.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 13.67
+    },
+    {
+        "evento": "Kevin Jousset vs Bryan Battle",
+        "maior_odd": 2.12,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 12.27
+    },
+    {
+        "evento": "Fares Ziam vs Matt Frevola",
+        "maior_odd": 2.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 11.46
+    },
+    {
+        "evento": "Sean Strickland vs Israel Adesanya",
+        "maior_odd": 2.08,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 11.33
+    },
+    {
+        "evento": "Leon Edwards vs Khamzat Chimaev",
+        "maior_odd": 2.08,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 11.33
+    },
+    {
+        "evento": "Levi Rigters vs Bahram Rajabzadeh",
+        "maior_odd": 2.05,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 10.71
+    },
+    {
+        "evento": "Lorenz Larkin vs Levan Chokheli",
+        "maior_odd": 2.04,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 10.37
+    },
+    {
+        "evento": "Alex Pereira vs Israel Adesanya",
+        "maior_odd": 2.04,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 9.58
+    },
+    {
+        "evento": "Jon Jones vs Tom Aspinall",
+        "maior_odd": 2.04,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 9.58
+    },
+    {
+        "evento": "Irene Aldana vs Norma Dumont",
+        "maior_odd": 2.04,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 8.92
+    },
+    {
+        "evento": "Sumiko Inaba vs Mackenzie Stiller",
+        "maior_odd": 2.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 8.5
+    },
+    {
+        "evento": "Trevor Peek vs Yanal Ashmoz",
+        "maior_odd": 2.04,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 7.94
+    },
+    {
+        "evento": "Ion Cutelaba vs Ivan Erslan",
+        "maior_odd": 2.02,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 7.69
+    },
+    {
+        "evento": "Alexa Grasso vs Valentina Shevchenko",
+        "maior_odd": 2.02,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 7.54
+    },
+    {
+        "evento": "Aysia Cortez vs Ashley Thiner",
+        "maior_odd": 1.96,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 7.1
+    },
+    {
+        "evento": "Manuel Torres vs Ignacio Bahamondes",
+        "maior_odd": 2.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 7.07
+    },
+    {
+        "evento": "Sean O'Malley vs Merab Dvalishvili",
+        "maior_odd": 2.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 6.01
+    },
+    {
+        "evento": "Kevin Törö vs Alexander Yakob",
+        "maior_odd": 1.93,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 5.9
+    },
+    {
+        "evento": "Alejandro Toutparfait vs Mashrab Mamadaliyev",
+        "maior_odd": 1.93,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 5.9
+    },
+    {
+        "evento": "Gephte Jiffa Kundo vs Aldin Reiz",
+        "maior_odd": 1.88,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 3.16
+    },
+    {
+        "evento": "Conor McGregor vs Michael Chandler",
+        "maior_odd": 1.93,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 3.12
+    },
+    {
+        "evento": "Alexa Grasso vs Weili Zhang",
+        "maior_odd": 1.87,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 1.08
+    },
+    {
+        "evento": "Manly Warringah Sea Eagles vs Cronulla Sutherland Sharks",
+        "maior_odd": 21.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 390.15
+    },
+    {
+        "evento": "St George Illawarra Dragons vs Canberra Raiders",
+        "maior_odd": 21.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 389.65
+    },
+    {
+        "evento": "Newcastle Knights vs Dolphins",
+        "maior_odd": 21.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 387.66
+    },
+    {
+        "evento": "Canterbury Bulldogs vs North Queensland Cowboys",
+        "maior_odd": 21.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 387.59
+    },
+    {
+        "evento": "Wests Tigers vs Parramatta Eels",
+        "maior_odd": 21.0,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 386.39
+    },
+    {
+        "evento": "Penrith Panthers vs Gold Coast Titans",
+        "maior_odd": 34.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 349.51
+    },
+    {
+        "evento": "Brisbane Broncos vs Melbourne Storm",
+        "maior_odd": 26.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 344.21
+    },
+    {
+        "evento": "South Sydney Rabbitohs vs Sydney Roosters",
+        "maior_odd": 21.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 326.94
+    },
+    {
+        "evento": "Estudiantes vs Platense",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 81.2
+    },
+    {
+        "evento": "Lanus vs Union Santa Fe",
+        "maior_odd": 4.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 65.73
+    },
+    {
+        "evento": "River Plate vs Atlético Tucuman",
+        "maior_odd": 5.7,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 65.62
+    },
+    {
+        "evento": "Godoy Cruz vs Sarmiento de Junin",
+        "maior_odd": 5.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 63.88
+    },
+    {
+        "evento": "Argentinos Juniors vs Newells Old Boys",
+        "maior_odd": 4.0,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 57.36
+    },
+    {
+        "evento": "Independiente Rivadavia vs Defensa y Justicia",
+        "maior_odd": 3.75,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 46.77
+    },
+    {
+        "evento": "Belgrano de Cordoba vs Independiente",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 42.2
+    },
+    {
+        "evento": "Racing Club vs Boca Juniors",
+        "maior_odd": 3.25,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 40.49
+    },
+    {
+        "evento": "CA Tigre BA vs Gimnasia La Plata",
+        "maior_odd": 3.1,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 31.54
+    },
+    {
+        "evento": "Central Córdoba vs Instituto de Córdoba",
+        "maior_odd": 3.1,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 26.08
+    },
+    {
+        "evento": "San Lorenzo vs Velez Sarsfield BA",
+        "maior_odd": 2.9,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 23.19
+    },
+    {
+        "evento": "Rosario Central vs Talleres",
+        "maior_odd": 3.25,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 23.18
+    },
+    {
+        "evento": "Deportivo Riestra vs Atlético Huracán",
+        "maior_odd": 2.8,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 15.96
+    },
+    {
+        "evento": "Barracas Central vs Banfield",
+        "maior_odd": 3.0,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 10.89
+    },
+    {
+        "evento": "RB Salzburg vs Austria Klagenfurt",
+        "maior_odd": 12.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 113.32
+    },
+    {
+        "evento": "Hartberg vs WSG Tirol",
+        "maior_odd": 4.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 38.26
+    },
+    {
+        "evento": "Hartberg vs WSG Tirol",
+        "maior_odd": 4.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 31.08
+    },
+    {
+        "evento": "Wolfsberger AC vs Rapid Wien",
+        "maior_odd": 3.7,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 26.83
+    },
+    {
+        "evento": "Grazer AK vs Rheindorf Altach",
+        "maior_odd": 3.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 25.31
+    },
+    {
+        "evento": "Austria Wien vs Sturm Graz",
+        "maior_odd": 3.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 24.83
+    },
+    {
+        "evento": "FC Blau-Weiß Linz vs LASK",
+        "maior_odd": 3.6,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 23.79
+    },
+    {
+        "evento": "Austria Wien vs Sturm Graz",
+        "maior_odd": 3.55,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 21.74
+    },
+    {
+        "evento": "Grazer AK vs Rheindorf Altach",
+        "maior_odd": 3.4,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 21.17
+    },
+    {
+        "evento": "KV Kortrijk vs Club Brugge",
+        "maior_odd": 8.0,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 76.39
+    },
+    {
+        "evento": "Gent vs KV Mechelen",
+        "maior_odd": 6.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 63.95
+    },
+    {
+        "evento": "Anderlecht vs Westerlo",
+        "maior_odd": 5.3,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 48.65
+    },
+    {
+        "evento": "Charleroi vs Beerschot Wilrijk",
+        "maior_odd": 4.6,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 40.1
+    },
+    {
+        "evento": "Royal Antwerp vs Union Saint-Gilloise",
+        "maior_odd": 3.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 22.86
+    },
+    {
+        "evento": "Cercle Brugge KSV vs Genk",
+        "maior_odd": 3.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 22.09
+    },
+    {
+        "evento": "Sint Truiden vs Leuven",
+        "maior_odd": 3.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 22.09
+    },
+    {
+        "evento": "Dender vs Standard Liege",
+        "maior_odd": 3.7,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 21.55
+    },
+    {
+        "evento": "Palmeiras vs Criciuma",
+        "maior_odd": 9.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 102.98
+    },
+    {
+        "evento": "Botafogo vs Corinthians",
+        "maior_odd": 6.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 75.97
+    },
+    {
+        "evento": "Internacional vs Cuiabá",
+        "maior_odd": 6.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 75.34
+    },
+    {
+        "evento": "Flamengo vs Vasco da Gama",
+        "maior_odd": 6.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 67.1
+    },
+    {
+        "evento": "Internacional vs Fortaleza",
+        "maior_odd": 4.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 53.86
+    },
+    {
+        "evento": "Cuiabá vs Juventude",
+        "maior_odd": 4.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 41.65
+    },
+    {
+        "evento": "Atletico Goianiense vs Vitoria",
+        "maior_odd": 4.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 40.33
+    },
+    {
+        "evento": "Cruzeiro vs Sao Paulo",
+        "maior_odd": 4.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 39.39
+    },
+    {
+        "evento": "Bragantino-SP vs Grêmio",
+        "maior_odd": 3.6,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 23.7
+    },
+    {
+        "evento": "Juventude vs Fluminense",
+        "maior_odd": 3.4,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 21.91
+    },
+    {
+        "evento": "Bahia vs Atletico Mineiro",
+        "maior_odd": 3.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 21.38
+    },
+    {
+        "evento": "Atletico Paranaense vs Fortaleza",
+        "maior_odd": 3.4,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 18.55
+    },
+    {
+        "evento": "Ceará vs Operario PR",
+        "maior_odd": 5.9,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 77.79
+    },
+    {
+        "evento": "América Mineiro vs Guarani",
+        "maior_odd": 6.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 77.35
+    },
+    {
+        "evento": "Vila Nova vs Clube de Regatas Brasil",
+        "maior_odd": 5.7,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 75.38
+    },
+    {
+        "evento": "Brusque FC vs Santos",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 57.87
+    },
+    {
+        "evento": "Coritiba vs Grêmio Novorizontino",
+        "maior_odd": 4.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 51.92
+    },
+    {
+        "evento": "Paysandu vs Amazonas FC",
+        "maior_odd": 4.3,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 45.53
+    },
+    {
+        "evento": "Ponte Preta vs Chapecoense",
+        "maior_odd": 4.2,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 41.22
+    },
+    {
+        "evento": "Avai vs Sport Recife",
+        "maior_odd": 3.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 28.55
+    },
+    {
+        "evento": "Ituano vs Mirassol",
+        "maior_odd": 3.65,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 28.48
+    },
+    {
+        "evento": "Botafogo vs Goiás",
+        "maior_odd": 3.1,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 17.8
+    },
+    {
+        "evento": "Colo Colo vs Universidad Católica (CHI)",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 55.12
+    },
+    {
+        "evento": "Universidad de Chile vs Palestino",
+        "maior_odd": 4.75,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 47.36
+    },
+    {
+        "evento": "Audax Italiano vs CD Cobreloa",
+        "maior_odd": 4.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 45.21
+    },
+    {
+        "evento": "Huachipato vs O'Higgins",
+        "maior_odd": 3.6,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 26.15
+    },
+    {
+        "evento": "Ñublense vs Cobresal",
+        "maior_odd": 3.6,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 25.78
+    },
+    {
+        "evento": "Deportes Copiapó vs Unión Española",
+        "maior_odd": 3.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 16.44
+    },
+    {
+        "evento": "O'Higgins vs Coquimbo Unido",
+        "maior_odd": 3.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 16.2
+    },
+    {
+        "evento": "Deportes Iquique vs Huachipato",
+        "maior_odd": 3.1,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 15.15
+    },
+    {
+        "evento": "Flamengo-RJ vs Peñarol Montevideo",
+        "maior_odd": 7.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 94.55
+    },
+    {
+        "evento": "Flamengo-RJ vs Peñarol Montevideo",
+        "maior_odd": 7.2,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 68.95
+    },
+    {
+        "evento": "Botafogo vs Sao Paulo",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 45.82
+    },
+    {
+        "evento": "Colo Colo vs River Plate",
+        "maior_odd": 3.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 18.85
+    },
+    {
+        "evento": "Fluminense-RJ vs Clube Atlético Mineiro",
+        "maior_odd": 3.15,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 15.07
+    },
+    {
+        "evento": "Brondby IF vs SonderjyskE",
+        "maior_odd": 7.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 75.05
+    },
+    {
+        "evento": "AGF Aarhus vs Silkeborg IF",
+        "maior_odd": 5.8,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 61.27
+    },
+    {
+        "evento": "FC Nordsjaelland vs Randers FC",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 36.58
+    },
+    {
+        "evento": "Vejle Boldklub vs Viborg FF",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 28.42
+    },
+    {
+        "evento": "FC Midtjylland vs FC Copenhagen",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 27.11
+    },
+    {
+        "evento": "AaB vs Lyngby",
+        "maior_odd": 3.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 23.54
+    },
+    {
+        "evento": "Middlesbrough vs Preston North End",
+        "maior_odd": 7.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 68.07
+    },
+    {
+        "evento": "Leeds United vs Burnley",
+        "maior_odd": 5.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 52.58
+    },
+    {
+        "evento": "Plymouth Argyle vs Sunderland",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 37.4
+    },
+    {
+        "evento": "Portsmouth vs West Bromwich Albion",
+        "maior_odd": 3.9,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 28.29
+    },
+    {
+        "evento": "Millwall vs Luton",
+        "maior_odd": 3.5,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 24.1
+    },
+    {
+        "evento": "Derby County vs Cardiff City",
+        "maior_odd": 3.5,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 23.11
+    },
+    {
+        "evento": "Watford vs Coventry City",
+        "maior_odd": 3.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 23.07
+    },
+    {
+        "evento": "Oxford United vs Stoke City",
+        "maior_odd": 3.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 22.7
+    },
+    {
+        "evento": "Swansea City vs Norwich City",
+        "maior_odd": 3.5,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 22.27
+    },
+    {
+        "evento": "Hull City vs Sheffield United",
+        "maior_odd": 3.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 21.62
+    },
+    {
+        "evento": "Blackburn Rovers vs Bristol City",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 21.06
+    },
+    {
+        "evento": "Sheffield Wednesday vs Queens Park Rangers",
+        "maior_odd": 3.45,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 19.73
+    },
+    {
+        "evento": "Wrexham AFC vs Shrewsbury Town",
+        "maior_odd": 7.2,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 75.8
+    },
+    {
+        "evento": "Barnsley vs Bristol Rovers",
+        "maior_odd": 4.9,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 47.7
+    },
+    {
+        "evento": "Charlton Athletic vs Rotherham United",
+        "maior_odd": 3.5,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 22.81
+    },
+    {
+        "evento": "Chesterfield FC vs Grimsby Town",
+        "maior_odd": 5.5,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 59.42
+    },
+    {
+        "evento": "Notts County vs Accrington Stanley",
+        "maior_odd": 5.0,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 47.45
+    },
+    {
+        "evento": "Bradford City vs Carlisle United",
+        "maior_odd": 4.8,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 45.97
+    },
+    {
+        "evento": "Barrow vs Swindon Town",
+        "maior_odd": 4.6,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 44.7
+    },
+    {
+        "evento": "Crewe Alexandra vs Morecambe",
+        "maior_odd": 4.3,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 41.06
+    },
+    {
+        "evento": "Doncaster Rovers vs Gillingham",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 37.96
+    },
+    {
+        "evento": "Newport County vs Port Vale",
+        "maior_odd": 3.8,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 30.68
+    },
+    {
+        "evento": "Milton Keynes Dons vs Walsall",
+        "maior_odd": 3.75,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 29.32
+    },
+    {
+        "evento": "Colchester United vs Bromley FC",
+        "maior_odd": 3.75,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 28.31
+    },
+    {
+        "evento": "Cheltenham Town vs Harrogate Town",
+        "maior_odd": 3.75,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 25.05
+    },
+    {
+        "evento": "Manchester City vs Brentford",
+        "maior_odd": 18.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 142.75
+    },
+    {
+        "evento": "Liverpool vs Nottingham Forest",
+        "maior_odd": 15.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 129.82
+    },
+    {
+        "evento": "Tottenham Hotspur vs Brentford",
+        "maior_odd": 7.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 93.37
+    },
+    {
+        "evento": "Brighton and Hove Albion vs Ipswich Town",
+        "maior_odd": 8.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 86.03
+    },
+    {
+        "evento": "Aston Villa vs Wolverhampton Wanderers",
+        "maior_odd": 6.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 83.82
+    },
+    {
+        "evento": "Aston Villa vs Everton",
+        "maior_odd": 7.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 75.89
+    },
+    {
+        "evento": "Liverpool vs Bournemouth",
+        "maior_odd": 8.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 72.94
+    },
+    {
+        "evento": "Brighton and Hove Albion vs Nottingham Forest",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 66.78
+    },
+    {
+        "evento": "Crystal Palace vs Leicester City",
+        "maior_odd": 5.9,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 62.53
+    },
+    {
+        "evento": "Southampton vs Manchester United",
+        "maior_odd": 4.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 45.52
+    },
+    {
+        "evento": "Manchester City vs Arsenal",
+        "maior_odd": 4.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 42.62
+    },
+    {
+        "evento": "Crystal Palace vs Manchester United",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 37.83
+    },
+    {
+        "evento": "West Ham United vs Chelsea",
+        "maior_odd": 3.9,
+        "bookmaker": "Bet Victor",
+        "percentual_acima_media": 36.47
+    },
+    {
+        "evento": "Bournemouth vs Chelsea",
+        "maior_odd": 4.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 33.82
+    },
+    {
+        "evento": "Southampton vs Ipswich Town",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 32.97
+    },
+    {
+        "evento": "Fulham vs Newcastle United",
+        "maior_odd": 3.8,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 31.64
+    },
+    {
+        "evento": "Leicester City vs Everton",
+        "maior_odd": 3.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 29.18
+    },
+    {
+        "evento": "Wolverhampton Wanderers vs Newcastle United",
+        "maior_odd": 3.9,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 28.84
+    },
+    {
+        "evento": "Tottenham Hotspur vs Arsenal",
+        "maior_odd": 3.85,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 25.44
+    },
+    {
+        "evento": "Fulham vs West Ham United",
+        "maior_odd": 3.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 25.38
+    },
+    {
+        "evento": "Paris Saint Germain vs Brest",
+        "maior_odd": 10.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 104.72
+    },
+    {
+        "evento": "Lille vs Strasbourg",
+        "maior_odd": 7.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 75.29
+    },
+    {
+        "evento": "Strasbourg vs Angers",
+        "maior_odd": 5.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 65.07
+    },
+    {
+        "evento": "Toulouse vs Le Havre",
+        "maior_odd": 5.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 53.71
+    },
+    {
+        "evento": "Saint Etienne vs Lille",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 53.17
+    },
+    {
+        "evento": "AS Monaco vs Le Havre",
+        "maior_odd": 6.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 52.8
+    },
+    {
+        "evento": "Rennes vs Montpellier",
+        "maior_odd": 5.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 52.73
+    },
+    {
+        "evento": "Nice vs Saint Etienne",
+        "maior_odd": 5.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 47.32
+    },
+    {
+        "evento": "Marseille vs Nice",
+        "maior_odd": 4.7,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 43.11
+    },
+    {
+        "evento": "Stade de Reims vs Paris Saint Germain",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 38.12
+    },
+    {
+        "evento": "RC Lens vs Lyon",
+        "maior_odd": 4.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 35.88
+    },
+    {
+        "evento": "Auxerre vs AS Monaco",
+        "maior_odd": 4.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 32.45
+    },
+    {
+        "evento": "Nantes vs Stade de Reims",
+        "maior_odd": 3.45,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 20.61
+    },
+    {
+        "evento": "Lyon vs Marseille",
+        "maior_odd": 3.3,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 16.06
+    },
+    {
+        "evento": "Rennes vs RC Lens",
+        "maior_odd": 3.25,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 15.02
+    },
+    {
+        "evento": "Angers vs Nantes",
+        "maior_odd": 3.25,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 14.8
+    },
+    {
+        "evento": "Holstein Kiel vs Bayern Munich",
+        "maior_odd": 12.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 114.07
+    },
+    {
+        "evento": "Borussia Dortmund vs 1. FC Heidenheim",
+        "maior_odd": 8.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 82.5
+    },
+    {
+        "evento": "RB Leipzig vs Union Berlin",
+        "maior_odd": 7.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 74.82
+    },
+    {
+        "evento": "TSG Hoffenheim vs Bayer Leverkusen",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 44.56
+    },
+    {
+        "evento": "Borussia Monchengladbach vs VfB Stuttgart",
+        "maior_odd": 4.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 41.92
+    },
+    {
+        "evento": "SC Freiburg vs VfL Bochum",
+        "maior_odd": 4.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 39.2
+    },
+    {
+        "evento": "VfL Wolfsburg vs Eintracht Frankfurt",
+        "maior_odd": 3.7,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 29.23
+    },
+    {
+        "evento": "FSV Mainz 05 vs Werder Bremen",
+        "maior_odd": 4.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 29.12
+    },
+    {
+        "evento": "Augsburg vs FC St. Pauli",
+        "maior_odd": 3.8,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 25.11
+    },
+    {
+        "evento": "Hamburger SV vs Jahn Regensburg",
+        "maior_odd": 8.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 75.09
+    },
+    {
+        "evento": "1. FC Köln vs 1. FC Magdeburg",
+        "maior_odd": 5.92,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 56.64
+    },
+    {
+        "evento": "Greuther Fürth vs Elversberg",
+        "maior_odd": 4.0,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 32.25
+    },
+    {
+        "evento": "Hannover 96 vs 1. FC Kaiserslautern",
+        "maior_odd": 3.95,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 30.97
+    },
+    {
+        "evento": "Karlsruher SC vs FC Schalke 04",
+        "maior_odd": 4.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 30.67
+    },
+    {
+        "evento": "Hertha Berlin vs Fortuna Düsseldorf",
+        "maior_odd": 3.65,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 29.8
+    },
+    {
+        "evento": "SC Preußen Münster vs SC Paderborn",
+        "maior_odd": 3.75,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 29.69
+    },
+    {
+        "evento": "SV Darmstadt 98 vs Eintracht Braunschweig",
+        "maior_odd": 4.02,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 28.6
+    },
+    {
+        "evento": "SSV Ulm 1846 vs 1. FC Nürnberg",
+        "maior_odd": 3.5,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 23.36
+    },
+    {
+        "evento": "Olympiakos Piraeus vs Panetolikos Agrinio",
+        "maior_odd": 26.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 125.66
+    },
+    {
+        "evento": "AEK Athens vs Volos FC",
+        "maior_odd": 23.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 108.71
+    },
+    {
+        "evento": "Panathinaikos vs Panserraikos FC",
+        "maior_odd": 15.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 99.03
+    },
+    {
+        "evento": "Volos FC vs PAOK Thessaloniki",
+        "maior_odd": 10.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 79.64
+    },
+    {
+        "evento": "Athens Kallithea FC vs AEK Athens",
+        "maior_odd": 7.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 70.59
+    },
+    {
+        "evento": "PAOK Thessaloniki vs Panathinaikos",
+        "maior_odd": 5.25,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 54.74
+    },
+    {
+        "evento": "Atromitos Athens vs PAS Lamia 1964",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 47.49
+    },
+    {
+        "evento": "Aris Thessaloniki vs Olympiakos Piraeus",
+        "maior_odd": 4.75,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 42.93
+    },
+    {
+        "evento": "PAS Lamia 1964 vs Athens Kallithea FC",
+        "maior_odd": 4.1,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 35.61
+    },
+    {
+        "evento": "Panserraikos FC vs Levadiakos",
+        "maior_odd": 3.9,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 31.19
+    },
+    {
+        "evento": "OFI Crete vs Aris Thessaloniki",
+        "maior_odd": 3.3,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 17.36
+    },
+    {
+        "evento": "Asteras Tripolis vs Atromitos Athens",
+        "maior_odd": 3.3,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 16.82
+    },
+    {
+        "evento": "Levadiakos vs OFI Crete",
+        "maior_odd": 2.9,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 11.25
+    },
+    {
+        "evento": "Panetolikos Agrinio vs Asteras Tripolis",
+        "maior_odd": 3.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 9.76
+    },
+    {
+        "evento": "AC Milan vs Venezia",
+        "maior_odd": 10.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 86.97
+    },
+    {
+        "evento": "Monza vs Inter Milan",
+        "maior_odd": 8.25,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 83.11
+    },
+    {
+        "evento": "Lazio vs Hellas Verona",
+        "maior_odd": 6.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 66.57
+    },
+    {
+        "evento": "Torino vs Lecce",
+        "maior_odd": 5.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 57.59
+    },
+    {
+        "evento": "Empoli vs Juventus",
+        "maior_odd": 5.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 56.56
+    },
+    {
+        "evento": "Atalanta BC vs Fiorentina",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 36.97
+    },
+    {
+        "evento": "Cagliari vs Napoli",
+        "maior_odd": 4.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 32.73
+    },
+    {
+        "evento": "Genoa vs AS Roma",
+        "maior_odd": 3.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 21.19
+    },
+    {
+        "evento": "Parma vs Udinese",
+        "maior_odd": 3.4,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 19.32
+    },
+    {
+        "evento": "Como vs Bologna",
+        "maior_odd": 3.3,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 17.32
+    },
+    {
+        "evento": "Cremonese vs Spezia",
+        "maior_odd": 3.8,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 29.85
+    },
+    {
+        "evento": "Bari vs Mantova",
+        "maior_odd": 3.7,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 29.36
+    },
+    {
+        "evento": "Salernitana vs Pisa",
+        "maior_odd": 3.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 23.8
+    },
+    {
+        "evento": "Cesena FC vs Modena",
+        "maior_odd": 3.35,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 19.23
+    },
+    {
+        "evento": "Carrarese vs Sassuolo",
+        "maior_odd": 3.3,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 18.41
+    },
+    {
+        "evento": "Juve Stabia vs Palermo",
+        "maior_odd": 3.25,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 17.14
+    },
+    {
+        "evento": "Cosenza vs Sampdoria",
+        "maior_odd": 3.2,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 16.79
+    },
+    {
+        "evento": "Cittadella vs US Catanzaro 1929",
+        "maior_odd": 3.25,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 16.39
+    },
+    {
+        "evento": "Brescia vs Frosinone",
+        "maior_odd": 3.2,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 15.93
+    },
+    {
+        "evento": "Reggiana vs Südtirol",
+        "maior_odd": 3.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 13.22
+    },
+    {
+        "evento": "Kawasaki Frontale vs Sagan Tosu",
+        "maior_odd": 6.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 62.24
+    },
+    {
+        "evento": "Vissel Kobe vs Cerezo Osaka",
+        "maior_odd": 5.0,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 50.78
+    },
+    {
+        "evento": "Kashiwa Reysol vs Jubilo Iwata",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 48.49
+    },
+    {
+        "evento": "Yokohama F Marinos vs Kyoto Purple Sanga",
+        "maior_odd": 4.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 41.91
+    },
+    {
+        "evento": "Avispa Fukuoka vs FC Machida Zelvia",
+        "maior_odd": 3.75,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 31.07
+    },
+    {
+        "evento": "Albirex Niigata vs Shonan Bellmare",
+        "maior_odd": 3.6,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 30.43
+    },
+    {
+        "evento": "Kashima Antlers vs Hiroshima Sanfrecce FC",
+        "maior_odd": 3.6,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 27.71
+    },
+    {
+        "evento": "Consadole Sapporo vs Tokyo Verdy",
+        "maior_odd": 3.4,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 24.82
+    },
+    {
+        "evento": "Gamba Osaka vs Urawa Red Diamonds",
+        "maior_odd": 3.3,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 21.13
+    },
+    {
+        "evento": "FC Tokyo vs Nagoya Grampus",
+        "maior_odd": 3.25,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 19.51
+    },
+    {
+        "evento": "FC Seoul vs Daejeon Citizen",
+        "maior_odd": 4.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 38.01
+    },
+    {
+        "evento": "Sangju Sangmu FC vs Incheon United",
+        "maior_odd": 3.8,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 30.55
+    },
+    {
+        "evento": "Jeju United FC vs Daegu FC",
+        "maior_odd": 3.25,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 18.54
+    },
+    {
+        "evento": "Ulsan Hyundai FC vs Gangwon FC",
+        "maior_odd": 3.3,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 18.21
+    },
+    {
+        "evento": "Suwon FC vs Jeonbuk Hyundai Motors",
+        "maior_odd": 3.4,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 18.19
+    },
+    {
+        "evento": "Gwangju FC vs Pohang Steelers",
+        "maior_odd": 3.25,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 17.68
+    },
+    {
+        "evento": "Shamrock Rovers vs Sligo Rovers",
+        "maior_odd": 7.0,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 74.08
+    },
+    {
+        "evento": "Waterford FC vs Dundalk",
+        "maior_odd": 3.9,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 30.1
+    },
+    {
+        "evento": "Bohemians vs Shelbourne Dublin",
+        "maior_odd": 3.3,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 19.18
+    },
+    {
+        "evento": "Dundalk vs St Patricks Athletic",
+        "maior_odd": 3.3,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 18.04
+    },
+    {
+        "evento": "Galway United vs Shamrock Rovers",
+        "maior_odd": 3.2,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 16.82
+    },
+    {
+        "evento": "Tigres vs Atlético San Luis",
+        "maior_odd": 8.0,
+        "bookmaker": "LeoVegas",
+        "percentual_acima_media": 87.78
+    },
+    {
+        "evento": "América vs Atlas",
+        "maior_odd": 6.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 60.57
+    },
+    {
+        "evento": "Monterrey vs FC Juárez",
+        "maior_odd": 6.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 60.57
+    },
+    {
+        "evento": "Santos Laguna vs Monterrey",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 48.86
+    },
+    {
+        "evento": "Pumas vs Puebla",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 48.0
+    },
+    {
+        "evento": "Guadalajara vs León",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 48.0
+    },
+    {
+        "evento": "Toluca vs Tijuana",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 46.35
+    },
+    {
+        "evento": "América vs Guadalajara",
+        "maior_odd": 4.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 38.64
+    },
+    {
+        "evento": "Querétaro vs Tigres",
+        "maior_odd": 4.33,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 34.96
+    },
+    {
+        "evento": "Atlético San Luis vs Cruz Azul",
+        "maior_odd": 4.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 28.89
+    },
+    {
+        "evento": "León vs Cruz Azul",
+        "maior_odd": 3.75,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 27.05
+    },
+    {
+        "evento": "Pachuca vs Toluca",
+        "maior_odd": 3.4,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 22.89
+    },
+    {
+        "evento": "Necaxa vs Pumas",
+        "maior_odd": 3.4,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 22.5
+    },
+    {
+        "evento": "Puebla vs Querétaro",
+        "maior_odd": 3.55,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 22.34
+    },
+    {
+        "evento": "Atlas vs Pachuca",
+        "maior_odd": 3.4,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 22.34
+    },
+    {
+        "evento": "Mazatlán FC vs Necaxa",
+        "maior_odd": 3.5,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 21.39
+    },
+    {
+        "evento": "FC Juárez vs Mazatlán FC",
+        "maior_odd": 3.45,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 21.3
+    },
+    {
+        "evento": "PSV Eindhoven vs NEC Nijmegen",
+        "maior_odd": 20.0,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 124.1
+    },
+    {
+        "evento": "FC Twente Enschede vs FC Zwolle",
+        "maior_odd": 13.0,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 113.61
+    },
+    {
+        "evento": "AZ Alkmaar vs Heerenveen",
+        "maior_odd": 7.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 63.84
+    },
+    {
+        "evento": "Groningen vs Feyenoord",
+        "maior_odd": 6.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 61.1
+    },
+    {
+        "evento": "Ajax vs FC Utrecht",
+        "maior_odd": 4.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 36.99
+    },
+    {
+        "evento": "Willem II vs RKC Waalwijk",
+        "maior_odd": 4.0,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 30.14
+    },
+    {
+        "evento": "NAC Breda vs Fortuna Sittard",
+        "maior_odd": 3.65,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 26.84
+    },
+    {
+        "evento": "Sparta Rotterdam vs Go Ahead Eagles",
+        "maior_odd": 3.75,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 26.39
+    },
+    {
+        "evento": "Heracles Almelo vs Almere City",
+        "maior_odd": 3.45,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 19.21
+    },
+    {
+        "evento": "Bodø/Glimt vs HamKam",
+        "maior_odd": 10.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 88.82
+    },
+    {
+        "evento": "Molde vs Fredrikstad FK",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 52.05
+    },
+    {
+        "evento": "Viking FK vs KFUM",
+        "maior_odd": 4.6,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 39.56
+    },
+    {
+        "evento": "Sarpsborg FK vs Kristiansund BK",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 35.32
+    },
+    {
+        "evento": "Sandefjord vs SK Brann",
+        "maior_odd": 3.9,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 33.04
+    },
+    {
+        "evento": "Lillestrom vs Rosenborg",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 29.09
+    },
+    {
+        "evento": "Haugesund vs Stromsgodset",
+        "maior_odd": 3.6,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 28.69
+    },
+    {
+        "evento": "Odds BK vs Tromso",
+        "maior_odd": 3.4,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 22.8
+    },
+    {
+        "evento": "FC Porto vs SC Farense",
+        "maior_odd": 21.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 143.95
+    },
+    {
+        "evento": "Benfica vs Santa Clara",
+        "maior_odd": 13.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 109.28
+    },
+    {
+        "evento": "Arouca vs Sporting Lisbon",
+        "maior_odd": 12.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 105.3
+    },
+    {
+        "evento": "Famalicão vs Gil Vicente",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 40.76
+    },
+    {
+        "evento": "Braga vs Vitória SC",
+        "maior_odd": 4.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 30.12
+    },
+    {
+        "evento": "CF Estrela vs Boavista Porto",
+        "maior_odd": 3.6,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 24.23
+    },
+    {
+        "evento": "Estoril vs Nacional",
+        "maior_odd": 3.4,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 19.77
+    },
+    {
+        "evento": "AVS Futebol SAD vs Rio Ave FC",
+        "maior_odd": 3.3,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 18.05
+    },
+    {
+        "evento": "Casa Pia vs Moreirense FC",
+        "maior_odd": 3.1,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 11.51
+    },
+    {
+        "evento": "Atlético Madrid vs Valencia",
+        "maior_odd": 10.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 108.48
+    },
+    {
+        "evento": "Real Betis vs Leganés",
+        "maior_odd": 5.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 71.22
+    },
+    {
+        "evento": "Celta Vigo vs Valladolid",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 49.42
+    },
+    {
+        "evento": "Real Sociedad vs Real Madrid",
+        "maior_odd": 4.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 40.65
+    },
+    {
+        "evento": "Girona vs Barcelona",
+        "maior_odd": 4.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 34.24
+    },
+    {
+        "evento": "Rayo Vallecano vs CA Osasuna",
+        "maior_odd": 3.8,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 28.08
+    },
+    {
+        "evento": "Sevilla vs Getafe",
+        "maior_odd": 3.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 25.01
+    },
+    {
+        "evento": "Las Palmas vs Athletic Bilbao",
+        "maior_odd": 3.45,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 19.39
+    },
+    {
+        "evento": "Mallorca vs Villarreal",
+        "maior_odd": 3.35,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 18.86
+    },
+    {
+        "evento": "Espanyol vs Alavés",
+        "maior_odd": 3.1,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 10.88
+    },
+    {
+        "evento": "Racing de Ferrol vs CD Mirandés",
+        "maior_odd": 5.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 67.69
+    },
+    {
+        "evento": "Córdoba vs Málaga",
+        "maior_odd": 4.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 39.66
+    },
+    {
+        "evento": "Albacete vs SD Eibar",
+        "maior_odd": 3.8,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 31.87
+    },
+    {
+        "evento": "Sporting Gijón vs Oviedo",
+        "maior_odd": 3.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 28.35
+    },
+    {
+        "evento": "Zaragoza vs Elche",
+        "maior_odd": 3.6,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 27.24
+    },
+    {
+        "evento": "Granada CF vs Deportivo La Coruña",
+        "maior_odd": 3.65,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 26.81
+    },
+    {
+        "evento": "SD Huesca vs Burgos CF",
+        "maior_odd": 3.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 25.86
+    },
+    {
+        "evento": "CD Castellón vs Cádiz CF",
+        "maior_odd": 3.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 21.57
+    },
+    {
+        "evento": "Tenerife vs Real Racing Club de Santander",
+        "maior_odd": 3.35,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 20.51
+    },
+    {
+        "evento": "CD Eldense vs Almería",
+        "maior_odd": 3.35,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 19.09
+    },
+    {
+        "evento": "FC Cartagena vs Levante",
+        "maior_odd": 3.25,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 16.45
+    },
+    {
+        "evento": "Celtic vs Hearts",
+        "maior_odd": 13.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 95.59
+    },
+    {
+        "evento": "Dundee United vs Rangers",
+        "maior_odd": 7.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 74.37
+    },
+    {
+        "evento": "Hibernian vs St Johnstone",
+        "maior_odd": 5.15,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 50.36
+    },
+    {
+        "evento": "Aberdeen vs Motherwell",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 48.76
+    },
+    {
+        "evento": "Ross County vs Dundee FC",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 25.66
+    },
+    {
+        "evento": "Ross County vs St Johnstone",
+        "maior_odd": 3.4,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 18.33
+    },
+    {
+        "evento": "St Mirren vs Kilmarnock",
+        "maior_odd": 3.4,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 18.06
+    },
+    {
+        "evento": "St Mirren vs Hearts",
+        "maior_odd": 3.3,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 13.79
+    },
+    {
+        "evento": "Halmstads BK vs IF Elfsborg",
+        "maior_odd": 5.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 55.85
+    },
+    {
+        "evento": "Djurgardens IF vs Mjällby AIF",
+        "maior_odd": 5.0,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 52.4
+    },
+    {
+        "evento": "Hammarby IF vs IFK Norrkoping",
+        "maior_odd": 4.75,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 39.35
+    },
+    {
+        "evento": "BK Hacken vs IFK Goteborg",
+        "maior_odd": 4.6,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 37.49
+    },
+    {
+        "evento": "IK Sirius vs IF Brommapojkarna",
+        "maior_odd": 3.8,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 29.48
+    },
+    {
+        "evento": "Västerås SK vs GAIS",
+        "maior_odd": 3.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 24.29
+    },
+    {
+        "evento": "AIK vs Malmo FF",
+        "maior_odd": 3.5,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 21.63
+    },
+    {
+        "evento": "Kalmar FF vs IFK Värnamo",
+        "maior_odd": 3.3,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 18.32
+    },
+    {
+        "evento": "Sandvikens IF vs Skövde AIK",
+        "maior_odd": 8.0,
+        "bookmaker": "Casumo",
+        "percentual_acima_media": 64.63
+    },
+    {
+        "evento": "Gefle IF vs Örgryte IS",
+        "maior_odd": 3.8,
+        "bookmaker": "LeoVegas",
+        "percentual_acima_media": 30.85
+    },
+    {
+        "evento": "GIF Sundsvall vs IK Brage",
+        "maior_odd": 3.9,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 27.06
+    },
+    {
+        "evento": "Utsiktens BK vs Degerfors IF",
+        "maior_odd": 3.8,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 26.5
+    },
+    {
+        "evento": "Östersunds FK vs Helsingborgs IF",
+        "maior_odd": 3.6,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 26.14
+    },
+    {
+        "evento": "Trelleborgs FF vs Örebro SK",
+        "maior_odd": 3.6,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 25.96
+    },
+    {
+        "evento": "Landskrona BoIS vs Östers IF",
+        "maior_odd": 3.55,
+        "bookmaker": "Unibet",
+        "percentual_acima_media": 24.15
+    },
+    {
+        "evento": "IK Oddevold vs Varbergs BoIS",
+        "maior_odd": 3.5,
+        "bookmaker": "LeoVegas",
+        "percentual_acima_media": 21.61
+    },
+    {
+        "evento": "Galatasaray vs Çaykur Rizespor",
+        "maior_odd": 11.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 88.94
+    },
+    {
+        "evento": "Kasimpasa SK vs Fenerbahce",
+        "maior_odd": 5.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 53.2
+    },
+    {
+        "evento": "Samsunspor vs Torku Konyaspor",
+        "maior_odd": 4.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 36.18
+    },
+    {
+        "evento": "Alanyaspor vs Hatayspor",
+        "maior_odd": 4.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 33.48
+    },
+    {
+        "evento": "Antalyaspor vs Adana Demirspor",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 24.28
+    },
+    {
+        "evento": "Trabzonspor vs Besiktas JK",
+        "maior_odd": 3.4,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 24.09
+    },
+    {
+        "evento": "Kayserispor vs Eyüpspor",
+        "maior_odd": 3.3,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 22.74
+    },
+    {
+        "evento": "Sivasspor vs Gazişehir Gaziantep",
+        "maior_odd": 3.4,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 22.45
+    },
+    {
+        "evento": "Bodrum FK vs Basaksehir",
+        "maior_odd": 3.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 11.69
+    },
+    {
+        "evento": "Bayern München vs Dinamo Zagreb",
+        "maior_odd": 17.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 118.96
+    },
+    {
+        "evento": "Celtic vs ŠK Slovan Bratislava",
+        "maior_odd": 8.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 84.26
+    },
+    {
+        "evento": "Real Madrid vs VfB Stuttgart",
+        "maior_odd": 10.0,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 83.81
+    },
+    {
+        "evento": "Manchester City vs Internazionale Milano",
+        "maior_odd": 6.5,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 65.27
+    },
+    {
+        "evento": "Paris Saint Germain vs Girona",
+        "maior_odd": 6.25,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 62.34
+    },
+    {
+        "evento": "Young Boys vs Aston Villa",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 46.09
+    },
+    {
+        "evento": "Juventus vs PSV Eindhoven",
+        "maior_odd": 4.75,
+        "bookmaker": "Grosvenor",
+        "percentual_acima_media": 43.97
+    },
+    {
+        "evento": "Brest vs SK Sturm Graz",
+        "maior_odd": 4.33,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 40.06
+    },
+    {
+        "evento": "Sporting Lisbon vs LOSC Lille",
+        "maior_odd": 4.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 38.82
+    },
+    {
+        "evento": "Bologna vs Shakhtar Donetsk",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 36.94
+    },
+    {
+        "evento": "Monaco vs Barcelona",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 33.69
+    },
+    {
+        "evento": "Atalanta vs Arsenal",
+        "maior_odd": 4.2,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 32.02
+    },
+    {
+        "evento": "Atlético Madrid vs RB Leipzig",
+        "maior_odd": 4.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 31.75
+    },
+    {
+        "evento": "Sparta Prague vs Salzburg",
+        "maior_odd": 3.7,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 31.28
+    },
+    {
+        "evento": "Red Star Belgrade vs Benfica",
+        "maior_odd": 4.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 28.44
+    },
+    {
+        "evento": "AC Milan vs Liverpool",
+        "maior_odd": 3.8,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 24.22
+    },
+    {
+        "evento": "Club Brugge vs Borussia Dortmund",
+        "maior_odd": 3.7,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 22.15
+    },
+    {
+        "evento": "Feyenoord vs Bayer Leverkusen",
+        "maior_odd": 3.75,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 21.47
+    },
+    {
+        "evento": "Bayern München vs Dinamo Zagreb",
+        "maior_odd": 15.0,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 90.27
+    },
+    {
+        "evento": "Real Madrid vs VfB Stuttgart",
+        "maior_odd": 9.5,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 70.15
+    },
+    {
+        "evento": "Celtic vs ŠK Slovan Bratislava",
+        "maior_odd": 7.0,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 60.18
+    },
+    {
+        "evento": "Manchester City vs Internazionale Milano",
+        "maior_odd": 5.5,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 46.41
+    },
+    {
+        "evento": "Paris Saint Germain vs Girona",
+        "maior_odd": 5.0,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 36.36
+    },
+    {
+        "evento": "Bologna vs Shakhtar Donetsk",
+        "maior_odd": 4.2,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 33.33
+    },
+    {
+        "evento": "Sporting Lisbon vs LOSC Lille",
+        "maior_odd": 4.2,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 31.94
+    },
+    {
+        "evento": "Young Boys vs Aston Villa",
+        "maior_odd": 4.33,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 27.98
+    },
+    {
+        "evento": "Brest vs SK Sturm Graz",
+        "maior_odd": 4.0,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 27.66
+    },
+    {
+        "evento": "Juventus vs PSV Eindhoven",
+        "maior_odd": 4.0,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 25.92
+    },
+    {
+        "evento": "Red Star Belgrade vs Benfica",
+        "maior_odd": 3.8,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 23.91
+    },
+    {
+        "evento": "Sparta Prague vs Salzburg",
+        "maior_odd": 3.5,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 22.81
+    },
+    {
+        "evento": "Atalanta vs Arsenal",
+        "maior_odd": 3.8,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 21.93
+    },
+    {
+        "evento": "Atlético Madrid vs RB Leipzig",
+        "maior_odd": 3.8,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 21.93
+    },
+    {
+        "evento": "Monaco vs Barcelona",
+        "maior_odd": 3.8,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 21.93
+    },
+    {
+        "evento": "AC Milan vs Liverpool",
+        "maior_odd": 3.6,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 19.07
+    },
+    {
+        "evento": "Feyenoord vs Bayer Leverkusen",
+        "maior_odd": 3.6,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 19.07
+    },
+    {
+        "evento": "Club Brugge vs Borussia Dortmund",
+        "maior_odd": 3.5,
+        "bookmaker": "BoyleSports",
+        "percentual_acima_media": 18.64
+    },
+    {
+        "evento": "Fiorentina vs The New Saints FC",
+        "maior_odd": 36.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 180.77
+    },
+    {
+        "evento": "Molde FK vs Larne FC",
+        "maior_odd": 15.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 134.48
+    },
+    {
+        "evento": "Chelsea vs Gent",
+        "maior_odd": 9.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 90.66
+    },
+    {
+        "evento": "Omonoia FC vs Víkingur Reykjavík",
+        "maior_odd": 7.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 85.77
+    },
+    {
+        "evento": "Vitória SC vs NK Celje",
+        "maior_odd": 6.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 74.06
+    },
+    {
+        "evento": "FC Copenhagen vs Jagiellonia Białystok",
+        "maior_odd": 6.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 67.46
+    },
+    {
+        "evento": "FC Lugano vs HJK Helsinki",
+        "maior_odd": 6.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 61.48
+    },
+    {
+        "evento": "FC Astana vs FK TSC Bačka Topola",
+        "maior_odd": 4.33,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 53.0
+    },
+    {
+        "evento": "FK Borac Banja Luka vs Panathinaikos FC",
+        "maior_odd": 5.25,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 52.01
+    },
+    {
+        "evento": "1. FC Heidenheim vs NK Olimpija Ljubljana",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 50.97
+    },
+    {
+        "evento": "LASK vs Djurgardens IF",
+        "maior_odd": 4.75,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 45.66
+    },
+    {
+        "evento": "FC Dinamo Minsk vs Hearts",
+        "maior_odd": 3.7,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 36.78
+    },
+    {
+        "evento": "İstanbul Başakşehir FK vs Rapid Wien",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 35.1
+    },
+    {
+        "evento": "Legia Warszawa vs Real Betis",
+        "maior_odd": 3.6,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 34.1
+    },
+    {
+        "evento": "Shamrock Rovers vs APOEL FC",
+        "maior_odd": 3.8,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 29.99
+    },
+    {
+        "evento": "FC Noah vs FK Mladá Boleslav",
+        "maior_odd": 3.1,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 25.87
+    },
+    {
+        "evento": "Club Brugge vs Zenit St Petersburg",
+        "maior_odd": 3.6,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 22.69
+    },
+    {
+        "evento": "Petrocub Hîncești vs Pafos FC",
+        "maior_odd": 3.4,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 18.9
+    },
+    {
+        "evento": "Tottenham Hotspur vs Qarabağ FK",
+        "maior_odd": 15.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 113.36
+    },
+    {
+        "evento": "Manchester United vs FC Twente Enschede",
+        "maior_odd": 9.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 83.18
+    },
+    {
+        "evento": "AZ Alkmaar vs IF Elfsborg",
+        "maior_odd": 7.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 75.18
+    },
+    {
+        "evento": "Galatasaray vs PAOK",
+        "maior_odd": 6.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 69.42
+    },
+    {
+        "evento": "SC Braga vs Maccabi Tel Aviv",
+        "maior_odd": 6.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 61.24
+    },
+    {
+        "evento": "FCSB vs FK RFS",
+        "maior_odd": 5.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 57.03
+    },
+    {
+        "evento": "Fenerbahce vs Union Saint-Gilloise",
+        "maior_odd": 5.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 52.57
+    },
+    {
+        "evento": "Eintracht Frankfurt vs Viktoria Plzeň",
+        "maior_odd": 5.5,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 48.31
+    },
+    {
+        "evento": "Anderlecht vs Ferencváros TC",
+        "maior_odd": 4.33,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 41.23
+    },
+    {
+        "evento": "Ajax vs Besiktas JK",
+        "maior_odd": 4.33,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 39.13
+    },
+    {
+        "evento": "Lyon vs Olympiakos Piraeus",
+        "maior_odd": 4.33,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 39.04
+    },
+    {
+        "evento": "FC Midtjylland vs Hoffenheim",
+        "maior_odd": 3.6,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 26.08
+    },
+    {
+        "evento": "Dynamo Kyiv vs SS Lazio",
+        "maior_odd": 3.6,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 22.48
+    },
+    {
+        "evento": "Malmo FF vs Rangers FC",
+        "maior_odd": 3.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 21.72
+    },
+    {
+        "evento": "Bodø/Glimt vs Porto",
+        "maior_odd": 3.6,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 20.41
+    },
+    {
+        "evento": "PFC Ludogorets Razgrad vs Slavia Praha",
+        "maior_odd": 3.4,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 19.58
+    },
+    {
+        "evento": "Roma vs Athletic Bilbao",
+        "maior_odd": 3.4,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 18.04
+    },
+    {
+        "evento": "Nice vs Real Sociedad",
+        "maior_odd": 3.3,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 17.52
+    },
+    {
+        "evento": "Portugal vs Scotland",
+        "maior_odd": 11.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 126.42
+    },
+    {
+        "evento": "Netherlands vs Bosnia & Herzegovina",
+        "maior_odd": 17.0,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 109.66
+    },
+    {
+        "evento": "Belgium vs Israel",
+        "maior_odd": 12.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 107.17
+    },
+    {
+        "evento": "Germany vs Hungary",
+        "maior_odd": 12.0,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 105.78
+    },
+    {
+        "evento": "Kazakhstan vs Norway",
+        "maior_odd": 9.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 102.47
+    },
+    {
+        "evento": "Estonia vs Slovakia",
+        "maior_odd": 8.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 95.38
+    },
+    {
+        "evento": "Serbia vs Spain",
+        "maior_odd": 8.0,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 89.77
+    },
+    {
+        "evento": "Republic of Ireland vs England",
+        "maior_odd": 7.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 88.95
+    },
+    {
+        "evento": "Israel vs Italy",
+        "maior_odd": 8.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 77.87
+    },
+    {
+        "evento": "Portugal vs Croatia",
+        "maior_odd": 6.8,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 73.08
+    },
+    {
+        "evento": "Azerbaijan vs Sweden",
+        "maior_odd": 6.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 71.91
+    },
+    {
+        "evento": "Switzerland vs Spain",
+        "maior_odd": 4.6,
+        "bookmaker": "Coral",
+        "percentual_acima_media": 66.87
+    },
+    {
+        "evento": "Armenia vs Latvia",
+        "maior_odd": 5.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 63.72
+    },
+    {
+        "evento": "France vs Italy",
+        "maior_odd": 5.7,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 62.24
+    },
+    {
+        "evento": "Ukraine vs Albania",
+        "maior_odd": 5.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 60.02
+    },
+    {
+        "evento": "Greece vs Finland",
+        "maior_odd": 5.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 57.68
+    },
+    {
+        "evento": "Moldova vs Malta",
+        "maior_odd": 5.0,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 55.68
+    },
+    {
+        "evento": "Belarus vs Bulgaria",
+        "maior_odd": 4.7,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 47.26
+    },
+    {
+        "evento": "San Marino vs Liechtenstein",
+        "maior_odd": 4.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 44.11
+    },
+    {
+        "evento": "Croatia vs Poland",
+        "maior_odd": 4.8,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 40.85
+    },
+    {
+        "evento": "Faroe Islands vs North Macedonia",
+        "maior_odd": 4.1,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 36.36
+    },
+    {
+        "evento": "Denmark vs Serbia",
+        "maior_odd": 4.5,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 36.23
+    },
+    {
+        "evento": "Northern Ireland vs Luxembourg",
+        "maior_odd": 3.85,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 31.01
+    },
+    {
+        "evento": "Iceland vs Montenegro",
+        "maior_odd": 3.75,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 26.35
+    },
+    {
+        "evento": "Georgia vs Czech Republic",
+        "maior_odd": 3.6,
+        "bookmaker": "Ladbrokes",
+        "percentual_acima_media": 23.32
+    },
+    {
+        "evento": "Lithuania vs Cyprus",
+        "maior_odd": 3.45,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 20.56
+    },
+    {
+        "evento": "Slovenia vs Austria",
+        "maior_odd": 3.5,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 19.83
+    },
+    {
+        "evento": "Kosovo vs Romania",
+        "maior_odd": 3.4,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 18.92
+    },
+    {
+        "evento": "Denmark vs Switzerland",
+        "maior_odd": 3.35,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 16.62
+    },
+    {
+        "evento": "Scotland vs Poland",
+        "maior_odd": 3.35,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 15.36
+    },
+    {
+        "evento": "Wales vs Turkey",
+        "maior_odd": 3.25,
+        "bookmaker": "William Hill",
+        "percentual_acima_media": 14.84
+    },
+    {
+        "evento": "Vancouver Whitecaps FC vs San Jose Earthquakes",
+        "maior_odd": 6.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 94.9
+    },
+    {
+        "evento": "Orlando City SC vs New England Revolution",
+        "maior_odd": 4.75,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 73.09
+    },
+    {
+        "evento": "Atlanta United FC vs Nashville SC",
+        "maior_odd": 4.2,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 71.9
+    },
+    {
+        "evento": "Seattle Sounders FC vs Sporting Kansas City",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 57.89
+    },
+    {
+        "evento": "New York Red Bulls vs Sporting Kansas City",
+        "maior_odd": 5.0,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 51.4
+    },
+    {
+        "evento": "Colorado Rapids vs Portland Timbers",
+        "maior_odd": 3.7,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 51.38
+    },
+    {
+        "evento": "LA Galaxy vs Los Angeles FC",
+        "maior_odd": 3.6,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 50.58
+    },
+    {
+        "evento": "Inter Miami CF vs Philadelphia Union",
+        "maior_odd": 4.0,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 48.0
+    },
+    {
+        "evento": "D.C. United vs New York City FC",
+        "maior_odd": 3.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 46.9
+    },
+    {
+        "evento": "FC Cincinnati vs Columbus Crew SC",
+        "maior_odd": 3.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 46.09
+    },
+    {
+        "evento": "Toronto FC vs Austin FC",
+        "maior_odd": 3.5,
+        "bookmaker": "888sport",
+        "percentual_acima_media": 38.38
+    },
+    {
+        "evento": "Montreal Impact vs Charlotte FC",
+        "maior_odd": 3.3,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 37.74
+    },
+    {
+        "evento": "Columbus Crew SC vs Seattle Sounders FC",
+        "maior_odd": 4.2,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 35.45
+    },
+    {
+        "evento": "Houston Dynamo vs Los Angeles FC",
+        "maior_odd": 3.8,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 32.91
+    },
+    {
+        "evento": "New England Revolution vs St. Louis City SC",
+        "maior_odd": 3.85,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 32.81
+    },
+    {
+        "evento": "Chicago Fire vs New York Red Bulls",
+        "maior_odd": 3.5,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 31.09
+    },
+    {
+        "evento": "Vancouver Whitecaps FC vs FC Dallas",
+        "maior_odd": 3.9,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 29.49
+    },
+    {
+        "evento": "Houston Dynamo vs Real Salt Lake",
+        "maior_odd": 3.7,
+        "bookmaker": "Paddy Power",
+        "percentual_acima_media": 27.68
+    },
+    {
+        "evento": "Chicago Fire vs D.C. United",
+        "maior_odd": 3.8,
+        "bookmaker": "Mr Green",
+        "percentual_acima_media": 27.24
+    },
+    {
+        "evento": "St. Louis City SC vs Minnesota United FC",
+        "maior_odd": 3.6,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 22.34
+    },
+    {
+        "evento": "Jannik Sinner vs Daniil Medvedev",
+        "maior_odd": 3.5,
+        "bookmaker": "Betway",
+        "percentual_acima_media": 52.17
+    },
+    {
+        "evento": "Taylor Fritz vs Frances Tiafoe",
+        "maior_odd": 3.3,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 50.26
+    },
+    {
+        "evento": "Emma Navarro vs Aryna Sabalenka",
+        "maior_odd": 4.6,
+        "bookmaker": "Betfair",
+        "percentual_acima_media": 70.23
+    },
+    {
+        "evento": "Iga Swiatek vs Jessica Pegula",
+        "maior_odd": 4.0,
+        "bookmaker": "Matchbook",
+        "percentual_acima_media": 60.84
+    }
+]

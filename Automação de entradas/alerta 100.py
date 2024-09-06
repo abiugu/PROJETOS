@@ -322,6 +322,7 @@ def main():
                         print("Erro !!")
                         erros += 1
 
+                    
                     log_to_file(f"Acertos branco: {acertos_branco}, Acertos direto: {
                                 acertos_direto}, Erros: {erros}")
                     print(f"Acertos branco: {acertos_branco}, Acertos direto: {
