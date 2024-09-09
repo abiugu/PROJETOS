@@ -1,0 +1,8 @@
+pandas
+pandas_ta
+ta
+ccxt
+python-telegram-bot
+Flask
+scikit-learn
+joblib
