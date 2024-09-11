@@ -5,6 +5,7 @@ import estrategias.emaMacStoch as emaMacStoch
 import config.config as config
 from telegram_bot import start_bot, send_message
 
+
 # Ativando o logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
