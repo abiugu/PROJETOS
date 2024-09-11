@@ -6,10 +6,10 @@ symbols = ['BTCUSDT']
 
 
 # Config
-alavancagem = 10
-target = 100
+alavancagem = 5
+target = 50
 loss = -15
-amount = 10  # valor em usdt
+amount = 15  # valor em usdt
 
 
 # Chaves

@@ -14,6 +14,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Função para implementar a estratégia com EMA 26, MACD (9, 21, 5), RSI 10 e ADX 14
+
+
 async def startStrategy(symbol, send_message):
     try:
         exchange = gr.binance
@@ -35,16 +37,25 @@ async def startStrategy(symbol, send_message):
 
         # Obter dados de mercado
         timeframe = '15m'  # Timeframe de 15 minutos
-        bars = exchange.fetch_ohlcv(symbol=symbol, timeframe=timeframe, limit=100)
-        df = pd.DataFrame(bars, columns=['time', 'open', 'high', 'low', 'close', 'volume'])
+        bars = exchange.fetch_ohlcv(
+            symbol=symbol, timeframe=timeframe, limit=100)
+        df = pd.DataFrame(
+            bars, columns=['time', 'open', 'high', 'low', 'close', 'volume'])
 
-        # Calcular o EMA de 34 períodos (para identificar tendências)
-        df['ema_34'] = ta.ema(df['close'], length=26)
+        # Calcular o EMA de 26 períodos (para identificar tendências)
+        df['ema_26'] = ta.ema(df['close'], length=26)
 
-        # Calcular o MACD (8, 21, 5)
+        # Calcular o MACD (9, 21, 5)
         macd = ta.macd(df['close'], fast=9, slow=21, signal=5)
         df['macd_line'] = macd['MACD_9_21_5']
         df['signal_line'] = macd['MACDs_9_21_5']
+
+        # Calcular a distância entre o MACD e a linha de sinal
+        macd_distance = abs(df['macd_line'].iloc[-1] -
+                            df['signal_line'].iloc[-1])
+
+        # Definir um limite mínimo para a distância, por exemplo, 0.02
+        min_macd_distance = 0.02
 
         # Calcular o ADX (Average Directional Index) com 14 períodos
         adx = ta.adx(df['high'], df['low'], df['close'], length=14)
@@ -55,9 +66,11 @@ async def startStrategy(symbol, send_message):
         # Calcular o RSI com 10 períodos (Relative Strength Index)
         df['rsi'] = ta.rsi(df['close'], length=10)
 
-        # Verificar se o preço está acima ou abaixo da EMA 34 para identificar a tendência
-        is_uptrend = df['close'].iloc[-1] > df['ema_34'].iloc[-1]  # Tendência de alta
-        is_downtrend = df['close'].iloc[-1] < df['ema_34'].iloc[-1]  # Tendência de baixa
+        # Verificar se o preço está acima ou abaixo da EMA 26 para identificar a tendência
+        # Tendência de alta
+        is_uptrend = df['close'].iloc[-1] > df['ema_26'].iloc[-1]
+        # Tendência de baixa
+        is_downtrend = df['close'].iloc[-1] < df['ema_26'].iloc[-1]
 
         # Detectar cruzamento do MACD
         previous_macd_line = df['macd_line'].iloc[-2]
@@ -68,34 +81,39 @@ async def startStrategy(symbol, send_message):
         # Condições para o ADX (força da tendência: ADX > 25 indica tendência forte)
         strong_trend = df['adx'].iloc[-1] > 25
 
-        # Condições do RSI (sobrecompra > 70, sobrevenda < 30)
-        is_rsi_overbought = df['rsi'].iloc[-1] > 70 
+        # Condições do RSI (sobrecompra > 70, sobrevenda < 30, outros níveis de filtro)
+        is_rsi_overbought = df['rsi'].iloc[-1] > 70
         is_rsi_oversold = df['rsi'].iloc[-1] < 30
-        is_rsi_level_above_55= df['rsi'].iloc[-1] >= 60
-        is_rsi_level_under_40 = df['rsi'].iloc[-1] <= 44
-        
-        # Estratégia de Compra (LONG) no cruzamento positivo do MACD e com RSI e ADX em condições adequadas
+        is_rsi_level_above_60 = df['rsi'].iloc[-1] >= 60
+        is_rsi_level_under_44 = df['rsi'].iloc[-1] <= 44
+
+        # Estratégia de Compra (LONG) no cruzamento positivo do MACD e com RSI, ADX, e distância do MACD suficientes
         if (previous_macd_line <= previous_signal_line and current_macd_line >= current_signal_line
-            and is_uptrend and strong_trend and not is_rsi_overbought):
-             if not gr.posicao_max(symbol, posicao_max) and gr.posicoes_abertas(symbol)[0] != 'short' and not gr.ultima_ordem_aberta(symbol):
-                    try:
-                        exchange.create_order(symbol=symbol, side='buy', type='market', amount=amount, params={'hedged': 'true'})
-                        message = f"🚀 Abrindo Long em {symbol} com EMA 26 + MACD + ADX + RSI! 📈"
-                        logger.info(message)
-                        await send_message(message)
-                    except:
-                        logger.info(f"⚠️ Problema ao abrir Long em {symbol}!")
-        # Estratégia de Venda (SHORT) no cruzamento negativo do MACD e com RSI e ADX em condições adequadas
-        elif (previous_macd_line >= previous_signal_line and current_macd_line <= current_signal_line
-              and is_downtrend and strong_trend and not is_rsi_oversold):
-            if not gr.posicao_max(symbol, posicao_max) and gr.posicoes_abertas(symbol)[0] != 'long' and not gr.ultima_ordem_aberta(symbol):
+                and is_uptrend and strong_trend and not is_rsi_overbought and macd_distance > min_macd_distance):
+            if not gr.posicao_max(symbol, posicao_max) and gr.posicoes_abertas(symbol)[0] != 'short' and not gr.ultima_ordem_aberta(symbol):
                 try:
-                    exchange.create_order(symbol=symbol, side='sell', type='market', amount=amount)
-                    message = f"🔻 Abrindo Short em {symbol} com EMA 26 + MACD + ADX + RSI! 📉"
+                    exchange.create_order(
+                        symbol=symbol, side='buy', type='market', amount=amount, params={'hedged': 'true'})
+                    message = f"🚀 Abrindo Long em {
+                        symbol} com EMA 26 + MACD + ADX + RSI! 📈"
                     logger.info(message)
                     await send_message(message)
                 except:
-                    logger.info(f"⚠️ Problema ao abrir Short em {symbol}!")
+                    logger.info(f"⚠ Problema ao abrir Long em {symbol}!")
+
+        # Estratégia de Venda (SHORT) no cruzamento negativo do MACD e com RSI, ADX, e distância do MACD suficientes
+        elif (previous_macd_line >= previous_signal_line and current_macd_line <= current_signal_line
+              and is_downtrend and strong_trend and not is_rsi_oversold and macd_distance > min_macd_distance):
+            if not gr.posicao_max(symbol, posicao_max) and gr.posicoes_abertas(symbol)[0] != 'long' and not gr.ultima_ordem_aberta(symbol):
+                try:
+                    exchange.create_order(
+                        symbol=symbol, side='sell', type='market', amount=amount)
+                    message = f"🔻 Abrindo Short em {
+                        symbol} com EMA 26 + MACD + ADX + RSI! 📉"
+                    logger.info(message)
+                    await send_message(message)
+                except:
+                    logger.info(f"⚠ Problema ao abrir Short em {symbol}!")
     except Exception as e:
         logger.error(f"Erro ao executar a estratégia para {symbol}: {e}")
         # await send_message(f"Erro ao executar a estratégia: {e}")
