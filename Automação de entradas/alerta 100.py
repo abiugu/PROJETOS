@@ -37,7 +37,7 @@ acertos_gale_branco = 0
 
 # Caminho da área de trabalho
 desktop_path = os.path.join(os.path.expanduser(
-    "~"), "OneDrive", "Área de Trabalho")
+    "~"), 'Desktop')
 
 # Pasta de logs
 logs_path = os.path.join(desktop_path, "LOGS")
@@ -60,7 +60,7 @@ alarm_sound2 = pygame.mixer.Sound(sound_file_path2)
 
 # Arquivo de log interativo
 log_interativo_path = os.path.join(
-    logs_path, "log interativo 100 direto modded.txt")
+    logs_path, "log interativo 100.txt")
 
 # Dicionário para armazenar valores anteriores
 valores_anteriores = {"acertos_direto": 0, "acertos_gale": 0, "erros": 0}
