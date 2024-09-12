@@ -9,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 import pygame
+import json
+
 
 # Inicializando o serviço do Chrome
 service = Service()
@@ -76,6 +78,12 @@ def log_to_file(message):
 def verificar_stop():
     stop_path = os.path.join(desktop_path, "stop.txt")
     return os.path.exists(stop_path)
+
+
+def atualizar_json_alarme(alarme_acionado, cor_oposta):
+    with open('estado_alarme.json', 'w') as f:
+        json.dump({'alarme_acionado': alarme_acionado, 'cor_oposta': cor_oposta}, f)
+    print(f"JSON atualizado: alarme_acionado={alarme_acionado}, cor_oposta={cor_oposta}")
 
 
 # Função para extrair as porcentagens das cores
@@ -299,7 +307,7 @@ def main():
                             ):
 
                                 alarm_sound.play()
-
+                                
                     if len(set(sequencia[:3])) == 1:
                         cor_atual = sequencia[0]
                         cor_oposta = None
@@ -429,10 +437,13 @@ def main():
                                 hora_atual = current_time.strftime("%H:%M:%S")
                                 data_atual = current_time.strftime(
                                     "%d-%m-%Y")  # Ajuste para dia-mês-ano
-
+                                
+                                
                                 current_time = time.time()
-                                if current_time - last_alarm_time >= 60:
+                                if current_time - last_alarm_time >= 60:  
                                     alarm_sound2.play()
+                                    alarme_acionado = True
+                                    atualizar_json_alarme(alarme_acionado, cor_oposta)
                                     count_alarm += 1
                                     print(f"Alarme acionado. {hora_atual}, {
                                         data_atual}, Contagem: {count_alarm}")
@@ -440,7 +451,6 @@ def main():
                                         data_atual}, Contagem: {count_alarm}")
 
                                     last_alarm_time = current_time
-                                    alarme_acionado = True  # Define alarme_acionado como True
 
                                     # Atualiza a sequência anterior
                                     sequencia_anterior = sequencia
@@ -501,7 +511,8 @@ def main():
                     else:
                         print("Erro !!")
                         erros += 1
-
+                    alarme_acionado = False
+                    atualizar_json_alarme(alarme_acionado, cor_oposta)
                     log_to_file(f"Acertos branco: {acertos_branco}, Acertos direto: {
                                 acertos_direto}, Erros: {erros}")
                     print(f"Acertos branco: {acertos_branco}, Acertos direto: {
@@ -509,7 +520,6 @@ def main():
                     atualizar_log_interativo(
                         acertos_direto, acertos_branco, erros)
                     # Define alarme_acionado como False após coletar a segunda sequência
-                    alarme_acionado = False
                     time.sleep(1)
 
     except Exception as e:

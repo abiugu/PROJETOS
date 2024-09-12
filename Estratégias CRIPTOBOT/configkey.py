@@ -1,2 +1,0 @@
-binancekey = '7pLWCvmeZXQuV3tyX3OPDeyeBIbDYrYckKih9jmndJ5QRqTINJakS2Wi86cKtjwr'
-binancesecret = 'nYfM15ghk7RipVF3OacbOKphtSDzKJSMDT9WJ0xO8n07vFGlWVbjIQ3UnbS9jCoW'
