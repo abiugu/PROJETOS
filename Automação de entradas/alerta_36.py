@@ -34,6 +34,7 @@ acertos_gale = 0
 erros = 0
 last_alarm_time = 0  # Inicializar last_alarm_time
 alarme_acionado = False  # Inicializa o estado do alarme como falso
+alarme_acionado2 = False
 acertos_branco = 0
 acertos_gale_branco = 0
 
@@ -80,10 +81,10 @@ def verificar_stop():
     return os.path.exists(stop_path)
 
 
-def atualizar_json_alarme(alarme_acionado, cor_oposta):
+def atualizar_json_alarme(alarme_acionado2):
     with open('estado_alarme.json', 'w') as f:
-        json.dump({'alarme_acionado': alarme_acionado, 'cor_oposta': cor_oposta}, f)
-    print(f"JSON atualizado: alarme_acionado={alarme_acionado}, cor_oposta={cor_oposta}")
+        json.dump({'alarme_acionado': alarme_acionado2}, f)
+    print(f"JSON atualizado: alarme_acionado={alarme_acionado2}")
 
 
 # Função para extrair as porcentagens das cores
@@ -144,7 +145,7 @@ def atualizar_log_interativo(acertos_direto, acertos_branco, erros):
 
 # Função principal
 def main():
-    global count_alarm, acertos_direto, erros, last_alarm_time, alarme_acionado, acertos_branco, acertos_gale_branco
+    global count_alarm, acertos_direto, erros, last_alarm_time, alarme_acionado, alarme_acionado2, acertos_branco, acertos_gale_branco
     last_alarm_time = time.time()  # Inicializa o tempo do último alarme
 
     # Variável para armazenar a última sequência de cores registrada no log
@@ -307,7 +308,9 @@ def main():
                             ):
 
                                 alarm_sound.play()
-                                
+                                alarme_acionado2 = True
+                                atualizar_json_alarme(alarme_acionado2)
+
                     if len(set(sequencia[:3])) == 1:
                         cor_atual = sequencia[0]
                         cor_oposta = None
@@ -443,7 +446,6 @@ def main():
                                 if current_time - last_alarm_time >= 60:  
                                     alarm_sound2.play()
                                     alarme_acionado = True
-                                    atualizar_json_alarme(alarme_acionado, cor_oposta)
                                     count_alarm += 1
                                     print(f"Alarme acionado. {hora_atual}, {
                                         data_atual}, Contagem: {count_alarm}")
@@ -512,7 +514,7 @@ def main():
                         print("Erro !!")
                         erros += 1
                     alarme_acionado = False
-                    atualizar_json_alarme(alarme_acionado, cor_oposta)
+                    atualizar_json_alarme(alarme_acionado2)
                     log_to_file(f"Acertos branco: {acertos_branco}, Acertos direto: {
                                 acertos_direto}, Erros: {erros}")
                     print(f"Acertos branco: {acertos_branco}, Acertos direto: {

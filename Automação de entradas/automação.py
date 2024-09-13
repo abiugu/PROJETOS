@@ -14,9 +14,9 @@ def ler_estado_alarme():
     try:
         with open('estado_alarme.json', 'r') as f:
             estado = json.load(f)
-            alarme_acionado = estado['alarme_acionado']
+            alarme_acionado2 = estado['alarme_acionado2']
             cor_oposta = estado['cor_oposta']
-            print(f"Alarme acionado: {alarme_acionado}, Cor oposta: {cor_oposta}")  # Adiciona o print
+            print(f"Alarme acionado: {alarme_acionado2}, Cor oposta: {cor_oposta}")  # Adiciona o print
             return alarme_acionado, cor_oposta
     except FileNotFoundError:
         print("Arquivo JSON não encontrado.")  # Exibe uma mensagem se o arquivo não for encontrado
