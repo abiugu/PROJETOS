@@ -16,7 +16,7 @@ service = Service()
 
 # Configurando as opções do Chrome
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Executar em modo headless
+#options.add_argument("--headless")  # Executar em modo headless
 options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
@@ -190,6 +190,7 @@ def main():
                                     alarme_acionado2 = False
                                     atualizar_json_alarme(alarme_acionado2)
                                     print("Alarme desativado após 30 segundos.")
+
                     if len(set(sequencia[:3])) == 1:
                         cor_atual = sequencia[0]
                         cor_oposta = None

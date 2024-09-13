@@ -1,23 +1,25 @@
-import requests
-import json
 import time
+import json
+import requests
+import os
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
 
-# URL da API
+# URL da API Blaze
 url = "https://blaze1.space/api/roulette_games/recent"
 
 # Função para obter os dados da API
 def api():
     try:
-        # Solicita dados da API
         req = requests.get(url)
-        req.raise_for_status()  # Verifica se houve erro na solicitação
-        
-        # Converte o conteúdo para um objeto Python (lista de dicionários)
+        req.raise_for_status()
         data = req.json()
-        
-        # Extrai os valores de "id" e "color"
         results = [{'id': item['id'], 'color': item['color']} for item in data]
-        
         return results
     except requests.exceptions.RequestException as e:
         print(f"Erro ao obter dados: {e}")
@@ -38,61 +40,123 @@ def ler_estado_alarme():
         with open('estado_alarme.json', 'r') as f:
             estado = json.load(f)
             alarme_acionado2 = estado.get('alarme_acionado2', False)
-            return alarme_acionado2
+            cor_oposta = estado.get('cor_oposta', None)
+            return alarme_acionado2, cor_oposta
     except FileNotFoundError:
         print("Arquivo estado_alarme.json não encontrado.")
-        return False
+        return False, None
 
 # Função para atualizar o estado do alarme (desativá-lo, por exemplo)
-def atualizar_estado_alarme(alarme_acionado2):
+def atualizar_estado_alarme(alarme_acionado2, cor_oposta):
     estado = {
-        'alarme_acionado2': alarme_acionado2
+        'alarme_acionado2': alarme_acionado2,
+        'cor_oposta': cor_oposta
     }
     with open('estado_alarme.json', 'w') as f:
         json.dump(estado, f, indent=4)
-    print(f"Estado do alarme atualizado: alarme_acionado2={alarme_acionado2}")
+    print(f"Estado do alarme atualizado: alarme_acionado2={alarme_acionado2}, cor_oposta={cor_oposta}")
 
-# Função para monitorar a mudança de cor e ID e fazer a ação desejada
-def monitorar_jogadas():
+# Função para realizar login no site Blaze
+def realizar_login(email, senha):
+    service = Service()
+    options = webdriver.ChromeOptions()
+    driver = webdriver.Chrome(service=service, options=options)
+
+    driver.get("https://blaze1.space/pt/games/double?modal=auth&tab=login")
+
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+    email_input = driver.find_element(By.NAME, "username")
+    email_input.send_keys(email)
+
+    password_input = driver.find_element(By.NAME, "password")
+    password_input.send_keys(senha)
+    password_input.send_keys(Keys.RETURN)
+
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="number"]')))
+    return driver
+
+# Função para realizar a aposta
+def realizar_aposta(driver, valor_aposta, cor_aposta):
+    try:
+        # Localiza o campo de valor de entrada e insere o valor
+        input_valor_aposta = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="number"]'))
+        )
+        input_valor_aposta.clear()
+        input_valor_aposta.send_keys(valor_aposta)
+
+        # Seleciona a cor correta
+        cor_button = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f'div.{cor_aposta}'))
+        )
+        cor_button.click()
+
+        # Clicar no botão de "Apostar"
+        apostar_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "div.place-bet button"))
+        )
+        apostar_button.click()
+
+        print(f"Aposta de {valor_aposta} na cor {cor_aposta} realizada com sucesso!")
+
+    except Exception as e:
+        # Imprime uma mensagem de erro e continua a execução
+        print(f"Não foi possível realizar a aposta. Erro: {e}")
+
+
+
+# Função principal que monitora as jogadas e realiza as apostas
+def monitorar_jogadas(driver):
     ultimo_id = None
     ultima_cor = None
 
     while True:
-        # Atualiza o colors.json com os dados da API
         results = api()
         if results:
             save_colors(results)
 
-            # Lê o estado do alarme
-            alarme_acionado2 = ler_estado_alarme()
+            alarme_acionado2, cor_oposta = ler_estado_alarme()
 
-            # Se o alarme estiver acionado
             if alarme_acionado2:
                 print("Alarme acionado, verificando a próxima jogada...")
 
-                # Pega o último jogo salvo no colors.json (último resultado da API)
                 id_atual = results[0]['id']
                 cor_atual = results[0]['color']
 
-                # Verifica se o ID é diferente do anterior e a cor é igual à anterior
+                # Define cor_oposta com base na cor_atual
+                if cor_atual == 1:
+                    cor_oposta = 'black'
+                elif cor_atual == 2:
+                    cor_oposta = 'red'
+                else:
+                    cor_oposta = None
+
                 if ultimo_id and id_atual != ultimo_id and cor_atual == ultima_cor:
                     print(f"Condição atendida! ID anterior: {ultimo_id}, ID atual: {id_atual}, Cor repetida: {cor_atual}")
-                    # Aqui você pode adicionar a lógica para fazer a "entrada" ou outra ação automatizada
 
-                    # Após a ação, desative o alarme
-                    atualizar_estado_alarme(False)
+                    if cor_oposta:
+                        realizar_aposta(driver, "2", cor_oposta)
+                        realizar_aposta(driver, "0.5", "white")
 
-                # Atualiza o ID e a cor anteriores
+                    atualizar_estado_alarme(False, cor_oposta)
+
                 ultimo_id = id_atual
                 ultima_cor = cor_atual
             else:
                 print("Alarme não acionado.")
-        
-        # Aguarda 1 segundo antes de verificar novamente
+
         time.sleep(1)
 
 if __name__ == "__main__":
+    load_dotenv(dotenv_path='C:/Users/abiug/PROJETOS/Login.Env')
+    EMAIL = os.getenv('EMAIL')
+    SENHA = os.getenv('SENHA')
+
+    driver = realizar_login(EMAIL, SENHA)
+
     try:
-        monitorar_jogadas()  # Executa o loop principal
+        monitorar_jogadas(driver)
     except KeyboardInterrupt:
         print("\nExecução interrompida manualmente.")
+    finally:
+        driver.quit()

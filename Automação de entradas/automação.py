@@ -21,7 +21,7 @@ def ler_estado_alarme():
     except FileNotFoundError:
         print("Arquivo JSON não encontrado.")  # Exibe uma mensagem se o arquivo não for encontrado
         return False, None
-
+    
 
 # Função para realizar login
 def realizar_login(email, senha):
