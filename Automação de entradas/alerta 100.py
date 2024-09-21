@@ -132,27 +132,42 @@ def main():
     ultima_sequencia_log = None
 
     try:
+        log_to_file("Iniciando execução do código.")
         url = 'https://blaze-7.com/pt/games/double'
+        log_to_file(f"Acessando URL: {url}")
         driver.get(url)
 
         while not verificar_stop():
+            log_to_file("Verificação do arquivo stop.txt não detectou interrupção.")
             recent_results_element = driver.find_element(By.ID, "roulette-recent")
+            log_to_file("Elemento 'roulette-recent' encontrado.")
             box_elements = recent_results_element.find_elements(By.CLASS_NAME, "sm-box")
+            log_to_file(f"Quantidade de 'sm-box' capturada: {len(box_elements)}")
 
             # Analisa as 15 últimas cores disponíveis
             sequencia = [box_element.get_attribute("class").split()[-1] for box_element in box_elements[:15]]
+            log_to_file(f"Sequência capturada: {sequencia}")
 
             # Verifica se houve uma mudança na sequência de cores
             if 'sequencia_anterior' not in locals() or sequencia != sequencia_anterior:
+                log_to_file("Mudança detectada na sequência de cores.")
                 # Verifica se a sequência de cores é diferente da última registrada no log
                 if sequencia != ultima_sequencia_log:
+                    log_to_file("Nova sequência registrada. Atualizando logs.")
                     ultima_sequencia_log = sequencia  # Atualiza a última sequência registrada no log
 
+                    log_to_file("Extraindo porcentagens para os últimos 25, 50, 100 e 500 resultados.")
                     percentuais100 = extrair_cores(driver, 100)
                     percentuais25 = extrair_cores(driver, 25)
                     percentuais50 = extrair_cores(driver, 50)
                     percentuais500 = extrair_cores(driver, 500)
 
+                    log_to_file(f"Percentuais extraídos (100): {percentuais100}")
+                    log_to_file(f"Percentuais extraídos (25): {percentuais25}")
+                    log_to_file(f"Percentuais extraídos (50): {percentuais50}")
+                    log_to_file(f"Percentuais extraídos (500): {percentuais500}")
+
+                    log_to_file("Registrando os últimos resultados e porcentagens no log global.")
                     log_to_file("Ultimos 3 resultados: " + ', '.join(sequencia[:3]))
                     log_to_file("Ultimas 25 porcentagens: " + ', '.join(map(str, percentuais25)))
                     log_to_file("Ultimas 50 porcentagens: " + ', '.join(map(str, percentuais50)))
@@ -162,10 +177,12 @@ def main():
                     if len(set(sequencia[:2])) == 1:
                         cor_atual = sequencia[0]
                         cor_oposta = None
+                        log_to_file(f"Cor atual nas primeiras 2 jogadas: {cor_atual}")
                         if cor_atual == 'red':
                             cor_oposta = 'black'
                         elif cor_atual == 'black':
                             cor_oposta = 'red'
+                        log_to_file(f"Cor oposta identificada: {cor_oposta}")
                         if cor_oposta:
                             cor_atual_percentual_500 = int(percentuais500[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_500 = int(percentuais500[['white', 'black', 'red'].index(cor_oposta)])
@@ -179,25 +196,31 @@ def main():
                             cor_atual_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_oposta)])
 
+                            log_to_file(f"Porcentuais de cor atual e oposta: {cor_atual_percentual_25}, {cor_oposta_percentual_25}")
+
                             if cor_atual_percentual_25 <= 100:
+                                log_to_file("Condição para acionamento do alarme atendida.")
                                 alarm_sound.play()
                                 alarme_acionado2 = True
                                 alarme_acionado_start_time = time.time()  # Armazena o tempo em que o alarme foi ativado
                                 atualizar_json_alarme(alarme_acionado2)
                             if alarme_acionado and alarme_acionado_start_time:
                                 if time.time() - alarme_acionado_start_time >= 30:
+                                    log_to_file("Desativando alarme após 30 segundos.")
                                     alarme_acionado = False
                                     alarme_acionado2 = False
                                     atualizar_json_alarme(alarme_acionado2)
                                     print("Alarme desativado após 30 segundos.")
 
                     if len(set(sequencia[:3])) == 1:
+                        log_to_file(f"Mesma cor nas últimas 3 jogadas: {sequencia[:3]}")
                         cor_atual = sequencia[0]
                         cor_oposta = None
                         if cor_atual == 'red':
                             cor_oposta = 'black'
                         elif cor_atual == 'black':
                             cor_oposta = 'red'
+                        log_to_file(f"Cor oposta identificada para sequência de 3: {cor_oposta}")
                         if cor_oposta:
                             cor_atual_percentual_500 = int(percentuais500[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_500 = int(percentuais500[['white', 'black', 'red'].index(cor_oposta)])
@@ -211,8 +234,11 @@ def main():
                             cor_atual_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_oposta)])
 
+                            log_to_file(f"Porcentuais de cor atual e oposta (últimas 3 jogadas): {cor_atual_percentual_25}, {cor_oposta_percentual_25}")
+
                             if cor_atual_percentual_25 is not None and cor_atual_percentual_25 <= 100:
                                 print(f"Cor atual: {cor_atual}, Percentual: {cor_atual_percentual_25}")
+                                log_to_file(f"Alarme acionado para cor atual {cor_atual} com percentual de {cor_atual_percentual_25}%.")
 
                             if cor_atual_percentual_25 <= 100:
                                 current_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo'))
@@ -221,6 +247,7 @@ def main():
 
                                 current_time = time.time()
                                 if current_time - last_alarm_time >= 60:
+                                    log_to_file("Tocando som de alarme e registrando alarme acionado.")
                                     alarm_sound2.play()
                                     alarme_acionado = True
                                     count_alarm += 1
@@ -236,76 +263,24 @@ def main():
             # Verifica se o alarme deve ser desativado após 30 segundos
             if alarme_acionado and alarme_acionado_start_time:
                 if time.time() - alarme_acionado_start_time >= 30:
+                    log_to_file("Desativando alarme após 30 segundos.")
                     alarme_acionado = False
                     alarme_acionado2 = False
                     atualizar_json_alarme(alarme_acionado2)
                     print("Alarme desativado após 30 segundos.")
 
-            if alarme_acionado:
-                while sequencia == sequencia_anterior:
-                    recent_results_element = driver.find_element(By.ID, "roulette-recent")
-                    box_elements = recent_results_element.find_elements(By.CLASS_NAME, "sm-box")
-                    sequencia = [box_element.get_attribute("class").split()[-1] for box_element in box_elements[:15]]
-
-                    time.sleep(1)
-
-                if sequencia != sequencia_anterior:
-                    percentuais100_1 = extrair_cores(driver, 100)
-                    percentuais25_1 = extrair_cores(driver, 25)
-                    percentuais50_1 = extrair_cores(driver, 50)
-                    percentuais500_1 = extrair_cores(driver, 500)
-
-                    recent_results_element = driver.find_element(By.ID, "roulette-recent")
-                    box_elements = recent_results_element.find_elements(By.CLASS_NAME, "sm-box")
-                    sequencia_1 = [box_element.get_attribute("class").split()[-1] for box_element in box_elements[:15]]
-                    ultimas_tres_cores_1 = sequencia_1[:3]
-                    log_to_file("Ultimos 3 resultados: " + ', '.join(ultimas_tres_cores_1))
-                    log_to_file("Ultimas 25 porcentagens: " + ', '.join(map(str, percentuais25_1)))
-                    log_to_file("Ultimas 50 porcentagens: " + ', '.join(map(str, percentuais50_1)))
-                    log_to_file("Ultimas 100 porcentagens: " + ', '.join(map(str, percentuais100_1)))
-                    log_to_file("Ultimas 500 porcentagens: " + ', '.join(map(str, percentuais500_1)))
-
-                    while sequencia == sequencia_1:
-                        recent_results_element = driver.find_element(By.ID, "roulette-recent")
-                        box_elements = recent_results_element.find_elements(By.CLASS_NAME, "sm-box")
-                        sequencia_1 = [box_element.get_attribute("class").split()[-1] for box_element in box_elements[:15]]
-
-                        time.sleep(1)
-
-                    alarme_acionado2 = False
-                    atualizar_json_alarme(alarme_acionado2)
-                    
-                    if ultimas_tres_cores_1[0] == 'white':
-                        print("Acerto branco !!")
-                        acertos_branco += 1
-
-                    elif ultimas_tres_cores_1 != sequencia_anterior[:3]:
-                        print("Acerto direto !!")
-                        acertos_direto += 1
-
-                    else:
-                        print("Erro !!")
-                        erros += 1
-
-                    log_to_file(f"Acertos branco: {acertos_branco}, Acertos direto: {acertos_direto}, Erros: {erros}")
-                    print(f"Acertos branco: {acertos_branco}, Acertos direto: {acertos_direto}, Erros: {erros}")
-                    atualizar_log_interativo(acertos_direto, acertos_branco, erros)
-                    # Define alarme_acionado como False após coletar a segunda sequência
-                    alarme_acionado = False
-                    alarme_acionado_start_time = current_time
-                    atualizar_json_alarme(alarme_acionado2)
-                    time.sleep(1)
+            time.sleep(1)
 
     except Exception as e:
         error_message = f"Erro: {e}"
-        print(error_message)
         log_to_file(error_message)
+        print(error_message)
 
     finally:
         # Finalizando o driver
         if driver:
             driver.quit()
+        log_to_file("Driver fechado e execução finalizada.")
 
-# Chamando a função principal
 if __name__ == "__main__":
     main()
