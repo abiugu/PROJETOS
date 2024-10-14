@@ -18,11 +18,8 @@ service = Service()
 # Configurando as opções do Chrome
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")  # Executar em modo headless
-# Desabilitar a GPU (necessário em alguns sistemas)
 options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")  # Necessário para contêineres Linux
-# Evita problemas de memória compartilhada
-options.add_argument("--disable-dev-shm-usage")
+
 
 # Inicializando o driver do Chrome
 driver = webdriver.Chrome(service=service, options=options)

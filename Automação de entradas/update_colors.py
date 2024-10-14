@@ -178,9 +178,9 @@ async def monitorar_jogadas(driver):
 
                         # Realiza as apostas na cor oposta e no white
                         if cor_oposta:
-                            sucesso = tentar_aposta(driver, "1", cor_oposta)
+                            sucesso = tentar_aposta(driver, "20", cor_oposta)
                             if sucesso:
-                                tentar_aposta(driver, "1", "white")  # Aposta no white também
+                                tentar_aposta(driver, "2", "white")  # Aposta no white também
 
                                 # Desativa o alarme após a aposta
                                 atualizar_estado_alarme(False, None)
