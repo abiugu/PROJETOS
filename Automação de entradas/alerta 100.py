@@ -153,12 +153,6 @@ def main():
                     percentuais50 = extrair_cores(driver, 50)
                     percentuais500 = extrair_cores(driver, 500)
 
-                    log_to_file(f"Percentuais extraídos (100): {percentuais100}")
-                    log_to_file(f"Percentuais extraídos (25): {percentuais25}")
-                    log_to_file(f"Percentuais extraídos (50): {percentuais50}")
-                    log_to_file(f"Percentuais extraídos (500): {percentuais500}")
-
-                    log_to_file("Registrando os últimos resultados e porcentagens no log global.")
                     log_to_file("Ultimos 3 resultados: " + ', '.join(sequencia[:3]))
                     log_to_file("Ultimas 25 porcentagens: " + ', '.join(map(str, percentuais25)))
                     log_to_file("Ultimas 50 porcentagens: " + ', '.join(map(str, percentuais50)))
