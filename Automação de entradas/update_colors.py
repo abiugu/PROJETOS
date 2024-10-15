@@ -150,6 +150,7 @@ async def monitorar_jogadas(driver):
                 botao_estou_aqui = modal.find_element(By.CSS_SELECTOR, "button.custom-button.i_m_here")
                 botao_estou_aqui.click()
                 print("Clique realizado com sucesso!")
+                await asyncio.sleep(1)  # Pequeno delay para garantir que o modal seja fechado
         except NoSuchElementException:
             # Se o modal não estiver presente, o código continua normalmente
             pass
