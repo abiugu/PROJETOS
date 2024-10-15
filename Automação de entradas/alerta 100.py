@@ -17,7 +17,7 @@ service = Service()
 
 # Configurando as opções do Chrome
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Executar em modo headless
+#options.add_argument("--headless")  # Executar em modo headless
 options.add_argument("--disable-gpu")
 
 
