@@ -16,7 +16,7 @@ service = Service()
 
 # Configurando as opções do Chrome
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")
+#options.add_argument("--headless")
 options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
@@ -180,7 +180,8 @@ def main():
                             cor_oposta_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_oposta)])
 
 
-                            if cor_atual_percentual_25 <= 100:
+                            if cor_atual_percentual_25 <= 100 and 30 <= cor_atual_percentual_50 <= 50 and 42 <= cor_atual_percentual_100 <= 50:
+                                print(f"Cor atual: {cor_atual}, Percentual 25: {cor_atual_percentual_25}%, Percentual 50: {cor_atual_percentual_50}%, Percentual 100: {cor_atual_percentual_100}%")
                                 alarm_sound.play()
                                 alarme_acionado2 = True
                                 alarme_acionado_start_time = time.time()  # Armazena o tempo em que o alarme foi ativado
@@ -213,8 +214,10 @@ def main():
                             cor_atual_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_oposta)])
 
-                            if cor_atual_percentual_25 is not None and cor_atual_percentual_25 <= 100:
-                                print(f"Cor atual: {cor_atual}, Percentual: {cor_atual_percentual_25}")
+                            if cor_atual_percentual_25 <= 100 and 30 <= cor_atual_percentual_50 <= 50 and 42 <= cor_atual_percentual_100 <= 50:
+                                print(f"Cor atual: {cor_atual}, Percentual 25: {cor_atual_percentual_25}%, Percentual 50: {cor_atual_percentual_50}%, Percentual 100: {cor_atual_percentual_100}%")
+
+
 
                             if cor_atual_percentual_25 <= 100:
                                 current_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo'))

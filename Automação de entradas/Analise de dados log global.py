@@ -82,8 +82,8 @@ def main():
     with open(arquivo_previsoes, 'w') as f:
         f.write("Análise de Comparações de Percentuais:\n\n")
         
-        # Ordenando os padrões pela total de jogadas em ordem decrescente
-        padroes_ordenados = sorted(padroes_analise.items(), key=lambda x: x[1]['total'], reverse=True)
+        # Ordenando os padrões pela assertividade em ordem decrescente
+        padroes_ordenados = sorted(padroes_analise.items(), key=lambda x: (x[1]['acertos'] / x[1]['total']) if x[1]['total'] > 0 else 0, reverse=True)
         
         for chave_padrao, dados in padroes_ordenados:
             cor_atual, percentual_atual, comp_25, comp_50, comp_100, comp_500 = chave_padrao
@@ -91,7 +91,7 @@ def main():
             acertos = dados['acertos']
             assertividade = (acertos / total) * 100 if total > 0 else 0
 
-            if assertividade > 90:
+            if assertividade > 80:
                 f.write(f"Ultimos 3 resultados: {cor_atual}, {cor_atual}, {cor_atual}\n")
                 f.write(f"percentual cor atual: {percentual_atual}%\n")
                 f.write(f"Ultimas 25 porcentagens: {comp_25}\n")
@@ -101,6 +101,3 @@ def main():
                 f.write(f"acertos: {acertos}\n")
                 f.write(f"total: {total}\n")
                 f.write(f"assertividade: {assertividade:.2f}%\n\n")
-
-if __name__ == "__main__":
-    main()
