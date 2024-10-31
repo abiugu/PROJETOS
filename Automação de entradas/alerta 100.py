@@ -61,6 +61,63 @@ log_interativo_path = os.path.join(logs_path, "log interativo 100.txt")
 # Dicionário para armazenar valores anteriores
 valores_anteriores = {"acertos_direto": 0, "acertos_gale": 0, "erros": 0}
 
+estrategias = [
+    {"percentual_25": 48.0, "percentual_50": 52.0},
+    {"percentual_50": 44.0, "percentual_100": 50.0},
+    {"percentual_50": 56.0, "percentual_100": 54.0},
+    {"percentual_50": 52.0, "percentual_100": 53.0},
+    {"percentual_50": 44.0, "percentual_100": 46.0},
+    {"percentual_50": 44.0, "percentual_100": 43.0},
+    {"percentual_25": 48.0, "percentual_50": 54.0},
+    {"percentual_25": 44.0, "percentual_50": 50.0},
+    {"percentual_25": 40.0, "percentual_50": 40.0},
+    {"percentual_25": 56.0, "percentual_50": 46.0},
+    {"percentual_25": 44.0, "percentual_50": 38.0},
+    {"percentual_50": 50.0, "percentual_100": 45.0},
+    {"percentual_50": 44.0, "percentual_100": 46.0},
+    {"percentual_50": 36.0, "percentual_100": 42.0},
+    {"percentual_25": 64.0, "percentual_50": 52.0},
+    {"percentual_25": 40.0, "percentual_50": 40.0},
+    {"percentual_25": 36.0, "percentual_50": 42.0},
+    {"percentual_100": 50.0, "percentual_500": 49.0},
+    {"percentual_100": 50.0, "percentual_500": 47.4},
+    {"percentual_50": 60.0, "percentual_100": 53.0},
+    {"percentual_50": 50.0, "percentual_100": 54.0},
+    {"percentual_50": 46.0, "percentual_100": 54.0},
+    {"percentual_50": 38.0, "percentual_100": 45.0},
+    {"percentual_25": 52.0, "percentual_50": 58.0},
+    {"percentual_25": 52.0, "percentual_50": 40.0},
+    {"percentual_25": 44.0, "percentual_50": 40.0},
+    {"percentual_100": 52.0, "percentual_500": 48.4},
+    {"percentual_100": 49.0, "percentual_500": 48.6},
+    {"percentual_100": 47.0, "percentual_500": 47.0},
+    {"percentual_100": 42.0, "percentual_500": 44.0},
+    {"percentual_50": 50.0, "percentual_100": 48.0},
+    {"percentual_25": 44.0, "percentual_50": 40.0},
+    {"percentual_50": 50.0, "percentual_100": 46.0},
+    {"percentual_50": 62.0, "percentual_100": 55.0},
+    {"percentual_50": 52.0, "percentual_100": 50.0},
+    {"percentual_50": 48.0, "percentual_100": 49.0},
+    {"percentual_50": 54.0, "percentual_100": 57.0},
+    {"percentual_50": 52.0, "percentual_100": 52.0},
+    {"percentual_25": 68.0, "percentual_50": 54.0},
+    {"percentual_50": 54.0, "percentual_100": 53.0},
+    {"percentual_50": 48.0, "percentual_100": 52.0},
+    {"percentual_50": 42.0, "percentual_100": 44.0},
+    {"percentual_50": 50.0, "percentual_100": 51.0},
+    {"percentual_50": 48.0, "percentual_100": 51.0},
+]
+
+# Exemplo de como verificar as condições em uma função de entrada
+def verificar_estrategias(cor_atual_percentual_25, cor_atual_percentual_50, cor_atual_percentual_100, cor_atual_percentual_500):
+    for estrategia in estrategias:
+        if ('percentual_25' in estrategia and estrategia['percentual_25'] == cor_atual_percentual_25) and \
+           ('percentual_50' in estrategia and estrategia['percentual_50'] == cor_atual_percentual_50) and \
+           ('percentual_100' in estrategia and estrategia['percentual_100'] == cor_atual_percentual_100) and \
+           ('percentual_500' in estrategia and estrategia['percentual_500'] == cor_atual_percentual_500):
+            print(f"Estratégia acionada: {estrategia}")
+
+
 # Função para registrar mensagens no arquivo de log
 def log_to_file(message):
     with open(log_file_path, "a") as log_file:
@@ -122,6 +179,7 @@ def atualizar_log_interativo(acertos_direto, acertos_branco, erros):
         log_interativo_file.write(f"Entrada branco: {entrada_branco}\n")
         log_interativo_file.write(f"Entrada dupla: {entrada_dupla}\n")
 
+
 # Função principal
 def main():
     global count_alarm, acertos_direto, erros, last_alarm_time, alarme_acionado, alarme_acionado2, acertos_branco, acertos_gale_branco, alarme_acionado_start_time
@@ -159,6 +217,8 @@ def main():
                     log_to_file("Ultimas 100 porcentagens: " + ', '.join(map(str, percentuais100)))
                     log_to_file("Ultimas 500 porcentagens: " + ', '.join(map(str, percentuais500)))
 
+                    # ... [código anterior] ...
+
                     if len(set(sequencia[:2])) == 1:
                         cor_atual = sequencia[0]
                         cor_oposta = None
@@ -169,23 +229,20 @@ def main():
                         if cor_oposta:
                             cor_atual_percentual_500 = int(percentuais500[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_500 = int(percentuais500[['white', 'black', 'red'].index(cor_oposta)])
-
+                    
                             cor_atual_percentual_100 = int(percentuais100[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_100 = int(percentuais100[['white', 'black', 'red'].index(cor_oposta)])
-
+                    
                             cor_atual_percentual_50 = int(percentuais50[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_50 = int(percentuais50[['white', 'black', 'red'].index(cor_oposta)])
-
+                    
                             cor_atual_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_oposta)])
-
-
-                            if cor_atual_percentual_25 <= 100 and 30 <= cor_atual_percentual_50 <= 50 and 42 <= cor_atual_percentual_100 <= 50:
-                                print(f"Cor atual: {cor_atual}, Percentual 25: {cor_atual_percentual_25}%, Percentual 50: {cor_atual_percentual_50}%, Percentual 100: {cor_atual_percentual_100}%")
-                                alarm_sound.play()
-                                alarme_acionado2 = True
-                                alarme_acionado_start_time = time.time()  # Armazena o tempo em que o alarme foi ativado
-                                atualizar_json_alarme(alarme_acionado2)
+                    
+                            # Aqui, substitua a verificação original pela chamada à função verificar_estrategias
+                            verificar_estrategias(cor_atual_percentual_25, cor_atual_percentual_50, cor_atual_percentual_100, cor_atual_percentual_500)
+                    
+                            # A lógica do alarme pode ser ativada se a estratégia for encontrada.
                             if alarme_acionado and alarme_acionado_start_time:
                                 if time.time() - alarme_acionado_start_time >= 30:
                                     log_to_file("Desativando alarme após 30 segundos.")
@@ -193,6 +250,9 @@ def main():
                                     alarme_acionado2 = False
                                     atualizar_json_alarme(alarme_acionado2)
                                     print("Alarme desativado após 30 segundos.")
+
+# ... [código seguinte] ...
+
 
                     if len(set(sequencia[:3])) == 1:
                         cor_atual = sequencia[0]
@@ -214,8 +274,9 @@ def main():
                             cor_atual_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_atual)])
                             cor_oposta_percentual_25 = int(percentuais25[['white', 'black', 'red'].index(cor_oposta)])
 
-                            if cor_atual_percentual_25 <= 100 and 30 <= cor_atual_percentual_50 <= 50 and 42 <= cor_atual_percentual_100 <= 50:
-                                print(f"Cor atual: {cor_atual}, Percentual 25: {cor_atual_percentual_25}%, Percentual 50: {cor_atual_percentual_50}%, Percentual 100: {cor_atual_percentual_100}%")
+                            # Aqui, substitua a verificação original pela chamada à função verificar_estrategias
+                            verificar_estrategias(cor_atual_percentual_25, cor_atual_percentual_50, cor_atual_percentual_100, cor_atual_percentual_500)
+                            print(f"Cor atual: {cor_atual}, Percentual 25: {cor_atual_percentual_25}%, Percentual 50: {cor_atual_percentual_50}%, Percentual 100: {cor_atual_percentual_100}%")
 
 
 
