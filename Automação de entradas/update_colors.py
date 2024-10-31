@@ -13,7 +13,6 @@ from selenium.common.exceptions import NoSuchElementException
 import platform
 import time
 
-
 # Definir o loop de eventos correto no Windows
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -73,7 +72,7 @@ async def api():
                 data = await resp.json()
                 return [{'id': item['id'], 'color': item['color']} for item in data]
         except aiohttp.ClientError as e:
-            print(f"Erro ao obter dados: {e}")
+            print(f"Erro ao obter dados da API: {e}")
             return []
 
 # Função para salvar os dados no arquivo colors.json
@@ -91,7 +90,7 @@ def save_colors(results):
             ultima_mensagem = nova_mensagem  # Atualiza a última mensagem
 
     except IOError as e:
-        print(f"Erro ao salvar o arquivo: {e}")
+        print(f"Erro ao salvar o arquivo colors.json: {e}")
 
 # Função para ler o estado do alarme do arquivo estado_alarme.json
 def ler_estado_alarme():
@@ -117,23 +116,27 @@ def atualizar_estado_alarme(alarme_acionado2, cor_oposta):
 
 # Função para realizar login no site Blaze
 def realizar_login(email, senha):
-    service = Service()
+    service = Service('C:\\Users\\Abiug\\PROJETOS\\Automação de entradas\\chromedriver.exe')  # Atualize este caminho se necessário
     options = webdriver.ChromeOptions()
-    # options.add_argument('--headless')  # Adicionar headless para reduzir latência
+    # options.add_argument('--headless')  # Descomente para rodar em modo headless
     driver = webdriver.Chrome(service=service, options=options)
 
     driver.get("https://blaze1.space/pt/games/double?modal=auth&tab=login")
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
-    email_input = driver.find_element(By.NAME, "username")
-    email_input.send_keys(email)
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+        email_input = driver.find_element(By.NAME, "username")
+        email_input.send_keys(email)
 
-    password_input = driver.find_element(By.NAME, "password")
-    password_input.send_keys(senha)
-    password_input.send_keys(Keys.RETURN)
+        password_input = driver.find_element(By.NAME, "password")
+        password_input.send_keys(senha)
+        password_input.send_keys(Keys.RETURN)
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="number"]')))
-    return driver
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="number"]')))
+        return driver
+    except Exception as e:
+        print(f"Erro ao realizar login: {e}")
+        driver.quit()
 
 # Função para tentar realizar a aposta por até 5 segundos
 def tentar_aposta(driver, valor_aposta, cor):
@@ -145,11 +148,7 @@ def tentar_aposta(driver, valor_aposta, cor):
             valor_input.send_keys(str(valor_aposta))
 
             # Seleciona o botão de aposta com base na cor
-            if cor == "red":
-                cor_button = driver.find_element(By.CSS_SELECTOR, "button[data-color='red']")
-            else:
-                cor_button = driver.find_element(By.CSS_SELECTOR, "button[data-color='white']")
-
+            cor_button = driver.find_element(By.CSS_SELECTOR, f"button[data-color='{cor}']")
             cor_button.click()
             time.sleep(1)  # Pausa para garantir que a aposta foi processada
             print(f"Aposta de {valor_aposta} em {cor} realizada com sucesso!")
@@ -215,13 +214,14 @@ if __name__ == "__main__":
     email = os.getenv('EMAIL')
     senha = os.getenv('SENHA')
 
-    driver = realizar_login(email, senha)
-    asyncio.run(monitorar_jogadas(driver))
-
-    # Fechar o navegador quando o script for interrompido
-    try:
-        asyncio.run(monitorar_jogadas(driver))
-    except KeyboardInterrupt:
-        print("Interrompendo o script...")
-    finally:
-        driver.quit()
+    if not email or not senha:
+        print("Email ou senha não definidos. Verifique suas variáveis de ambiente.")
+    else:
+        driver = realizar_login(email, senha)
+        if driver:
+            try:
+                asyncio.run(monitorar_jogadas(driver))
+            except KeyboardInterrupt:
+                print("Interrompendo o script...")
+            finally:
+                driver.quit()
