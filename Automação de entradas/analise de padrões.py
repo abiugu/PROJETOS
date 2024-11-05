@@ -75,10 +75,140 @@ def analisar_historico(historico):
     "padrao 67": (["red", "red", "white"], ["white", "red"]),
     "padrao 68": (["black", "red", "red", "red", "white"], ["white", "red"]),
     "padrao 69": (["white", "black", "red", "red", "red", "black"], ["white", "black"]),
-    "padrao 70": (["black", "red", "red", "white", "black", "black"], ["white", "black"])
+    "padrao 70": (["black", "red", "red", "white", "black", "black"], ["white", "black"]),
+    "padrao 71": (["white", "red", "white", "black", "red", "white"], ["white", "red"]),
+    "padrao 72": (["black", "red", "white", "black", "white"], ["white", "black"]),
+    "padrao 73": (["white", "white", "black", "red", "black"], ["white", "black"]),
+    "padrao 74": (["red", "white", "red", "black", "black"], ["white", "red"]),
+    "padrao 75": (["white", "red", "black", "white", "red", "black"], ["white", "red"]),
+    "padrao 76": (["black", "black", "red", "white"], ["white", "black"]),
+    "padrao 77": (["white", "black", "red", "black", "white"], ["white", "black"]),
+    "padrao 78": (["red", "red", "black", "white", "black"], ["white", "red"]),
+    "padrao 79": (["black", "white", "black", "red", "white", "red"], ["white", "black"]),
+    "padrao 80": (["white", "black", "red", "white", "red", "black"], ["white", "black"]),
+    "padrao 81": (["red", "white", "black", "black", "white"], ["white", "red"]),
+    "padrao 82": (["black", "red", "white", "black", "red", "white"], ["white", "black"]),
+    "padrao 83": (["white", "black", "white", "red", "black"], ["white", "black"]),
+    "padrao 84": (["red", "black", "red", "white", "black"], ["white", "red"]),
+    "padrao 85": (["white", "red", "black", "black", "red", "white"], ["white", "red"]),
+    "padrao 86": (["black", "white", "red", "black", "red", "white"], ["white", "black"]),
+    "padrao 87": (["red", "black", "white", "red", "white"], ["white", "red"]),
+    "padrao 88": (["black", "red", "black", "white", "white", "red"], ["white", "black"]),
+    "padrao 89": (["white", "white", "red", "black", "white", "black"], ["white", "red"]),
+    "padrao 90": (["red", "black", "white", "black", "white", "red"], ["white", "black"]),
+    "padrao 91": (["white", "red", "black", "white", "black", "red"], ["white", "red"]),
+    "padrao 92": (["black", "white", "red", "black", "white", "black"], ["white", "black"]),
+    "padrao 93": (["white", "black", "white", "red", "black", "red"], ["white", "black"]),
+    "padrao 94": (["red", "white", "black", "red", "white", "black"], ["white", "red"]),
+    "padrao 95": (["black", "black", "white", "red", "black", "white"], ["white", "black"]),
+    "padrao 96": (["white", "red", "white", "black", "red", "black"], ["white", "red"]),
+    "padrao 97": (["black", "red", "black", "white", "red"], ["white", "black"]),
+    "padrao 98": (["red", "white", "black", "white", "red", "black"], ["white", "red"]),
+    "padrao 99": (["white", "black", "red", "white", "black"], ["white", "black"]),
+    "padrao 100": (["black", "red", "white", "black", "red"], ["white", "red"]),
+    "padrao 101": (["red", "white", "red", "black", "white"], ["white", "red"]),
+    "padrao 102": (["white", "black", "white", "red", "black"], ["white", "black"]),
+    "padrao 103": (["black", "red", "white", "black", "white"], ["white", "black"]),
+    "padrao 104": (["white", "red", "black", "red", "black"], ["white", "red"]),
+    "padrao 105": (["red", "white", "black", "red", "black"], ["white", "red"]),
+    "padrao 106": (["black", "white", "black", "red"], ["white", "black"]),
+    "padrao 107": (["white", "red", "black", "black", "red"], ["white", "red"]),
+    "padrao 108": (["red", "black", "white", "red"], ["white", "black"]),
+    "padrao 109": (["black", "white", "red", "black", "red"], ["white", "black"]),
+    "padrao 110": (["white", "black", "white", "red", "black"], ["white", "black"]),
+    "padrao 111": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 112": (["black", "red", "white", "red"], ["white", "black"]),
+    "padrao 113": (["white", "black", "red", "white"], ["white", "red"]),
+    "padrao 114": (["red", "black", "white", "red"], ["white", "black"]),
+    "padrao 115": (["white", "red", "black", "red"], ["white", "red"]),
+    "padrao 116": (["black", "white", "black", "red"], ["white", "black"]),
+    "padrao 117": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 118": (["white", "black", "red", "white"], ["white", "black"]),
+    "padrao 119": (["red", "white", "black", "red"], ["white", "red"]),
+    "padrao 120": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 121": (["white", "black", "red", "white"], ["white", "red"]),
+    "padrao 122": (["red", "white", "black", "red"], ["white", "black"]),
+    "padrao 123": (["black", "white", "red", "black"], ["white", "red"]),
+    "padrao 124": (["white", "red", "black", "white"], ["white", "black"]),
+    "padrao 125": (["red", "black", "white", "red"], ["white", "red"]),
+    "padrao 126": (["black", "white", "red", "white"], ["white", "black"]),
+    "padrao 127": (["white", "red", "black", "red"], ["white", "black"]),
+    "padrao 128": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 129": (["white", "black", "red", "white"], ["white", "red"]),
+    "padrao 130": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 131": (["red", "black", "white", "red"], ["white", "black"]),
+    "padrao 132": (["white", "red", "black", "black"], ["white", "black"]),
+    "padrao 133": (["black", "white", "red", "white"], ["white", "red"]),
+    "padrao 134": (["red", "white", "black", "red"], ["white", "black"]),
+    "padrao 135": (["white", "black", "red", "white"], ["white", "red"]),
+    "padrao 136": (["red", "black", "white", "red"], ["white", "black"]),
+    "padrao 137": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 138": (["red", "black", "white", "red"], ["white", "red"]),
+    "padrao 139": (["white", "black", "red", "black"], ["white", "black"]),
+    "padrao 140": (["black", "red", "white", "white"], ["white", "black"]),
+    "padrao 141": (["red", "black", "white", "white"], ["white", "black"]),
+    "padrao 142": (["black", "red", "white", "red"], ["white", "red"]),
+    "padrao 143": (["white", "black", "red", "black"], ["white", "black"]),
+    "padrao 144": (["black", "white", "red", "red"], ["white", "red"]),
+    "padrao 145": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 146": (["white", "red", "black", "black"], ["white", "red"]),
+    "padrao 147": (["black", "red", "white", "white"], ["white", "black"]),
+    "padrao 148": (["white", "black", "red", "red"], ["white", "red"]),
+    "padrao 149": (["black", "white", "red", "black"], ["white", "black"]),
+    "padrao 150": (["white", "black", "white", "red"], ["white", "red"]),
+    "padrao 151": (["red", "white", "black", "black"], ["white", "red"]),
+    "padrao 152": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 153": (["white", "red", "black", "white"], ["white", "red"]),
+    "padrao 154": (["black", "white", "red", "black"], ["white", "black"]),
+    "padrao 155": (["red", "black", "white", "red"], ["white", "red"]),
+    "padrao 156": (["white", "red", "black", "white"], ["white", "red"]),
+    "padrao 157": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 158": (["white", "black", "red", "red"], ["white", "black"]),
+    "padrao 159": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 160": (["black", "white", "red", "black"], ["white", "red"]),
+    "padrao 161": (["white", "red", "black", "black"], ["white", "black"]),
+    "padrao 162": (["red", "white", "black", "black"], ["white", "black"]),
+    "padrao 163": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 164": (["white", "black", "red", "red"], ["white", "black"]),
+    "padrao 165": (["black", "white", "red", "black"], ["white", "red"]),
+    "padrao 166": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 167": (["white", "red", "black", "black"], ["white", "black"]),
+    "padrao 168": (["black", "white", "red", "white"], ["white", "black"]),
+    "padrao 169": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 170": (["white", "red", "black", "white"], ["white", "black"]),
+    "padrao 171": (["black", "white", "red", "black"], ["white", "red"]),
+    "padrao 172": (["white", "black", "red", "red"], ["white", "black"]),
+    "padrao 173": (["red", "white", "black", "white"], ["white", "red"]),
+    "padrao 174": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 175": (["white", "black", "red", "black"], ["white", "black"]),
+    "padrao 176": (["black", "red", "white", "black"], ["white", "red"]),
+    "padrao 177": (["red", "black", "white", "red"], ["white", "black"]),
+    "padrao 178": (["white", "black", "red", "white"], ["white", "red"]),
+    "padrao 179": (["black", "red", "white", "red"], ["white", "black"]),
+    "padrao 180": (["white", "red", "black", "white"], ["white", "black"]),
+    "padrao 181": (["black", "white", "red", "black"], ["white", "red"]),
+    "padrao 182": (["red", "black", "white", "red"], ["white", "black"]),
+    "padrao 183": (["white", "red", "black", "white"], ["white", "black"]),
+    "padrao 184": (["black", "red", "white", "black"], ["white", "black"]),
+    "padrao 185": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 186": (["white", "red", "black", "black"], ["white", "black"]),
+    "padrao 187": (["black", "white", "red", "white"], ["white", "red"]),
+    "padrao 188": (["red", "white", "black", "black"], ["white", "black"]),
+    "padrao 189": (["white", "black", "red", "black"], ["white", "black"]),
+    "padrao 190": (["red", "white", "black", "white"], ["white", "red"]),
+    "padrao 191": (["black", "red", "white", "red"], ["white", "black"]),
+    "padrao 192": (["white", "black", "red", "white"], ["white", "red"]),
+    "padrao 193": (["red", "white", "black", "black"], ["white", "black"]),
+    "padrao 194": (["white", "red", "black", "red"], ["white", "red"]),
+    "padrao 195": (["black", "white", "red", "white"], ["white", "black"]),
+    "padrao 196": (["red", "black", "white", "black"], ["white", "red"]),
+    "padrao 197": (["white", "red", "black", "white"], ["white", "black"]),
+    "padrao 198": (["black", "red", "white", "red"], ["white", "black"]),
+    "padrao 199": (["red", "white", "black", "black"], ["white", "red"]),
+    "padrao 200": (["white", "black", "red", "white"], ["white", "black"]),
+
 }
 
-    
     # Contadores de acertos, acertos gale, erros e totais de padrões
     resultados = {padrao: {"acertos": 0, "acertos_gale": 0, "erros": 0, "total": 0, "max_acertos_consecutivos": 0, "max_erros_consecutivos": 0} for padrao in padroes}
     log_padroes = []  # Para armazenar informações sobre as ocorrências dos padrões
@@ -87,9 +217,9 @@ def analisar_historico(historico):
     acertos_consecutivos = {padrao: 0 for padrao in padroes}
     erros_consecutivos = {padrao: 0 for padrao in padroes}
     
-    # Processar o histórico de jogadas, extraindo a primeira cor de cada linha
+    # Processar o histórico de jogadas, extraindo a cor de cada linha no novo formato
     linhas = historico.strip().split("\n")
-    sequencias = [re.findall(r"(red|black|white)", linha)[0] for linha in linhas if re.findall(r"(red|black|white)", linha)]
+    sequencias = [re.search(r"Cor: (white|black|red)", linha).group(1) for linha in linhas if re.search(r"Cor: (white|black|red)", linha)]
     
     # Iteração sobre a sequência de cores para detectar padrões e próximas jogadas
     for i in range(len(sequencias)):
@@ -135,11 +265,11 @@ def analisar_historico(historico):
 # Caminhos para a área de trabalho e o log
 desktop_path = os.path.join(os.path.expanduser("~"), 'Desktop')
 logs_path = os.path.join(desktop_path, "LOGS")
-log_file_path = os.path.join(logs_path, "log 36.txt")
+log_file_path = os.path.join(logs_path, "resultados_double.txt")
 log_padroes_path = os.path.join(desktop_path, "log_padroes_encontrados.txt")
 planilha_path = os.path.join(desktop_path, "resultados_padroes.xlsx")
 
-# Leitura do arquivo de histórico
+# Leitura do arquivo de histórico no novo formato
 with open(log_file_path, "r") as arquivo:
     historico = arquivo.read()
 

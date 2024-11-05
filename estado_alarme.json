@@ -1,1 +1,4 @@
-{"alarme_acionado2": true}
+{
+    "alarme_acionado2": false,
+    "cor_oposta": null
+}

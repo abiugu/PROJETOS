@@ -4,12 +4,12 @@ import aiohttp
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
-from dotenv import load_dotenv
 from selenium.common.exceptions import NoSuchElementException
+from dotenv import load_dotenv
 import platform
 import time
 
@@ -22,10 +22,8 @@ url = "https://blaze1.space/api/roulette_games/recent"
 
 # Variável global para armazenar a última mensagem
 ultima_mensagem = ""
-# Variável global para armazenar a última mensagem do alarme
-ultima_mensagem_alarme = ""
 
-# Dicionário de padrões de cores
+# Dicionário de padrões
 padroes = {
     "padrao 18": (["black", "white", "red", "white", "black"], ["white", "black"]),
     "padrao 21": (["black", "red", "red", "white", "white", "black"], ["white", "red"]),
@@ -72,7 +70,7 @@ async def api():
                 data = await resp.json()
                 return [{'id': item['id'], 'color': item['color']} for item in data]
         except aiohttp.ClientError as e:
-            print(f"Erro ao obter dados da API: {e}")
+            print(f"Erro ao obter dados: {e}")
             return []
 
 # Função para salvar os dados no arquivo colors.json
@@ -90,7 +88,7 @@ def save_colors(results):
             ultima_mensagem = nova_mensagem  # Atualiza a última mensagem
 
     except IOError as e:
-        print(f"Erro ao salvar o arquivo colors.json: {e}")
+        print(f"Erro ao salvar o arquivo: {e}")
 
 # Função para ler o estado do alarme do arquivo estado_alarme.json
 def ler_estado_alarme():
@@ -98,25 +96,25 @@ def ler_estado_alarme():
         with open('estado_alarme.json', 'r') as f:
             estado = json.load(f)
             alarme_acionado2 = estado.get('alarme_acionado2', False)
-            cor_oposta = estado.get('cor_oposta', None)
-            return alarme_acionado2, cor_oposta
+            cores_para_apostar = estado.get('cores_para_apostar', None)
+            return alarme_acionado2, cores_para_apostar
     except FileNotFoundError:
         print("Arquivo estado_alarme.json não encontrado.")
         return False, None
 
 # Função para atualizar o estado do alarme (desativá-lo, por exemplo)
-def atualizar_estado_alarme(alarme_acionado2, cor_oposta):
+def atualizar_estado_alarme(alarme_acionado2, cores_para_apostar):
     estado = {
         'alarme_acionado2': alarme_acionado2,
-        'cor_oposta': cor_oposta
+        'cores_para_apostar': cores_para_apostar
     }
     with open('estado_alarme.json', 'w') as f:
         json.dump(estado, f, indent=4)
-    print(f"Estado do alarme atualizado: alarme_acionado2={alarme_acionado2}, cor_oposta={cor_oposta}")
+    print(f"Estado do alarme atualizado: alarme_acionado2={alarme_acionado2}, cores_para_apostar={cores_para_apostar}")
 
 # Função para realizar login no site Blaze
 def realizar_login(email, senha):
-    service = Service('C:\\Users\\Abiug\\PROJETOS\\Automação de entradas\\chromedriver.exe')  # Atualize este caminho se necessário
+    service = Service()  # Atualize este caminho se necessário
     options = webdriver.ChromeOptions()
     # options.add_argument('--headless')  # Descomente para rodar em modo headless
     driver = webdriver.Chrome(service=service, options=options)
@@ -136,92 +134,119 @@ def realizar_login(email, senha):
         return driver
     except Exception as e:
         print(f"Erro ao realizar login: {e}")
-        driver.quit()
+
 
 # Função para tentar realizar a aposta por até 5 segundos
-def tentar_aposta(driver, valor_aposta, cor):
-    tentativas = 0
-    while tentativas < 5:
+def tentar_aposta(driver, valor_aposta, cor_aposta, tentativas=5):
+    for tentativa in range(tentativas):
         try:
-            valor_input = driver.find_element(By.CSS_SELECTOR, 'input[type="number"]')
-            valor_input.clear()
-            valor_input.send_keys(str(valor_aposta))
+            # Localiza o campo de valor de entrada e insere o valor
+            input_valor_aposta = WebDriverWait(driver, 1).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="number"]'))
+            )
+            input_valor_aposta.clear()
+            input_valor_aposta.send_keys(valor_aposta)
 
-            # Seleciona o botão de aposta com base na cor
-            cor_button = driver.find_element(By.CSS_SELECTOR, f"button[data-color='{cor}']")
+            # Seleciona a cor correta
+            cor_button = WebDriverWait(driver, 1).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, f'div.{cor_aposta}'))
+            )
             cor_button.click()
-            time.sleep(1)  # Pausa para garantir que a aposta foi processada
-            print(f"Aposta de {valor_aposta} em {cor} realizada com sucesso!")
-            return
-        except NoSuchElementException:
-            print("Erro ao tentar realizar a aposta, tentando novamente...")
-            tentativas += 1
-            time.sleep(1)
-    print("Falha ao realizar a aposta após 5 tentativas.")
 
-# Função para monitorar as jogadas
+            # Clicar no botão de "Apostar"
+            botao_apostar = WebDriverWait(driver, 1).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, 'button#bet-button'))
+            )
+            botao_apostar.click()
+            print(f"Aposta de {valor_aposta} na cor {cor_aposta} realizada com sucesso!")
+            return True  # Retorna verdadeiro se a aposta foi realizada com sucesso
+        except Exception as e:
+            print(f"Tentativa {tentativa + 1}/{tentativas} falhou: {e}")
+            time.sleep(1)  # Aguardar antes de tentar novamente
+    return False  # Retorna falso se todas as tentativas falharam
+
+# Função principal que monitora as jogadas e realiza as apostas
 async def monitorar_jogadas(driver):
-    global ultima_mensagem_alarme  # Referência à variável global
+    ultimo_id = None
+    ultima_cor = None
+    penultima_cor = None  # Variável para armazenar a cor antes da última
     historico = []  # Para armazenar o histórico das cores
 
     while True:
-        # Verificar se o modal de inatividade está presente
+        # Verificar se o modal de confirmação de atividade está presente
         try:
-            modal = driver.find_element(By.CSS_SELECTOR, ".modal-content")
+            # Tenta localizar o modal de confirmação de atividade
+            modal = driver.find_element(By.ID, "confirm-activity-modal")
+            # Se o modal estiver presente, tenta clicar no botão "Estou aqui!"
             if modal.is_displayed():
-                botao_estou_aqui = driver.find_element(By.CSS_SELECTOR, ".btn.btn-primary")
+                print("Modal de inatividade detectado, clicando no botão 'Estou aqui!'")
+                botao_estou_aqui = modal.find_element(By.CSS_SELECTOR, "button.custom-button.i_m_here")
                 botao_estou_aqui.click()
-                print("Botão 'Estou aqui!' clicado.")
+                print("Clique realizado com sucesso!")
+                await asyncio.sleep(1)  # Pequeno delay para garantir que o modal seja fechado
         except NoSuchElementException:
-            pass
+            pass  # Se o modal não estiver presente, continua normalmente
 
-        # Obter os resultados da API
-        resultados = await api()
-        save_colors(resultados)
-        
-        # Atualiza o histórico com as cores mais recentes
-        for resultado in resultados:
-            historico.append(resultado['color'])
+        results = await api()  # Função de API assíncrona para pegar os dados
+        if results:
+            save_colors(results)
+
+            id_atual = results[0]['id']  # ID da jogada mais recente
+            cor_atual = results[0]['color']  # Cor da jogada mais recente
+            
+            # Adiciona a cor atual ao histórico
+            historico.append(cor_atual)
             if len(historico) > 10:  # Limitar o histórico a 10 entradas
                 historico.pop(0)
 
-        # Verifica padrões
-        alarme_acionado = False
-        cor_oposta = None
-        
-        for padrao, (sequencia, cores_alarme) in padroes.items():
-            if len(historico) >= len(sequencia) and historico[-len(sequencia):] == sequencia:
-                alarme_acionado = True
-                cor_oposta = cores_alarme  # Cores a serem apostadas
-                print(f"Alarme acionado pelo {padrao}!")
-                break
+            # Verifica padrões
+            alarme_acionado = False
+            cores_para_apostar = []  # Listar cores a serem apostadas
 
-        # Atualiza o estado do alarme
-        atualizar_estado_alarme(alarme_acionado, cor_oposta)
+            for padrao, (sequencia, cores_alarme) in padroes.items():
+                if len(historico) >= len(sequencia) and historico[-len(sequencia):] == sequencia:
+                    alarme_acionado = True
+                    cores_para_apostar = cores_alarme  # Cores a serem apostadas
+                    print(f"Alarme acionado pelo padrão '{padrao}'!")
+                    break
 
-        if alarme_acionado:
-            # Realiza a aposta nas cores opostas especificadas
-            if cor_oposta:
-                valor_aposta = 1  # Defina aqui o valor da aposta
-                for cor in cor_oposta:
-                    tentar_aposta(driver, valor_aposta, cor)
+            # Atualiza o estado do alarme
+            atualizar_estado_alarme(alarme_acionado, cores_para_apostar)
 
-        await asyncio.sleep(5)  # Aguarda 5 segundos antes da próxima verificação
+            if alarme_acionado and cores_para_apostar:
+                valor_aposta = 10  # Define o valor da aposta
+                for cor in cores_para_apostar:
+                    sucesso = tentar_aposta(driver, valor_aposta, cor)
+                    if sucesso:
+                        # Realiza também a aposta na cor "white"
+                        tentar_aposta(driver, 1, "white")  # Aposta de 1 na cor "white"
+                        print(f"Apostas realizadas para as cores: {cores_para_apostar} e white.")
+                        # Desativa o alarme após a aposta
+                        atualizar_estado_alarme(False, None)
+                        print("Apostas realizadas, aguardando 30 segundos antes de continuar.")
+                        await asyncio.sleep(30)  # Aguardar 30 segundos antes de continuar
 
-# Execução do script
-if __name__ == "__main__":
-    load_dotenv()
+            # Atualiza os valores de última jogada
+            penultima_cor = ultima_cor  # Move a última cor para a penúltima
+            ultima_cor = cor_atual
+            ultimo_id = id_atual
+
+        await asyncio.sleep(0.5)  # Reduzir latência com await
+
+# Função principal do programa
+async def main():
+    load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
     email = os.getenv('EMAIL')
     senha = os.getenv('SENHA')
 
-    if not email or not senha:
-        print("Email ou senha não definidos. Verifique suas variáveis de ambiente.")
-    else:
-        driver = realizar_login(email, senha)
-        if driver:
-            try:
-                asyncio.run(monitorar_jogadas(driver))
-            except KeyboardInterrupt:
-                print("Interrompendo o script...")
-            finally:
-                driver.quit()
+    # Verifique se as variáveis foram carregadas corretamente
+    if email is None or senha is None:
+        print("Erro: EMAIL ou SENHA não estão definidos no arquivo .env.")
+        return
+
+    driver = realizar_login(email, senha)
+    try:
+        await monitorar_jogadas(driver)
+    finally:
+        driver.quit()  # Garante que o navegador seja fechado no final
+
