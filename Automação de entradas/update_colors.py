@@ -18,7 +18,7 @@ if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # URL da API Blaze
-url = "https://blaze1.space/api/roulette_games/recent"
+url = "https://blaze1.space/api/singleplayer-originals/originals/roulette_games/recent/1"
 
 # Variável global para armazenar a última mensagem
 ultima_mensagem = ""
