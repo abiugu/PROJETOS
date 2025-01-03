@@ -1,124 +1,45 @@
-import os
-import re
 import pandas as pd
-from collections import defaultdict
+import os
 
-def ler_e_analisar_log(caminho_arquivo_log):
-    with open(caminho_arquivo_log, 'r') as f:
-        log_data = f.read()
+# Dados dos padrões
+dados_padroes = [
+    {"Padrão": "4626", "Win Direto": 58, "Gale 1": 26, "Gale 2": 15, "Loss": 7},
+    {"Padrão": "5583", "Win Direto": 5, "Gale 1": 2, "Gale 2": 0, "Loss": 0},
+    {"Padrão": "2420", "Win Direto": 5, "Gale 1": 1, "Gale 2": 0, "Loss": 0},
+    {"Padrão": "3800", "Win Direto": 1, "Gale 1": 1, "Gale 2": 2, "Loss": 0},
+    {"Padrão": "1985", "Win Direto": 63, "Gale 1": 30, "Gale 2": 5, "Loss": 11},
+    {"Padrão": "4131", "Win Direto": 3, "Gale 1": 1, "Gale 2": 0, "Loss": 0},
+    {"Padrão": "2817", "Win Direto": 2, "Gale 1": 0, "Gale 2": 1, "Loss": 0},
+    {"Padrão": "6398", "Win Direto": 10, "Gale 1": 1, "Gale 2": 1, "Loss": 0},
+    {"Padrão": "418", "Win Direto": 2, "Gale 1": 3, "Gale 2": 0, "Loss": 0},
+    {"Padrão": "7615", "Win Direto": 3, "Gale 1": 1, "Gale 2": 1, "Loss": 1},
+    {"Padrão": "8992", "Win Direto": 8, "Gale 1": 2, "Gale 2": 4, "Loss": 0},
+    {"Padrão": "2885", "Win Direto": 20, "Gale 1": 11, "Gale 2": 5, "Loss": 1},
+    {"Padrão": "6237", "Win Direto": 5, "Gale 1": 6, "Gale 2": 0, "Loss": 2},
+    {"Padrão": "6972", "Win Direto": 1, "Gale 1": 2, "Gale 2": 1, "Loss": 0},
+    {"Padrão": "7", "Win Direto": 17, "Gale 1": 10, "Gale 2": 4, "Loss": 1},
+    {"Padrão": "8", "Win Direto": 17, "Gale 1": 7, "Gale 2": 5, "Loss": 2},
+]
+
+# Processar os dados para adicionar os percentuais
+for padrao in dados_padroes:
+    total_tentativas = padrao["Win Direto"] + padrao["Gale 1"] + padrao["Gale 2"] + padrao["Loss"]
     
-    # Padrões de regex para capturar os resultados e porcentagens
-    resultados_re = re.compile(r'Ultimos 3 resultados: (\w+), (\w+), (\w+)')
-    porcentagens_25_re = re.compile(r'Ultimas 25 porcentagens: ([\d.]+), ([\d.]+), ([\d.]+)')
-    porcentagens_50_re = re.compile(r'Ultimas 50 porcentagens: ([\d.]+), ([\d.]+), ([\d.]+)')
-    porcentagens_100_re = re.compile(r'Ultimas 100 porcentagens: ([\d.]+), ([\d.]+), ([\d.]+)')
-    porcentagens_500_re = re.compile(r'Ultimas 500 porcentagens: ([\d.]+), ([\d.]+), ([\d.]+)')
+    # Percentual acumulado
+    padrao["Percentual Acerto Direto (%)"] = (padrao["Win Direto"] / total_tentativas * 100) if total_tentativas > 0 else 0
+    padrao["Percentual Acerto Gale 1 (%)"] = ((padrao["Win Direto"] + padrao["Gale 1"]) / total_tentativas * 100) if total_tentativas > 0 else 0
+    padrao["Percentual Acerto Gale 2 (%)"] = ((padrao["Win Direto"] + padrao["Gale 1"] + padrao["Gale 2"]) / total_tentativas * 100) if total_tentativas > 0 else 0
     
-    resultados = resultados_re.findall(log_data)
-    porcentagens_25 = porcentagens_25_re.findall(log_data)
-    porcentagens_50 = porcentagens_50_re.findall(log_data)
-    porcentagens_100 = porcentagens_100_re.findall(log_data)
-    porcentagens_500 = porcentagens_500_re.findall(log_data)
+    # Percentual de erros
+    padrao["Percentual Erro (%)"] = (padrao["Loss"] / total_tentativas * 100) if total_tentativas > 0 else 0
 
-    # Converte as porcentagens para float
-    porcentagens_25 = [(float(p[0]), float(p[1]), float(p[2])) for p in porcentagens_25]
-    porcentagens_50 = [(float(p[0]), float(p[1]), float(p[2])) for p in porcentagens_50]
-    porcentagens_100 = [(float(p[0]), float(p[1]), float(p[2])) for p in porcentagens_100]
-    porcentagens_500 = [(float(p[0]), float(p[1]), float(p[2])) for p in porcentagens_500]
 
-    return resultados, porcentagens_25, porcentagens_50, porcentagens_100, porcentagens_500
+# Criar o DataFrame
+df = pd.DataFrame(dados_padroes)
 
-def analisar_padroes(resultados, porcentagens_25, porcentagens_50, porcentagens_100, porcentagens_500):
-    acertos_erros = {'red': defaultdict(lambda: {'acertos': 0, 'erros': 0}),
-                     'black': defaultdict(lambda: {'acertos': 0, 'erros': 0}),
-                     'white': defaultdict(lambda: {'acertos': 0, 'erros': 0})}
+# Salvar em Excel
+desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+arquivo_excel = os.path.join(desktop_path, "resultados_padroes.xlsx")
+df.to_excel(arquivo_excel, index=False)
 
-    i = 0
-    while i < len(resultados) - 2:
-        cor_atual = resultados[i][0]
-        
-        # Verifica se os 3 últimos resultados são iguais (sequência de cores)
-        if resultados[i][0] == resultados[i][1] == resultados[i][2]:
-            if cor_atual not in ["black", "red", "white"]:
-                i += 1
-                continue
-
-            # Captura os índices corretos para as porcentagens
-            index = {"white": 0, "black": 1, "red": 2}[cor_atual]
-
-            # Captura as porcentagens correspondentes e as rotula (percentual 25, 50, 100, 500)
-            porcentagem_atual_25 = (porcentagens_25[i][index], "Percentual 25")
-            porcentagem_atual_50 = (porcentagens_50[i][index], "Percentual 50")
-            porcentagem_atual_100 = (porcentagens_100[i][index], "Percentual 100")
-            porcentagem_atual_500 = (porcentagens_500[i][index], "Percentual 500")
-
-            # Combinações de duas porcentagens
-            combinacoes = [
-                (porcentagem_atual_25, porcentagem_atual_50),
-                (porcentagem_atual_50, porcentagem_atual_100),
-                (porcentagem_atual_100, porcentagem_atual_500)
-            ]
-
-            # Verifica a próxima linha para determinar se houve quebra na sequência
-            if i + 1 < len(resultados):
-                for comb in combinacoes:
-                    if resultados[i + 1][0] == cor_atual:  # Erro: manteve a sequência
-                        acertos_erros[cor_atual][comb]['erros'] += 1
-                    else:  # Acerto: quebrou a sequência
-                        acertos_erros[cor_atual][comb]['acertos'] += 1
-
-            # Avança até quebrar a sequência de 3 cores iguais
-            while i < len(resultados) and resultados[i][0] == cor_atual:
-                i += 1
-        else:
-            i += 1
-
-    return acertos_erros
-
-def salvar_resultados(acertos_erros, caminho_arquivo_saida):
-    resultados_com_assertividade = []
-
-    for cor in acertos_erros.keys():
-        for combinacao, dados in acertos_erros[cor].items():
-            acertos = dados['acertos']
-            erros = dados['erros']
-            total = acertos + erros
-            
-            # Calcular assertividade em percentual
-            assertividade = (acertos / total * 100) if total > 0 else 0
-            
-            # Adiciona os dados à lista para o DataFrame
-            resultados_com_assertividade.append({
-                'Cor': cor,
-                'Combinação': f"{combinacao[0][1]} ({combinacao[0][0]:.1f}%) e {combinacao[1][1]} ({combinacao[1][0]:.1f}%)",
-                'Acertos': acertos,
-                'Erros': erros,
-                'Total de Jogadas': total,
-                'Assertividade (%)': f"{assertividade:.1f}"
-            })
-
-    # Cria um DataFrame com os resultados
-    df_resultados = pd.DataFrame(resultados_com_assertividade)
-
-    # Ordenar os resultados pela assertividade (decrescente) e, em seguida, pela quantidade de jogadas (total)
-    df_resultados.sort_values(by=['Assertividade (%)', 'Total de Jogadas'], ascending=[False, False], inplace=True)
-
-    # Salvar os resultados em um arquivo Excel
-    df_resultados.to_excel(caminho_arquivo_saida, index=False)
-
-def main():
-    desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
-    arquivo_log = os.path.join(desktop_path, 'LOGS', 'log 36.txt')
-    
-    # Ler o log e capturar resultados e porcentagens
-    resultados, porcentagens_25, porcentagens_50, porcentagens_100, porcentagens_500 = ler_e_analisar_log(arquivo_log)
-    
-    # Analisar padrões de acertos e erros
-    acertos_erros = analisar_padroes(resultados, porcentagens_25, porcentagens_50, porcentagens_100, porcentagens_500)
-    
-    # Salvar resultados no arquivo "resultados.xlsx" na área de trabalho
-    arquivo_saida = os.path.join(desktop_path, 'resultados.xlsx')
-    salvar_resultados(acertos_erros, arquivo_saida)
-
-if __name__ == "__main__":
-    main()
+print(f"Planilha criada com sucesso: {arquivo_excel}")

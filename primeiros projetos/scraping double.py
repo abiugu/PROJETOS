@@ -14,37 +14,53 @@ options.add_argument('--disable-gpu')
 
 # Caminho para a área de trabalho
 desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
-txt_file_path = os.path.join(desktop_path, "resultados_double.txt")
+txt_file_path = os.path.join(desktop_path, "resultados_double2.txt")
 
 # Limitar o número de páginas a serem extraídas
-limite_paginas = 887  # Altere este valor conforme desejado
+limite_paginas = 850  # Altere este valor conforme desejado
 
 # Iniciar o WebDriver
 driver = webdriver.Chrome(service=service, options=options)
 wait = WebDriverWait(driver, 30)
-
 try:
     # Navegar até a página inicial
     url = 'https://blaze1.space/pt/games/double?modal=double_history-v2_index&roomId=1'
     driver.get(url)
-    print("Pagina carregada com sucesso.")
+    print("Página carregada com sucesso.")
+
+    # Fechar notificação "Eu tenho mais de 18 anos"
+    try:
+        botao_idade = wait.until(EC.element_to_be_clickable(
+            (By.XPATH, "//button[contains(text(), 'Eu tenho mais de 18 anos')]")))
+        botao_idade.click()
+        print("Botão 'Eu tenho mais de 18 anos' clicado.")
+    except Exception as e:
+        print("Botão 'Eu tenho mais de 18 anos' não encontrado ou já fechado.")
+
+    # Fechar notificação "Aceitar todos os cookies"
+    try:
+        botao_cookies = wait.until(EC.element_to_be_clickable(
+            (By.XPATH, "//button[contains(text(), 'ACEITAR TODOS OS COOKIES')]")))
+        botao_cookies.click()
+        print("Botão 'Aceitar todos os cookies' clicado.")
+    except Exception as e:
+        print("Botão 'Aceitar todos os cookies' não encontrado ou já fechado.")
 
     # Avançar para a página final a partir da página inicial
     for i in range(limite_paginas - 1):
         try:
-            botao_avanco = wait.until(EC.element_to_be_clickable(
-                (By.XPATH, "(//button[@class='pagination__button'])[2]")))
+            botao_avanco = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class='pagination__button'])[2]")))
             botao_avanco.click()
-            print(f"Avancando para a pagina {i + 2}")
+            print(f"Avançando para a página {i + 2}")
 
         except Exception as e:
-            print(f"Erro ao tentar avancar a pagina: {e}")
+            print(f"Erro ao tentar avançar a página: {e}")
             break
 
     # Extrair dados e retroceder uma página por vez até a página inicial
     for pagina in range(limite_paginas):
         pagina_atual = limite_paginas - pagina  # Calcula a página atual de acordo com o loop
-        print(f"Extraindo dados da pagina {pagina_atual}")
+        print(f"Extraindo dados da página {pagina_atual}")
 
         # Espera até que o histórico de jogadas esteja carregado
         history_element = wait.until(EC.presence_of_element_located((By.ID, "history__double")))
@@ -78,7 +94,7 @@ try:
                     txt_file.write(result_line + "\n")
 
                 except Exception as e:
-                    print(f"Erro ao extrair dados do conteiner: {e}")
+                    print(f"Erro ao extrair dados do contêiner: {e}")
                     continue
 
         # Retrocede para a página anterior, se não estiver na primeira página
@@ -87,10 +103,10 @@ try:
                 botao_retrocesso = wait.until(EC.element_to_be_clickable(
                     (By.XPATH, "(//button[@class='pagination__button'])[1]")))
                 botao_retrocesso.click()
-                print(f"Retrocedendo para a pagina {pagina_atual - 1}")
+                print(f"Retrocedendo para a página {pagina_atual - 1}")
                 time.sleep(2)
             except Exception as e:
-                print(f"Erro ao tentar retroceder a pagina: {e}")
+                print(f"Erro ao tentar retroceder a página: {e}")
                 break
 
 except Exception as e:
