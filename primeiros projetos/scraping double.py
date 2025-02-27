@@ -9,7 +9,7 @@ import time
 # Configurações do ChromeDriver
 service = Service()
 options = webdriver.ChromeOptions()
-# options.add_argument('--headless')  # Usar para rodar sem interface gráfica
+options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 
 # Caminho para a área de trabalho
@@ -17,14 +17,14 @@ desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 txt_file_path = os.path.join(desktop_path, "resultados_double2.txt")
 
 # Limitar o número de páginas a serem extraídas
-limite_paginas = 850  # Altere este valor conforme desejado
+limite_paginas = 1000  # Altere este valor conforme desejado
 
 # Iniciar o WebDriver
 driver = webdriver.Chrome(service=service, options=options)
 wait = WebDriverWait(driver, 30)
 try:
     # Navegar até a página inicial
-    url = 'https://blaze1.space/pt/games/double?modal=double_history-v2_index&roomId=1'
+    url = 'https://blaze.bet.br/pt/games/double?modal=double_history-v2_index&roomId=1'
     driver.get(url)
     print("Página carregada com sucesso.")
 
