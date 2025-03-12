@@ -53,7 +53,7 @@ def analisar_padroes(lista_cores, tamanho_sequencia):
 
 def salvar_resultado(padroes, tamanho_sequencia):
     """Salva o resultado da análise em uma planilha Excel."""
-    desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop', 'Resultados padroes white')
+    desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop', 'Resultados padroes double')
     resultado_path = os.path.join(desktop_path, f'Analise white {tamanho_sequencia}.xlsx')
 
     df_resultado = []
