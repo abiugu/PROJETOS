@@ -1,36 +1,10 @@
 import sys
 import os
 import pandas as pd
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QTableWidget, QTableWidgetItem, QDialog, QDialogButtonBox, QTextEdit
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QTableWidget, QTableWidgetItem
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 from collections import defaultdict
-
-class JanelaPadroes(QDialog):
-    def __init__(self, padroes):
-        super().__init__()
-        self.setWindowTitle("Padrões Detectados")
-        self.setGeometry(200, 200, 600, 400)
-
-        # Layout para a janela de padrões
-        layout = QVBoxLayout()
-
-        # Texto que irá conter os padrões detectados
-        self.texto_padroes = QTextEdit(self)
-        self.texto_padroes.setReadOnly(True)
-        layout.addWidget(self.texto_padroes)
-
-        # Exibe os padrões detectados na janela
-        for padrao in padroes:
-            self.texto_padroes.append(padrao)
-
-        # Botão para fechar a janela
-        botao_fechar = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
-        botao_fechar.clicked.connect(self.accept)
-        layout.addWidget(botao_fechar)
-
-        self.setLayout(layout)
-
 
 class HistoricoBlaze(QWidget):
     def __init__(self):
@@ -88,7 +62,7 @@ class HistoricoBlaze(QWidget):
             df['Minuto'] = df["DataHora"].dt.minute
 
             # Agora, os dados estão com a hora e minuto extraídos corretamente
-            dias_unicos = sorted(df["DataHora"].dt.date.unique())  # Ordem crescente dos dias
+            dias_unicos = sorted(df["DataHora"].dt.date.unique(), reverse=True)
             historico = {dia: df[df["DataHora"].dt.date == dia] for dia in dias_unicos}
 
             return historico
@@ -115,18 +89,26 @@ class HistoricoBlaze(QWidget):
         # Ordenar os dados para garantir a ordem correta de hora e minuto
         df = df.sort_values(by=["Hora", "Minuto"])
     
-        # Definindo as horas disponíveis
+        
+        # Criar um conjunto apenas com os minutos reais existentes no DataFrame
         horas_disponiveis = sorted(df["Hora"].unique())
+        minutos_disponiveis = { (row["Hora"], row["Minuto"]) for _, row in df.iterrows() }
+
     
-        # Determinando o número máximo de jogadas por minuto (2, conforme mencionado)
-        max_jogadas_por_minuto = df.groupby(['Hora', 'Minuto']).size().max()
+        max_jogadas_por_minuto = 2  # Sempre no máximo 2 jogadas por minuto
+
+        # Filtrar apenas os minutos reais do dataframe
+        minutos_disponiveis = sorted(df["Minuto"].unique())
+        
+        # Criar colunas apenas para os minutos reais e no máximo 2 por minuto
+        self.tabela.setColumnCount(len(minutos_disponiveis) * max_jogadas_por_minuto)
+        self.tabela.setHorizontalHeaderLabels(
+            [f"{minuto}m ({i+1})" for minuto in minutos_disponiveis for i in range(max_jogadas_por_minuto)]
+        )
+
     
         # Definindo a tabela para mostrar
         self.tabela.setRowCount(len(horas_disponiveis))
-        self.tabela.setColumnCount(60 * max_jogadas_por_minuto)  # Multiplicando as colunas por jogadas
-    
-        # Ajuste do cabeçalho para mostrar os minutos duplicados
-        self.tabela.setHorizontalHeaderLabels([f"{i//max_jogadas_por_minuto}m ({i%max_jogadas_por_minuto + 1})" for i in range(60 * max_jogadas_por_minuto)])
     
         self.tabela.setVerticalHeaderLabels([f"{h}h" for h in horas_disponiveis])
     
@@ -150,8 +132,15 @@ class HistoricoBlaze(QWidget):
             for minuto in range(60):
                 jogadas = jogadas_por_minuto.get((hora, minuto), [])
     
+                # Garantir que tenha no máximo 2 jogadas por minuto (caso haja mais, vamos descartar as extras)
+                if len(jogadas) > 2:
+                    jogadas = jogadas[:2]  # Limitar a 2 jogadas por minuto
+    
+                # Inverter as jogadas dentro do minuto (se houver 2 jogadas)
+                jogadas_invertidas = jogadas[::-1]  # Inverte a lista
+    
                 # Se houver jogadas para esse minuto
-                for idx, (numero, cor) in enumerate(jogadas):
+                for idx, (numero, cor) in enumerate(jogadas_invertidas):
                     item = QTableWidgetItem(numero)
                     item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
     
@@ -179,6 +168,9 @@ class HistoricoBlaze(QWidget):
     
         for row in range(self.tabela.rowCount()):
             self.tabela.setRowHeight(row, 35)  # Reduzindo a altura das linhas para metade (20 pixels, por exemplo)
+
+
+
 
     def dia_anterior(self):
         """Mostra o dia anterior."""
@@ -266,8 +258,8 @@ class HistoricoBlaze(QWidget):
 
         # Exibe os padrões encontrados
         if padroes:
-            janela_padroes = JanelaPadroes(padroes)
-            janela_padroes.exec()
+            for padrao in padroes:
+                print(padrao)
         else:
             print("Nenhum padrão encontrado.")
 
