@@ -1,124 +1,57 @@
-import os
 import pandas as pd
-from collections import defaultdict
+import os
 
-def ler_lista_cores():
-    """Lê a planilha de histórico de jogadas e retorna a lista de cores na ordem correta (de baixo para cima)."""
-    desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
-    arquivo_path = os.path.join(desktop_path, 'historico blaze.xlsx')
+# Caminho para o desktop
+desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 
-    try:
-        df = pd.read_excel(arquivo_path)
+# Carregar os dados do arquivo gerado
+file_path = os.path.join(desktop_path, "resultado_diferenca_brancos.xlsx")
+data = pd.read_excel(file_path)
 
-        # 🔹 Inverte a ordem das linhas para ler de baixo para cima
-        df = df.iloc[::-1].reset_index(drop=True)
+# Garantir que a coluna 'Dia' esteja no formato datetime (com data)
+data['Dia'] = pd.to_datetime(data['Dia'], format='%d/%m/%Y')
 
-        lista_cores = df["Cor"].str.lower().tolist()  # Obtém a coluna "Cor" e converte para minúsculas
-        return lista_cores
-    except Exception as e:
-        print(f"Erro ao ler a planilha: {e}")
-        return []
+# Calcular a diferença de brancos por hora (Diferença da Hora Anterior)
+data['Diferença da Hora Anterior'] = data.groupby(['Dia'])['Qtd brancos'].diff()
 
-def analisar_padroes(lista_cores, tamanho_sequencia):
-    """Analisa a frequência dos padrões e os acertos diretos e Gale 1 para white."""
-    padroes = defaultdict(lambda: {
-        "Total": 0,
-        "White_Acerto_Direto": 0, 
-        "White_Acerto_Gale": 0, 
-        "White_Erros": 0
-    })
+# Calcular a diferença de brancos por dia (Diferença com Dia Anterior)
+data['Diferença com Dia Anterior'] = data.groupby(['Hora'])['Qtd brancos'].diff()
 
-    total_sequencias = len(lista_cores) - tamanho_sequencia - 1
+# Função para calcular a assertividade de um padrão
+def calcular_assertividade(padrao_coluna):
+    """
+    Calcular a assertividade de um padrão dado uma coluna que contém as diferenças de brancos.
+    A assertividade é definida como a frequência de um padrão se repetindo.
+    """
+    total = len(padrao_coluna)
+    padrao_count = padrao_coluna.value_counts()  # Contar quantas vezes cada valor (padrão) se repete
+    assertividade = (padrao_count / total) * 100  # Calcular assertividade como porcentagem
+    return assertividade
 
-    if total_sequencias < 1:
-        print("Poucos dados para análise. Escolha um tamanho de sequência menor.")
-        return padroes
+# Função para filtrar os padrões com 70% ou mais de assertividade
+def filtrar_padroes_70_porcento(data, threshold=70):
+    # Padrões por hora - analisando a diferença por hora
+    patterns_hour = data.groupby(['Dia', 'Hora'])['Diferença da Hora Anterior'].apply(calcular_assertividade)
+    
+    # Padrões por dia - analisando a diferença por dia
+    patterns_day = data.groupby(['Dia', 'Hora'])['Diferença com Dia Anterior'].apply(calcular_assertividade)
+    
+    # Filtrar os padrões que têm mais de 70% de assertividade
+    hour_patterns_70 = patterns_hour[patterns_hour >= threshold]
+    day_patterns_70 = patterns_day[patterns_day >= threshold]
+    
+    return hour_patterns_70, day_patterns_70
 
-    for i in range(total_sequencias):
-        sequencia = tuple(lista_cores[i:i + tamanho_sequencia])  # Captura a sequência de X jogadas
-        proxima_cor = lista_cores[i + tamanho_sequencia]  # Primeira jogada futura
-        segunda_cor = lista_cores[i + tamanho_sequencia + 1] if i + tamanho_sequencia + 1 < len(lista_cores) else None  # Segunda jogada futura
+# Aplicar a função
+hour_patterns_70, day_patterns_70 = filtrar_padroes_70_porcento(data)
 
-        padroes[sequencia]["Total"] += 1
+# Criar o arquivo Excel para salvar ambos os dados (padrões por hora e por dia)
+output_file_path = os.path.join(desktop_path, "padroes_70_porcento_brancos.xlsx")
 
-        # Analisando apenas a cor "white"
-        if proxima_cor == 'white':
-            padroes[sequencia]["White_Acerto_Direto"] += 1
-        elif segunda_cor == 'white':
-            padroes[sequencia]["White_Acerto_Gale"] += 1
-        else:
-            padroes[sequencia]["White_Erros"] += 1
+# Salvar os resultados no arquivo Excel
+with pd.ExcelWriter(output_file_path) as writer:
+    hour_patterns_70.to_excel(writer, sheet_name='Padrões por Hora', header=True)
+    day_patterns_70.to_excel(writer, sheet_name='Padrões por Dia', header=True)
 
-    return padroes
-
-def salvar_resultado(padroes, tamanho_sequencia):
-    """Salva o resultado da análise em uma planilha Excel."""
-    desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop', 'Resultados padroes double')
-    resultado_path = os.path.join(desktop_path, f'Analise white {tamanho_sequencia}.xlsx')
-
-    df_resultado = []
-
-    for padrao, dados in padroes.items():
-        sequencia_formatada = " → ".join(padrao)
-
-        total = dados["Total"]
-        acertos = dados["White_Acerto_Direto"] + dados["White_Acerto_Gale"]
-        percentual_acertos = round((acertos / total * 100), 1) if total > 0 else 0
-
-        df_resultado.append({
-            "Sequência": sequencia_formatada,
-            "Cor Esperada": "White",
-            "Total Tentativas": total,
-            "Acertos Diretos": dados["White_Acerto_Direto"],
-            "Acertos Gale 1": dados["White_Acerto_Gale"],
-            "Erros": dados["White_Erros"],
-            "Percentual Acertos": percentual_acertos
-        })
-
-    df_resultado = pd.DataFrame(df_resultado)
-
-    # Formatar planilha
-    with pd.ExcelWriter(resultado_path, engine='xlsxwriter') as writer:
-        df_resultado.to_excel(writer, index=False, sheet_name="Análise White")
-
-        workbook = writer.book
-        worksheet = writer.sheets["Análise White"]
-
-        # Aplicar formatação
-        formato = workbook.add_format({'bold': True, 'border': 1, 'align': 'center'})
-        for col_num, value in enumerate(df_resultado.columns.values):
-            worksheet.write(0, col_num, value, formato)
-
-        worksheet.set_column(0, len(df_resultado.columns) - 1, 15)
-
-    print(f"Resultado salvo em: {resultado_path}")
-
-def main():
-    print("Carregando dados da planilha...")
-    lista_cores = ler_lista_cores()
-
-    if not lista_cores:
-        print("Não foi possível carregar os dados da planilha.")
-        return
-
-    while True:
-        try:
-            comprimento_sequencia = int(input("\nDigite o comprimento da sequência desejada (ou 0 para sair): "))
-            
-            if comprimento_sequencia == 0:
-                print("Finalizando o programa...")
-                break
-
-            padroes = analisar_padroes(lista_cores, comprimento_sequencia)
-
-            if padroes:
-                salvar_resultado(padroes, comprimento_sequencia)
-                print("Análise concluída! Verifique a planilha de padrões.")
-            else:
-                print("Nenhum padrão encontrado.")
-        
-        except ValueError:
-            print("Erro: Digite um número válido.")
-
-if __name__ == "__main__":
-    main()
+# O arquivo será salvo diretamente no desktop
+print(f"Resultados analisados e salvos em: {output_file_path}")
