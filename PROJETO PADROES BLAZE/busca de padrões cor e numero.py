@@ -89,7 +89,6 @@ def analyze_patterns():
             gale_positions = [i + len(pattern_list) + g for g in range(2)]  # Gale 0 e Gale 1
 
             # Gale 0: Conta os acertos diretamente no Gale 0, permitindo múltiplas contagens
-        # Gale 0: Conta os acertos diretamente no Gale 0, permitindo múltiplas contagens
             if gale_positions[0] < len(color_list):
                 color_0 = color_list[gale_positions[0]][0]
                 gale_0_counts[color_0] += 1  # O Gale 0 agora conta todas as aparições
@@ -128,12 +127,16 @@ def analyze_patterns():
         result_message += f"Percentual acumulado até Gale 0:\n"
         nome_cores = {"white": "Branco", "red": "Vermelho", "black": "Preto"}
         for color, prob in gale_0_percentages.items():
-            result_message += f"{nome_cores[color]} - Gale 0: {prob:.2f}%\n"
+            result_message += f"{nome_cores[color]} - Gale 0: {gale_0_counts[color]}/{total_patterns} - {prob:.2f}%\n"
     elif gale_mode == "1":
         result_message += f"Percentual acumulado até Gale 1 (Gale 0 + Gale 1):\n"
         nome_cores = {"white": "Branco", "red": "Vermelho", "black": "Preto"}
         for color, prob in final_percentages.items():
-            result_message += f"{nome_cores[color]} - Gale 1: {prob:.2f}%\n"  # Exibe o percentual de Gale 1 acumulado
+            # Somando os acertos de Gale 0 e Gale 1
+            total_gale_1 = gale_0_counts[color] + gale_1_counts[color]
+            # Calculando o percentual de Gale 0 + Gale 1
+            total_percentage = ((total_gale_1) / total_patterns) * 100
+            result_message += f"{nome_cores[color]} - Gale 1: {total_gale_1}/{total_patterns} - {total_percentage:.2f}%\n"  # Exibe o percentual acumulado de Gale 0 + Gale 1
 
     result_text.insert("insert", result_message)
 
