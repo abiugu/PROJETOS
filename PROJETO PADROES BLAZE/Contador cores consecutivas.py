@@ -161,7 +161,7 @@ def contar_cores_jogada_anterior(df, wb):
     return resultado
 
 # Caminho do arquivo Excel no Desktop
-file_path = os.path.expanduser('~/Desktop/historico blaze teste.xlsx')  # Ajuste o nome do arquivo se necessário
+file_path = os.path.expanduser('~/Desktop/historico blaze.xlsx')  # Ajuste o nome do arquivo se necessário
 
 # Carregar o arquivo Excel
 df = pd.read_excel(file_path)
