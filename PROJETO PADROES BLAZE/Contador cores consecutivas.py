@@ -85,10 +85,16 @@ def contar_cores_jogada_anterior(df, wb):
                     subsequente = sequencia_atual[cor_anterior]
                     # Se a sequência subsequente de mesma cor
                     if subsequente not in sequencias_subsequentes[cor_anterior]:
-                        sequencias_subsequentes[cor_anterior][subsequente] = 1
+                        sequencias_subsequentes[cor_anterior][subsequente] = {}
+                    
+                    # Registra a quantidade de sequências subsequentes
+                    if subsequente not in sequencias_subsequentes[cor_anterior]:
+                        sequencias_subsequentes[cor_anterior][subsequente] = {sequencia_atual[cor_atual]: 1}
+                    elif sequencia_atual[cor_atual] in sequencias_subsequentes[cor_anterior][subsequente]:
+                        sequencias_subsequentes[cor_anterior][subsequente][sequencia_atual[cor_atual]] += 1
                     else:
-                        sequencias_subsequentes[cor_anterior][subsequente] += 1
-            
+                        sequencias_subsequentes[cor_anterior][subsequente][sequencia_atual[cor_atual]] = 1
+
             # Atualiza a cor anterior
             cor_anterior = cor_atual
         
@@ -139,7 +145,7 @@ def contar_cores_jogada_anterior(df, wb):
             'media_sequencias': medias_sequencias,  # Média das sequências de cada cor
             'contagem_sequencias': contagem_sequencias,  # Contagem de quantas vezes cada sequência ocorre
             'percentuais_sequencias': percentuais_sequencias,  # Percentuais das sequências de cada cor
-            'sequencias_subsequentes': sequencias_subsequentes  # Sequências subsequentes após cada tipo de sequência
+            'sequencias_subsequentes': sequencias_subsequentes  # Sequências subsequentes após cada sequência
         }
 
     return resultado
@@ -157,7 +163,7 @@ wb = load_workbook(file_path)
 resultado_analise = contar_cores_jogada_anterior(df, wb)
 
 # Caminho do arquivo de saída (no Desktop)
-output_file_path = os.path.expanduser('~/Desktop/resultado_analise_sequencias subsequentes.txt')
+output_file_path = os.path.expanduser('~/Desktop/resultado_analise_sequencias subsequente.txt')
 
 # Salvar os resultados em um arquivo .txt no Desktop
 with open(output_file_path, 'w') as file:
@@ -183,8 +189,10 @@ with open(output_file_path, 'w') as file:
         file.write(f"  Sequências subsequentes:\n")
         for cor, seq_dict in dados['sequencias_subsequentes'].items():
             file.write(f"    {cor.capitalize()}:\n")
-            for seq_len, count in sorted(seq_dict.items()):  # Ordenando as sequências por tamanho
-                file.write(f"      Após sequência de {seq_len} cores: {count} vezes\n")
+            for seq_len, subseq_dict in sorted(seq_dict.items()):  # Ordenando as sequências por tamanho
+                file.write(f"      Após sequência de {seq_len} cores:\n")
+                for subseq_len, subseq_count in sorted(subseq_dict.items()):
+                    file.write(f"        Sequência de {subseq_len} cores: {subseq_count} vezes\n")
         file.write("\n")
 
 print(f"Resultado salvo em: {output_file_path}")
