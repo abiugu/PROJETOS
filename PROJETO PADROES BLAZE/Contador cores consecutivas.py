@@ -41,13 +41,13 @@ def contar_cores_jogada_anterior(df, wb):
         # Contadores para as quantidades de cada sequência de cores
         contagem_sequencias = {'white': {}, 'red': {}, 'black': {}}  # Dicionário para contar os comprimentos das sequências
 
-        # Dicionário para contar as sequências subsequentes após cada tipo de sequência
-        sequencias_subsequentes = {'white': {}, 'red': {}, 'black': {}}  # Ex: Após sequência de 3 cores, quantas vezes 1, 2, 3 cores apareceram
+        # Dicionário para contar as sequências seguintes após cada tipo de sequência
+        sequencias_seguintes = {'white': {}, 'red': {}, 'black': {}}  # Ex: Após sequência de 3 cores, quantas vezes 1, 2, 3 cores apareceram
         
         cor_anterior = None  # Variável para armazenar a cor anterior
         linha_anterior = None  # Variável para armazenar a linha da célula de cima
         
-        # Itera pelas jogadas do número de baixo para cima (começar da segunda linha para acessar a célula de cima)
+        # Primeira contagem: Contagem das sequências principais
         for i in range(1, len(jogadas_numero)):  # Inicia de 1 para acessar a célula de cima
             # Acessa a célula de cima (linha acima)
             celula_acima = sheet.cell(row=jogadas_numero.iloc[i].name, column=2)  # Coluna 2 é a "Cor"
@@ -80,21 +80,6 @@ def contar_cores_jogada_anterior(df, wb):
                     sequencia_atual[cor_atual] = 1  # Reinicia a sequência para a nova cor
                     linha_anterior = jogadas_numero.iloc[i].name  # Atualiza a linha para a célula atual
                 
-                # Registrar sequências subsequentes após uma sequência
-                if cor_anterior:
-                    subsequente = sequencia_atual[cor_anterior]
-                    # Se a sequência subsequente de mesma cor
-                    if subsequente not in sequencias_subsequentes[cor_anterior]:
-                        sequencias_subsequentes[cor_anterior][subsequente] = {}
-                    
-                    # Registra a quantidade de sequências subsequentes
-                    if subsequente not in sequencias_subsequentes[cor_anterior]:
-                        sequencias_subsequentes[cor_anterior][subsequente] = {sequencia_atual[cor_atual]: 1}
-                    elif sequencia_atual[cor_atual] in sequencias_subsequentes[cor_anterior][subsequente]:
-                        sequencias_subsequentes[cor_anterior][subsequente][sequencia_atual[cor_atual]] += 1
-                    else:
-                        sequencias_subsequentes[cor_anterior][subsequente][sequencia_atual[cor_atual]] = 1
-
             # Atualiza a cor anterior
             cor_anterior = cor_atual
         
@@ -111,11 +96,36 @@ def contar_cores_jogada_anterior(df, wb):
             else:
                 contagem_sequencias[cor_anterior][seq_len] = 1
         
-        # Calcular os percentuais das contagens
-        percentuais_cor_anterior = {}
-        for cor, contagem in contagem_cor_anterior.items():
-            percentuais_cor_anterior[cor] = (contagem / contagem_total) * 100 if contagem_total > 0 else 0
+        # Segunda contagem: Sequências seguintes após a sequência principal
+        cor_anterior = None  # Reiniciar a cor anterior para a nova iteração
+        sequencia_atual = {'white': 0, 'red': 0, 'black': 0}  # Reiniciar a sequência
         
+        for i in range(1, len(jogadas_numero)):  # Inicia de 1 para acessar a célula de cima
+            cor_atual = cor_do_numero(df.iloc[jogadas_numero.iloc[i].name - 1]['Número'])
+            
+            if cor_atual:
+                # Se a cor for a mesma que a anterior, aumenta a sequência
+                if cor_atual == cor_anterior:
+                    sequencia_atual[cor_atual] += 1
+                else:
+                    # Se a cor mudou, conta a sequência seguinte que apareceu
+                    if cor_anterior:
+                        sequencia_anterior = sequencia_atual[cor_anterior]
+                        
+                        # Registra a sequência seguinte
+                        if sequencia_anterior not in sequencias_seguintes[cor_anterior]:
+                            sequencias_seguintes[cor_anterior][sequencia_anterior] = {}
+                    
+                        if sequencia_atual[cor_atual] not in sequencias_seguintes[cor_anterior][sequencia_anterior]:
+                            sequencias_seguintes[cor_anterior][sequencia_anterior][sequencia_atual[cor_atual]] = 1
+                        else:
+                            sequencias_seguintes[cor_anterior][sequencia_anterior][sequencia_atual[cor_atual]] += 1
+                    
+                    sequencia_atual[cor_atual] = 1  # Reinicia a sequência para a nova cor
+            
+            cor_anterior = cor_atual
+        
+        # Calcular percentuais para as sequências principais
         percentuais_sequencias = {'white': {}, 'red': {}, 'black': {}}
         for cor in ['white', 'red', 'black']:
             total_ocorrencias = sum(contagem_sequencias[cor].values())
@@ -124,28 +134,28 @@ def contar_cores_jogada_anterior(df, wb):
                     percentuais_sequencias[cor][seq_len] = (count / total_ocorrencias) * 100
             else:
                 percentuais_sequencias[cor] = {}
-        
-        # Calcular a média das sequências
-        medias_sequencias = {}
+
+        # Calcular percentuais para as sequências seguintes
+        percentuais_sequencias_seguintes = {'white': {}, 'red': {}, 'black': {}}
         for cor in ['white', 'red', 'black']:
-            if contagem_sequencias[cor]:
-                total_seq = sum(k * v for k, v in contagem_sequencias[cor].items())  # Total de comprimento das sequências
-                total_ocorrencias = sum(contagem_sequencias[cor].values())  # Total de sequências
-                medias_sequencias[cor] = total_seq / total_ocorrencias
-            else:
-                medias_sequencias[cor] = 0  # Caso não tenha nenhuma sequência
-        
+            for seq_len, subseq_dict in sequencias_seguintes[cor].items():
+                total_subsequentes = sum(subseq_dict.values())
+                if total_subsequentes > 0:
+                    for subseq_len, count in subseq_dict.items():
+                        percentuais_sequencias_seguintes[cor].setdefault(seq_len, {})[subseq_len] = (count / total_subsequentes) * 100
+                else:
+                    percentuais_sequencias_seguintes[cor][seq_len] = {}
+
         # Armazenar os resultados para o número atual
         resultado[numero] = {
             'total': contagem_total,  # Total de aparições do número
             'cores_seguinte': contagem_cor_anterior,  # Contagem das cores da célula de cima
-            'percentuais_cores_seguinte': percentuais_cor_anterior,  # Percentual das cores da célula de cima
             'sequencias_maximas': sequencia_max,  # Máximas sequências consecutivas
             'linha_sequencia_max': linha_sequencia_max,  # Linha da sequência máxima de cada cor
-            'media_sequencias': medias_sequencias,  # Média das sequências de cada cor
             'contagem_sequencias': contagem_sequencias,  # Contagem de quantas vezes cada sequência ocorre
             'percentuais_sequencias': percentuais_sequencias,  # Percentuais das sequências de cada cor
-            'sequencias_subsequentes': sequencias_subsequentes  # Sequências subsequentes após cada sequência
+            'sequencias_seguintes': sequencias_seguintes,  # Sequências seguintes após cada sequência principal
+            'percentuais_sequencias_seguintes': percentuais_sequencias_seguintes  # Percentuais das sequências seguintes
         }
 
     return resultado
@@ -163,36 +173,52 @@ wb = load_workbook(file_path)
 resultado_analise = contar_cores_jogada_anterior(df, wb)
 
 # Caminho do arquivo de saída (no Desktop)
-output_file_path = os.path.expanduser('~/Desktop/resultado_analise_sequencias subsequente.txt')
+output_file_path = os.path.expanduser('~/Desktop/resultado_analise_sequencias seguintes.txt')
 
-# Salvar os resultados em um arquivo .txt no Desktop
+# Salvar os resultados em um arquivo .txt no Desktop com formatação mais organizada
 with open(output_file_path, 'w') as file:
     for numero, dados in resultado_analise.items():
-        file.write(f"Número {numero}:\n")
-        file.write(f"  Total de aparições: {dados['total']}\n")
-        file.write(f"  Cores seguintes (da célula de cima):\n")
+        file.write(f"==============================\n")
+        file.write(f"          Número {numero}          \n")
+        file.write(f"==============================\n")
+        file.write(f"\n")
+        
+        file.write(f"** Total de aparições: {dados['total']} **\n\n")
+
+        # Contagem das cores seguintes (da célula de cima)
+        file.write(f"** Cores seguintes (da célula de cima): **\n")
         for cor, quantidade in dados['cores_seguinte'].items():
-            percentual = dados['percentuais_cores_seguinte'][cor]
-            file.write(f"    {cor.capitalize()}: {quantidade} ({percentual:.2f}%)\n")
-        file.write(f"  Máximas sequências consecutivas:\n")
+            percentual = (quantidade / dados['total']) * 100
+            file.write(f"  - {cor.capitalize()}: {quantidade} vezes ({percentual:.2f}%)\n")
+        file.write(f"\n")
+
+        # Máximas sequências consecutivas
+        file.write(f"** Máximas sequências consecutivas: **\n")
         for cor, sequencia in dados['sequencias_maximas'].items():
-            file.write(f"    {cor.capitalize()}: {sequencia} (Linha: {dados['linha_sequencia_max'][cor]})\n")
-        file.write(f"  Média das sequências:\n")
-        for cor, media in dados['media_sequencias'].items():
-            file.write(f"    {cor.capitalize()}: {media:.2f}\n")
-        file.write(f"  Contagem das sequências:\n")
+            file.write(f"  - {cor.capitalize()}: {sequencia} (Linha: {dados['linha_sequencia_max'][cor]})\n")
+        file.write(f"\n")
+
+        # Contagem das sequências
+        file.write(f"** Contagem das sequências principais: **\n")
         for cor, seq_dict in dados['contagem_sequencias'].items():
-            file.write(f"    {cor.capitalize()}:\n")
+            file.write(f"  - {cor.capitalize()}:\n")
             for seq_len, count in sorted(seq_dict.items()):  # Ordenando as sequências por tamanho
                 percentual = dados['percentuais_sequencias'][cor].get(seq_len, 0)
-                file.write(f"      Sequência de {seq_len} cores: {count} vezes ({percentual:.2f}%)\n")
-        file.write(f"  Sequências subsequentes:\n")
-        for cor, seq_dict in dados['sequencias_subsequentes'].items():
-            file.write(f"    {cor.capitalize()}:\n")
+                file.write(f"    - Sequência de {seq_len} cores: {count} vezes ({percentual:.2f}%)\n")
+            file.write(f"\n")
+
+        # Sequências seguintes (após cada sequência principal)
+        file.write(f"** Sequências seguintes após cada sequência principal: **\n")
+        for cor, seq_dict in dados['sequencias_seguintes'].items():
+            file.write(f"  - {cor.capitalize()}:\n")
             for seq_len, subseq_dict in sorted(seq_dict.items()):  # Ordenando as sequências por tamanho
-                file.write(f"      Após sequência de {seq_len} cores:\n")
+                file.write(f"    - Após sequência de {seq_len} cores:\n")
                 for subseq_len, subseq_count in sorted(subseq_dict.items()):
-                    file.write(f"        Sequência de {subseq_len} cores: {subseq_count} vezes\n")
-        file.write("\n")
+                    percentual = dados['percentuais_sequencias_seguintes'][cor].get(seq_len, {}).get(subseq_len, 0)
+                    file.write(f"      - Sequência de {subseq_len} cores: {subseq_count} vezes ({percentual:.2f}%)\n")
+            file.write(f"\n")
+
+        file.write(f"==============================\n")
+        file.write(f"\n")
 
 print(f"Resultado salvo em: {output_file_path}")
