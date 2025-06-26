@@ -19,7 +19,17 @@ PROXIES = [
 "92.112.172.250:6522:LexuspX0:LexuspX7",
 "23.129.253.149:6767:LexuspX0:LexuspX7",
 "92.112.170.217:6186:JettapX11:JettapX17",
-"91.123.10.14:6556:JettapX11:JettapX17"
+"91.123.10.14:6556:JettapX11:JettapX17",
+"85.198.45.253:6177:oldmoney0:oldmoney0",
+"85.198.45.146:6070:proxyrap10:proxyrap10",
+"92.112.171.245:6213:proxyrap10:proxyrap10",
+"92.112.172.80:6352:proxyrap10:proxyrap10",
+"85.198.45.62:5986:newmoney0:newmoney0",
+"92.112.170.188:6157:proxyrap10:proxyrap10",
+"92.112.170.45:6014:proxyrap50:proxyrap50",
+"85.198.45.183:6107:proxyrap10:proxyrap10",
+"185.72.240.38:7074:oldmoney0:oldmoney0",
+"92.112.200.131:6714:oldmoney0:oldmoney0"
 ]
 
 
