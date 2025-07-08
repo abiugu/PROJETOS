@@ -43,7 +43,7 @@ USER_AGENTS = [
 
 # 🔹 Datas para buscar na API
 START_DATE = "2025-01-01T04:00:00.000Z"
-END_DATE = "2025-06-10T04:05:47.243Z"
+END_DATE = "2025-07-01T23:05:47.000Z"
 
 # 🔹 Função para testar os proxies
 def testar_proxies():
@@ -138,7 +138,7 @@ def salvar_dados_em_planilha(records):
             record["color"] = traduzir_cor(record["color"])
     
     desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    caminho_arquivo = os.path.join(desktop, "historico_blaze_junho.xlsx")
+    caminho_arquivo = os.path.join(desktop, "historico_blaze_julho.xlsx")
     
     df = pd.DataFrame(records)
     df.to_excel(caminho_arquivo, index=False)

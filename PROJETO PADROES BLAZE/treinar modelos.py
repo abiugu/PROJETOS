@@ -36,13 +36,19 @@ def gerar_dados(df, tamanho_seq):
         y.append(df['cor_num'].iloc[i+tamanho_seq])
     return pd.DataFrame(X), pd.Series(y)
 
-# Modelos disponíveis
+# Modelos disponíveis com otimizações
 modelos = {
-    'Random Forest': RandomForestClassifier(n_estimators=100),
-    'KNN': KNeighborsClassifier(),
+    'Random Forest': RandomForestClassifier(
+        n_estimators=50,
+        max_depth=12,
+        min_samples_leaf=5,
+        n_jobs=-1,
+        random_state=42
+    ),
+    'KNN': KNeighborsClassifier(n_jobs=-1),
     'Logistic Regression': LogisticRegression(max_iter=1000),
     'Gradient Boosting': GradientBoostingClassifier(),
-    'Decision Tree': DecisionTreeClassifier(),
+    'Decision Tree': DecisionTreeClassifier(max_depth=10),
     'MLP Classifier': MLPClassifier(max_iter=1000)
 }
 
@@ -57,7 +63,7 @@ for seq in sequencias:
         modelo.fit(X, y)
         nome_arquivo = f"{nome} ({seq}).pkl"
         caminho_modelo = os.path.join(modelos_dir, nome_arquivo)
-        joblib.dump(modelo, caminho_modelo)
+        joblib.dump(modelo, caminho_modelo, compress=('zlib', 3))
         print(f"✅ Modelo salvo: {nome_arquivo}")
 
 print("\n🎉 Todos os modelos foram treinados e salvos com sucesso!")
