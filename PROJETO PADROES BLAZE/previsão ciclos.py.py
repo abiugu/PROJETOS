@@ -4,21 +4,32 @@ from collections import Counter
 from datetime import datetime, timedelta
 import json
 import os
+import pandas as pd
 
 app = Flask(__name__)
 ESTATISTICAS_FILE = 'estatisticas.json'
 
+# Lista de probabilidades específicas que irão disparar o alarme
+PROBABILIDADES_ESPECIFICAS = [
+    40.23, 40.43, 60.00, 40.86, 61.05, 40.91, 48.42, 41.38, 41.94, 43.75,
+    45.45, 39.33, 45.98, 46.15, 47.19, 44.33, 47.25, 47.42, 47.73, 48.28,
+    49.48, 51.04, 51.11, 51.65, 51.69, 52.08, 52.87, 53.57, 53.61, 46.88,
+    53.85, 54.02, 54.17, 54.76, 55.17, 56.7, 40.22, 42.86, 52.27, 57.95,
+    57.29, 57.73, 57.78, 58.62, 58.7, 58.76, 59.18, 59.78, 60.22, 47.78,
+    60.23, 60.87, 61.29, 62.11, 59.77
+]
+
+# Inicializando as estatísticas se não existirem
 if not os.path.exists(ESTATISTICAS_FILE):
     with open(ESTATISTICAS_FILE, 'w') as f:
         json.dump({
             'acertos': 0,
-            'gales': 0,
             'erros': 0,
             'historico_entradas': [],
             'historico_resultados': [],
             'historico_horarios': [],
             'historico_resultados_binarios': [],
-            'historico_completo': [],
+            'historico_probabilidades': [],
             'ultima_analisada': ""
         }, f)
 
@@ -27,7 +38,7 @@ TEMPLATE = '''
 <html>
 <head>
     <title>Previsão Blaze (Double)</title>
-    <meta http-equiv="refresh" content="5">
+    <meta http-equiv="refresh" content="2">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -100,8 +111,8 @@ TEMPLATE = '''
             padding: 5px 0;
         }
         .scrollable {
-            height: 500px;
-            overflow-y: scroll;
+            overflow-y: auto;
+            max-height: 500px;
         }
     </style>
 </head>
@@ -110,14 +121,13 @@ TEMPLATE = '''
         <div class="box">
             <h1>🎯 Previsão da Blaze (Double)</h1>
             <div class="entrada">➡️ Entrada recomendada: <strong>{{ entrada }}</strong></div>
-            <div class="entrada">🔁 Gale 1: <strong>{{ gale }}</strong></div>
             <div class="entrada">⚪ Proteção no branco</div>
             <hr>
             <div class="info">🎲 Última jogada: <strong>{{ ultima }}</strong> às <strong>{{ horario }}</strong></div>
             <div class="info">📈 Probabilidade estimada: <span class="prob">{{ probabilidade }}%</span></div>
-            {% if probabilidade > 60 %}
+            {% if probabilidade in probabilidades_especificas %}
             <audio autoplay>
-                <source src="{{ url_for('static', filename='alerta60.mp3') }}" type="audio/mpeg">
+                <source src="{{ url_for('static', filename='ENTRADA CONFIRMADA.mp3') }}" type="audio/mpeg">
             </audio>
             {% endif %}
             <hr>
@@ -138,7 +148,8 @@ TEMPLATE = '''
 
             <div class="historico">
                 <h3>📋 Últimas entradas</h3>
-                {% for i in range(entradas|length) %}
+                {% for i in range(10) %}
+                    {% if i < entradas|length and i < resultados|length %}
                     <div style="display:inline-block; text-align:center; margin: 4px;">
                         <div class="entrada-bola {{ entradas[i] }}"></div>
                         <div style="font-size: 0.8em;">
@@ -151,24 +162,24 @@ TEMPLATE = '''
                             {% endif %}
                         </div>
                     </div>
+                    {% endif %}
                 {% endfor %}
             </div>
 
             <form method="POST" action="/reset">
                 <button class="reset-btn" type="submit">Resetar Estatísticas</button>
             </form>
-            <div style="margin-top:10px; font-size:0.8em;">Atualiza a cada 5s automaticamente</div>
+            <div style="margin-top:10px; font-size:0.8em;">Atualiza a cada 2s automaticamente</div>
         </div>
 
-        <div class="sidebar">
+        <div class="sidebar scrollable">
             <h3>📜 Histórico Completo</h3>
             {% for h in historico_completo %}
                 <div class="linha-historico">
-                    {{ h['horario'] }} - Previsão: <b>{{ h['previsao'] }}</b> - Resultado: {{ h['resultado'] }}
+                    {{ h['horario'] }} - Previsão: <b>{{ h['previsao'] }}</b> - Resultado: {{ h['resultado'] }} {{ h['icone'] }}
                 </div>
             {% endfor %}
         </div>
-
     </div>
 </body>
 </html>
@@ -185,14 +196,13 @@ def reset():
             'historico_resultados': [],
             'historico_horarios': [],
             'historico_resultados_binarios': [],
+            'historico_probabilidades': [],
             'ultima_analisada': ""
         }, f)
     return redirect('/')
 
 def obter_previsao():
     try:
-        import pandas as pd
-
         with open(ESTATISTICAS_FILE, 'r') as f:
             stats = json.load(f)
 
@@ -223,7 +233,6 @@ def obter_previsao():
         if atual == 2: preto += 1
 
         entrada = "PRETO" if preto >= vermelho else "VERMELHO"
-        gale = entrada
         entrada_valor = 2 if entrada == "PRETO" else 1
 
         ultima_cor = cores[0]
@@ -233,109 +242,75 @@ def obter_previsao():
         probabilidade = round((contagem[entrada_valor] / total) * 100, 2)
 
         if stats.get("ultima_analisada") != horario_utc:
-            stats['historico_probabilidades'] = [probabilidade] + stats.get('historico_probabilidades', [])[:9]
-            if stats.get("ultima_analisada"):
-                if len(cores) >= 3:
-                    previsao = stats['historico_entradas'][0]
-                    cor_esperada = 2 if previsao == "PRETO" else 1
-
-                    rodada1 = cores[1]
-                    rodada2 = cores[2]
-                    
-                    if rodada1 == cor_esperada or rodada1 == 0:
-                        stats['acertos'] += 1
-                        stats['historico_resultados_binarios'] = [True] + stats['historico_resultados_binarios'][:9]
-                    else:
-                        stats['erros'] += 1
-                        stats['historico_resultados_binarios'] = [False] + stats['historico_resultados_binarios'][:9]
-
+            if stats.get("ultima_analisada") and len(stats['historico_entradas']) > 0:
+                previsao_anterior = stats['historico_entradas'][0]
+                cor_prevista = 2 if previsao_anterior == "PRETO" else 1
+                cor_realizada = ultima_cor  # Cor atual é o resultado da previsão passada
+        
+                if cor_realizada == cor_prevista or cor_realizada == 0:
+                    resultado_binario = True
+                    stats['acertos'] += 1
                 else:
-                    stats['historico_resultados_binarios'] = [None] + stats['historico_resultados_binarios'][:9]
+                    resultado_binario = False
+                    stats['erros'] += 1
             else:
-                stats['historico_resultados_binarios'] = [None] + stats['historico_resultados_binarios'][:9]
-
-            stats['historico_entradas'] = [entrada] + stats['historico_entradas'][:9]
-            stats['historico_resultados'] = [ultima_nome] + stats['historico_resultados'][:9]
-            stats['historico_horarios'] = [horario_local] + stats['historico_horarios'][:9]
+                resultado_binario = None
+        
+            stats['historico_entradas'].insert(0, entrada)
+            stats['historico_resultados'].insert(0, ultima_nome)
+            stats['historico_horarios'].insert(0, horario_local)
+            stats['historico_resultados_binarios'].insert(0, resultado_binario)
+            stats['historico_probabilidades'].insert(0, probabilidade)
             stats['ultima_analisada'] = horario_utc
 
-        total_hits = stats['acertos'] + stats['gales'] + stats['erros']
-        taxa = round(((stats['acertos'] + stats['gales']) / total_hits) * 100, 1) if total_hits > 0 else 0
+        total_hits = stats['acertos'] + stats['erros']
+        taxa = round((stats['acertos'] / total_hits) * 100, 1) if total_hits > 0 else 0
         entradas_formatadas = ["preto" if e == "PRETO" else "vermelho" for e in stats['historico_entradas']]
         ultimas_10 = ["branco" if c == 0 else "vermelho" if c == 1 else "preto" for c in cores[:10][::-1]]
         ultimos_horarios = horarios_format[:10][::-1]
 
-        # Construir histórico completo para exibição (sem probabilidade)
         historico_completo = []
-        for i in range(len(stats['historico_entradas'])):
+        for i in range(1, len(stats['historico_entradas'])):
             historico_completo.append({
-                "horario": stats['historico_horarios'][i],
+                "horario": stats['historico_horarios'][i - 1],
                 "previsao": stats['historico_entradas'][i],
-                "resultado": stats['historico_resultados'][i],
-                "icone": (
-                    "✅" if stats['historico_resultados_binarios'][i] is True else
-                    "❌" if stats['historico_resultados_binarios'][i] is False else
-                    "?"
-                )
+                "resultado": stats['historico_resultados'][i - 1],
+                "icone": "✅" if stats['historico_resultados_binarios'][i - 1] is True else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?"
             })
 
-        # Salvar os dados atualizados
         with open(ESTATISTICAS_FILE, 'w') as f:
             json.dump(stats, f)
 
-        # Gerar o Excel com probabilidade, mas sem mostrar no front
-        # Gerar o Excel com probabilidade individual por rodada
-        historico_para_planilha = []
-        for i in range(len(stats['historico_entradas'])):
-            historico_para_planilha.append({
-                "Horário": stats['historico_horarios'][i],
-                "Previsão": stats['historico_entradas'][i],
-                "Resultado": stats['historico_resultados'][i],
-                "Acertou": (
-                    "Sim" if stats['historico_resultados_binarios'][i] is True else
-                    "Não" if stats['historico_resultados_binarios'][i] is False else
-                    "N/D"
-                ),
-                "Probabilidade": stats['historico_probabilidades'][i] if i < len(stats['historico_probabilidades']) else "-"
-            })
-        
-        df = pd.DataFrame(historico_para_planilha)
-        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "historico_completo.xlsx")
-        df.to_excel(desktop_path, index=False)
-        
-
-
         return (
-            entrada, gale, preto, vermelho, ultima_nome, probabilidade,
+            entrada, ultima_nome, preto, vermelho, ultima_nome, probabilidade,
             ultimas_10, ultimos_horarios, horario_local,
-            stats['acertos'], stats['gales'], stats['erros'],
+            stats['acertos'], stats['erros'],
             taxa, entradas_formatadas, stats['historico_resultados_binarios'], historico_completo
         )
     except Exception as e:
         return "Erro", "Erro", 0, 0, "Indefinida", 0.0, [], [], "--:--:--", 0, 0, 0, 0, [], [], []
 
-
 @app.route('/')
 def home():
-    entrada, gale, preto, vermelho, ultima, probabilidade, ultimas, ultimos_horarios, horario, acertos, gales, erros, taxa_acerto, entradas, resultados, historico_completo = obter_previsao()
+    entrada, ultima, preto, vermelho, ultima_nome, probabilidade, ultimas, ultimos_horarios, horario, acertos, erros, taxa_acerto, entradas, resultados, historico_completo = obter_previsao()
     return render_template_string(
         TEMPLATE,
         entrada=entrada,
-        gale=gale,
+        ultima=ultima,
         preto=preto,
         vermelho=vermelho,
-        ultima=ultima,
+        ultima_nome=ultima_nome,
         probabilidade=probabilidade,
         ultimas=ultimas,
         ultimos_horarios=ultimos_horarios,
         horario=horario,
         acertos=acertos,
-        gales=gales,
         erros=erros,
         taxa_acerto=taxa_acerto,
         entradas=entradas,
         resultados=resultados,
-        historico_completo=historico_completo
+        historico_completo=historico_completo,
+        probabilidades_especificas=PROBABILIDADES_ESPECIFICAS
     )
 
 if __name__ == '__main__':
