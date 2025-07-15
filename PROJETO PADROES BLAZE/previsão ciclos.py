@@ -1,25 +1,28 @@
 from flask import Flask, render_template_string, url_for, redirect
 import requests
 from collections import Counter
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 import os
 import pandas as pd
+import atexit
 
 app = Flask(__name__)
-ESTATISTICAS_FILE = 'estatisticas.json'
 
-# Lista de probabilidades específicas que irão disparar o alarme
+def obter_nome_arquivo_estatisticas():
+    hoje = date.today().strftime('%Y-%m-%d')
+    return f"estatisticas_{hoje}.json"
+
+ESTATISTICAS_FILE = obter_nome_arquivo_estatisticas()
+
 PROBABILIDADES_ESPECIFICAS = [
-    40.23, 40.43, 60.00, 40.86, 61.05, 40.91, 48.42, 41.38, 41.94, 43.75,
-    45.45, 39.33, 45.98, 46.15, 47.19, 44.33, 47.25, 47.42, 47.73, 48.28,
-    49.48, 51.04, 51.11, 51.65, 51.69, 52.08, 52.87, 53.57, 53.61, 46.88,
-    53.85, 54.02, 54.17, 54.76, 55.17, 56.7, 40.22, 42.86, 52.27, 57.95,
-    57.29, 57.73, 57.78, 58.62, 58.7, 58.76, 59.18, 59.78, 60.22, 47.78,
-    60.23, 60.87, 61.29, 62.11, 59.77
+    47.25, 59.78, 55.17, 62.11, 53.85, 60.22, 57.73, 63.83,
+    52.08, 58.95, 56.67, 61.29, 52.22, 46.15, 52.87, 58.62,
+    50.55, 51.11, 56.04, 41.94
 ]
 
-# Inicializando as estatísticas se não existirem
+
+# Inicializa o arquivo se não existir
 if not os.path.exists(ESTATISTICAS_FILE):
     with open(ESTATISTICAS_FILE, 'w') as f:
         json.dump({
@@ -33,6 +36,28 @@ if not os.path.exists(ESTATISTICAS_FILE):
             'ultima_analisada': ""
         }, f)
 
+def salvar_em_excel():
+    if not os.path.exists(ESTATISTICAS_FILE):
+        return
+    with open(ESTATISTICAS_FILE, 'r') as f:
+        stats = json.load(f)
+    historico_para_planilha = []
+    for i in range(len(stats['historico_entradas'])):
+        historico_para_planilha.append({
+            "Horário": stats['historico_horarios'][i],
+            "Previsão": stats['historico_entradas'][i],
+            "Resultado": stats['historico_resultados'][i],
+            "Acertou": "Sim" if stats['historico_resultados_binarios'][i] is True else "Não" if stats['historico_resultados_binarios'][i] is False else "N/D",
+            "Probabilidade": stats['historico_probabilidades'][i] if i < len(stats['historico_probabilidades']) else "-"
+        })
+    df = pd.DataFrame(historico_para_planilha)
+    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "historico diario percentuais", f"historico_completo_{date.today()}.xlsx")
+    df.to_excel(desktop_path, index=False)
+
+salvar_em_excel()
+atexit.register(salvar_em_excel)
+
+
 TEMPLATE = '''
 <!DOCTYPE html>
 <html>
@@ -40,6 +65,22 @@ TEMPLATE = '''
     <title>Previsão Blaze (Double)</title>
     <meta http-equiv="refresh" content="2">
     <style>
+        .btn-reset {
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .btn-reset:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #111;
@@ -92,19 +133,6 @@ TEMPLATE = '''
             border-radius: 50%;
             margin: 2px;
         }
-        .reset-btn {
-            margin-top: 15px;
-            padding: 8px 16px;
-            background-color: #900;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .historico {
-            text-align: center;
-            margin-top: 20px;
-        }
         .linha-historico {
             font-size: 0.9em;
             border-bottom: 1px solid #444;
@@ -125,11 +153,13 @@ TEMPLATE = '''
             <hr>
             <div class="info">🎲 Última jogada: <strong>{{ ultima }}</strong> às <strong>{{ horario }}</strong></div>
             <div class="info">📈 Probabilidade estimada: <span class="prob">{{ probabilidade }}%</span></div>
+
             {% if probabilidade in probabilidades_especificas %}
             <audio autoplay>
-                <source src="{{ url_for('static', filename='ENTRADA CONFIRMADA.mp3') }}" type="audio/mpeg">
+                <source src="{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}" type="audio/mpeg">
             </audio>
             {% endif %}
+
             <hr>
             <div class="info">
                 ✅ Direto: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%
@@ -137,39 +167,50 @@ TEMPLATE = '''
             <div class="info">📊 Ciclos — Preto: {{ preto }} | Vermelho: {{ vermelho }}</div>
 
             <div class="historico">
-                <h3>🕒 Últimas 10 jogadas</h3>
-                {% for i in range(ultimas|length) %}
-                    <div style="display:inline-block; text-align:center; margin: 4px;">
-                        <div class="bola {{ ultimas[i] }}"></div>
-                        <div style="font-size: 0.7em;">{{ ultimos_horarios[i] }}</div>
-                    </div>
-                {% endfor %}
+                <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
+                <div style="text-align: center;">
+                    {% for i in range(ultimas|length) %}
+                        <div style="display:inline-block; text-align:center; margin: 4px;">
+                            <div class="bola {{ ultimas[i] }}"></div>
+                            <div style="font-size: 0.7em;">{{ ultimos_horarios[i] }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
+            
+            <div class="historico">
+                <h3 style="text-align: center;">📋 Últimas entradas</h3>
+                <div style="text-align: center;">
+                    {% for i in range(10) %}
+                        {% if i < entradas|length and i < resultados|length %}
+                        <div style="display:inline-block; text-align:center; margin: 4px;">
+                            <div class="entrada-bola {{ entradas[i] }}"></div>
+                            <div style="font-size: 0.8em;">
+                                {% if resultados[i] == True %}
+                                    ✅
+                                {% elif resultados[i] == False %}
+                                    ❌
+                                {% else %}
+                                    ?
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
 
             <div class="historico">
-                <h3>📋 Últimas entradas</h3>
-                {% for i in range(10) %}
-                    {% if i < entradas|length and i < resultados|length %}
-                    <div style="display:inline-block; text-align:center; margin: 4px;">
-                        <div class="entrada-bola {{ entradas[i] }}"></div>
-                        <div style="font-size: 0.8em;">
-                            {% if resultados[i] == True %}
-                                ✅
-                            {% elif resultados[i] == False %}
-                                ❌
-                            {% else %}
-                                ?
-                            {% endif %}
-                        </div>
+                <form method="POST" action="/reset">
+                    <div style="display: flex; justify-content: center; margin-top: 10px;">
+                        <button class="btn-reset">🔄 Resetar Estatísticas</button>
                     </div>
-                    {% endif %}
-                {% endfor %}
+                </form>
+                <div style="text-align: center; margin-top: 10px; font-size: 0.85em; color: #ccc;">
+                    Atualiza a cada 2s automaticamente
+                </div>
             </div>
-
-            <form method="POST" action="/reset">
-                <button class="reset-btn" type="submit">Resetar Estatísticas</button>
-            </form>
-            <div style="margin-top:10px; font-size:0.8em;">Atualiza a cada 2s automaticamente</div>
         </div>
 
         <div class="sidebar scrollable">
@@ -275,7 +316,7 @@ def obter_previsao():
                 "horario": stats['historico_horarios'][i - 1],
                 "previsao": stats['historico_entradas'][i],
                 "resultado": stats['historico_resultados'][i - 1],
-                "icone": "✅" if stats['historico_resultados_binarios'][i - 1] is True else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?"
+                "icone": "✅" if stats['historico_resultados_binarios'][i - 1] is True else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?",
             })
 
         with open(ESTATISTICAS_FILE, 'w') as f:
