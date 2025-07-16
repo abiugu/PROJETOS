@@ -16,12 +16,12 @@ def obter_nome_arquivo_estatisticas():
 ESTATISTICAS_FILE = obter_nome_arquivo_estatisticas()
 
 PROBABILIDADES_ESPECIFICAS = [
-    61.22, 64.21, 59.78, 55.17, 57.3, 57.78, 41.38, 63.16, 60.22, 57.73,
-    38.3, 38.89, 40.91, 45.98, 41.11, 48.28, 63.83, 47.25, 61.05, 54.08,
-    61.29, 62.77, 47.13, 58.62, 51.11, 51.14, 51.02, 56.67, 60.42, 62.11,
-    57.14, 46.15, 53.61, 42.05, 40.86, 55.81, 58.7
+    38.3, 38.89, 40.86, 40.91, 41.11, 41.38, 42.05, 45.98, 46.15, 47.13,
+    47.25, 48.28, 51.02, 51.11, 51.14, 53.61, 54.08, 55.17, 55.81, 56.67,
+    57.14, 57.3, 57.73, 57.78, 58.62, 58.7, 59.78, 60.22, 60.42, 61.05,
+    61.22, 61.29, 62.11, 62.77, 63.16, 63.83, 64.21
 ]
-
+# percentuais dos dia 09 até dia 15 acima de 70%
 
 # Inicializa o arquivo se não existir
 if not os.path.exists(ESTATISTICAS_FILE):
@@ -166,6 +166,29 @@ TEMPLATE = '''
                 ✅ Direto: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%
             </div>
             <div class="info">📊 Ciclos — Preto: {{ preto }} | Vermelho: {{ vermelho }}</div>
+
+            <hr>
+            <div class="info">
+                <h3>📌 Probabilidades Específicas Atuais</h3>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding: 10px;">
+                    {% for prob in probabilidades_especificas %}
+                        <span style="
+                            background-color: {% if prob == probabilidade %}#f00{% else %}#0f0{% endif %};
+                            color: {% if prob == probabilidade %}#fff{% else %}#000{% endif %};
+                            padding: 6px 12px;
+                            border-radius: 15px;
+                            font-size: {% if prob == probabilidade %}1.05em{% else %}0.95em{% endif %};
+                            font-weight: bold;
+                            box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+                            display: inline-flex;
+                            align-items: center;
+                        ">
+                            {% if prob == probabilidade %}🔥 {% endif %}{{ prob }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+
 
             <div class="historico">
                 <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
