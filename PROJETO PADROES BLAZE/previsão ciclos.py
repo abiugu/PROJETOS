@@ -16,14 +16,13 @@ def obter_nome_arquivo_estatisticas():
 ESTATISTICAS_FILE = obter_nome_arquivo_estatisticas()
 
 PROBABILIDADES_ESPECIFICAS = [
-    38.3, 38.89, 40.86, 40.91, 41.11, 41.38, 42.05, 45.98, 46.15, 47.13,
-    47.25, 48.28, 51.02, 51.11, 51.14, 53.61, 54.08, 55.17, 55.81, 56.67,
-    57.14, 57.3, 57.73, 57.78, 58.62, 58.7, 59.78, 60.22, 60.42, 61.05,
-    61.22, 61.29, 62.11, 62.77, 63.16, 63.83, 64.21
+    41.11, 42.53, 47.25, 47.67, 51.11, 51.55, 54.08, 55.17, 57.3, 57.73, 57.78, 59.78, 60.22, 61.22, 62.11, 63.16, 63.83
 ]
+
 # percentuais dos dia 09 até dia 15 acima de 70%
 
 # Inicializa o arquivo se não existir
+# Inicializa o arquivo se não existir e garante que as chaves existam
 if not os.path.exists(ESTATISTICAS_FILE):
     with open(ESTATISTICAS_FILE, 'w') as f:
         json.dump({
@@ -34,28 +33,57 @@ if not os.path.exists(ESTATISTICAS_FILE):
             'historico_horarios': [],
             'historico_resultados_binarios': [],
             'historico_probabilidades': [],
+            'historico_ciclos_preto': [],  # Garantir que a chave existe
+            'historico_ciclos_vermelho': [],  # Garantir que a chave existe
             'ultima_analisada': ""
         }, f)
 
 def salvar_em_excel():
     if not os.path.exists(ESTATISTICAS_FILE):
         return
+
     with open(ESTATISTICAS_FILE, 'r') as f:
         stats = json.load(f)
+
+    # Garante que os campos existam mesmo que estejam ausentes no JSON
+    stats.setdefault('historico_horarios', [])
+    stats.setdefault('historico_entradas', [])
+    stats.setdefault('historico_resultados', [])
+    stats.setdefault('historico_resultados_binarios', [])
+    stats.setdefault('historico_probabilidades', [])
+    stats.setdefault('historico_ciclos_preto', [])
+    stats.setdefault('historico_ciclos_vermelho', [])
+
     historico_para_planilha = []
     for i in range(len(stats['historico_entradas'])):
+        horario = stats['historico_horarios'][i] if i < len(stats['historico_horarios']) else "-"
+        previsao = stats['historico_entradas'][i]
+        resultado = stats['historico_resultados'][i]
+        acertou = stats['historico_resultados_binarios'][i]
+        probabilidade = stats['historico_probabilidades'][i] if i < len(stats['historico_probabilidades']) else "-"
+        ciclos_preto = stats['historico_ciclos_preto'][i] if i < len(stats['historico_ciclos_preto']) else 0
+        ciclos_vermelho = stats['historico_ciclos_vermelho'][i] if i < len(stats['historico_ciclos_vermelho']) else 0
+
         historico_para_planilha.append({
-            "Horário": stats['historico_horarios'][i],
-            "Previsão": stats['historico_entradas'][i],
-            "Resultado": stats['historico_resultados'][i],
-            "Acertou": "Sim" if stats['historico_resultados_binarios'][i] is True else "Não" if stats['historico_resultados_binarios'][i] is False else "N/D",
-            "Probabilidade": stats['historico_probabilidades'][i] if i < len(stats['historico_probabilidades']) else "-"
+            "Horário": horario,
+            "Previsão": previsao,
+            "Resultado": resultado,
+            "Acertou": "Sim" if acertou is True else "Não" if acertou is False else "N/D",
+            "Probabilidade": probabilidade,
+            "Ciclos Preto": ciclos_preto,
+            "Ciclos Vermelho": ciclos_vermelho
         })
+
     df = pd.DataFrame(historico_para_planilha)
-    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "historico diario percentuais", f"historico_completo_{date.today()}.xlsx")
+
+    # Caminho de exportação para a área de trabalho
+    desktop_path = os.path.join(
+        os.path.expanduser("~"), "Desktop", "historico diario percentuais", f"historico_completo_{date.today()}.xlsx"
+    )
+    os.makedirs(os.path.dirname(desktop_path), exist_ok=True)
     df.to_excel(desktop_path, index=False)
 
-salvar_em_excel()
+# Registro automático no encerramento do app
 atexit.register(salvar_em_excel)
 
 
@@ -64,7 +92,7 @@ TEMPLATE = '''
 <html>
 <head>
     <title>Previsão Blaze (Double)</title>
-    <meta http-equiv="refresh" content="2">
+    <meta http-equiv="refresh" content="1">
     <style>
         .btn-reset {
             background: linear-gradient(135deg, #ff4e50, #f9d423);
@@ -327,6 +355,12 @@ def obter_previsao():
             stats['historico_resultados_binarios'].insert(0, resultado_binario)
             stats['historico_probabilidades'].insert(0, probabilidade)
             stats['ultima_analisada'] = horario_utc
+             # Adiciona os valores de ciclos ao histórico (isso estava faltando!)
+            stats.setdefault('historico_ciclos_preto', [])
+            stats.setdefault('historico_ciclos_vermelho', [])
+
+            stats['historico_ciclos_preto'].insert(0, preto)
+            stats['historico_ciclos_vermelho'].insert(0, vermelho)
 
         total_hits = stats['acertos'] + stats['erros']
         taxa = round((stats['acertos'] / total_hits) * 100, 1) if total_hits > 0 else 0
