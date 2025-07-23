@@ -8,6 +8,7 @@ import pandas as pd
 import threading
 import time
 import atexit
+import re
 
 app = Flask(__name__)
 
@@ -15,9 +16,31 @@ def obter_nome_arquivo_estatisticas():
     hoje = date.today().strftime('%Y-%m-%d')
     return f"estatisticas_{hoje}.json"
 
+
 ESTATISTICAS_FILE = obter_nome_arquivo_estatisticas()
 
+
+usuario = os.getlogin()
+desktop_path = fr"C:\Users\{usuario}\Desktop\SEQUENCIAS_VALIDAS.txt"
+
+with open(desktop_path, "r") as f:
+    conteudo = f.read()
+
+# Encontra todas as listas dentro do conteúdo, mesmo que esteja em "SEQUENCIAS_VALIDAS = [...]"
+listas_encontradas = re.findall(r'\[[^\[\]]+\]', conteudo)
+
+SEQUENCIAS_VALIDAS = [eval(lista) for lista in listas_encontradas]
+
+CONTAGEM_ALERTAS = {}
+
+# Exibe as 5 primeiras para testar
+for seq in SEQUENCIAS_VALIDAS[:5]:
+    print(seq)
+
 SEQUENCIAS_VALIDAS = [
+    [50.00, 50.00],
+    [50.00, 50.54],
+    [50.00, 51.06],
     [29.17, 29.35],
     [29.35, 29.47],
     [29.47, 29.67],
@@ -275,7 +298,25 @@ SEQUENCIAS_VALIDAS = [
     [69.15, 69.39, 69.79, 69.89, 70.65, 71.28],
 ]
 
-# Inicializa o arquivo se não existir
+def encontrar_alertas_completos(ultimas, sequencias_validas):
+    alertas = []
+    if not isinstance(ultimas, list):
+        return alertas
+
+    for seq in sequencias_validas:
+        if len(ultimas) >= len(seq) and ultimas[-len(seq):] == seq:
+            alertas.append(seq)
+
+            # Transformar sequência em string para usar como chave
+            chave = str(seq)
+            if chave in CONTAGEM_ALERTAS:
+                CONTAGEM_ALERTAS[chave] += 1
+            else:
+                CONTAGEM_ALERTAS[chave] = 1
+
+    return alertas
+
+
 # Inicializa o arquivo se não existir e garante que as chaves existam
 if not os.path.exists(ESTATISTICAS_FILE):
     with open(ESTATISTICAS_FILE, 'w') as f:
@@ -325,9 +366,7 @@ def salvar_em_excel():
 
         df = pd.DataFrame(historico_para_planilha)
 
-        desktop_path = os.path.join(
-            os.path.expanduser("~"), "Desktop", "historico diario percentuais", f"historico_completo_{date.today()}.xlsx"
-        )
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "historico diario percentuais", f"historico_completo_{date.today()}.xlsx")
         os.makedirs(os.path.dirname(desktop_path), exist_ok=True)
         df.to_excel(desktop_path, index=False)
         print(f"Planilha salva automaticamente: {desktop_path}")
@@ -473,6 +512,36 @@ TEMPLATE = '''
             <div class="info">📊 Ciclos — Preto: {{ preto }} | Vermelho: {{ vermelho }}</div>
 
             <hr>
+
+            {% if alertas_iminentes %}
+            <div style="margin-top: 10px; padding: 10px; background-color: #ffdddd; border-left: 6px solid #cc0000;">
+                <h3 style="margin: 0; color: #cc0000;">🚨 Alerta Iminente!</h3>
+                <p style="margin: 8px 0; font-size: 16px;">
+                    A seguinte sequência está prestes a se completar:
+                </p>
+                <ul style="margin: 0; padding-left: 20px;">
+                    {% for alerta in alertas_iminentes %}
+                        <li><strong>{{ alerta }}</strong></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <hr>
+
+            {% if alertas_iminentes %}
+            <div style="background-color: #ffeeba; padding: 15px; border: 1px solid #ffc107; border-radius: 8px; margin-bottom: 20px;">
+                <h4>🚨 Alerta de Sequência Iminente!</h4>
+                <ul>
+                    {% for seq in alertas_iminentes %}
+                        <li><strong>Próxima sequência esperada:</strong> {{ seq }}</li>
+                    {% endfor %}
+                </ul>
+                <audio autoplay>
+                    <source src="{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}" type="audio/mpeg">
+                </audio>
+            </div>
+            {% endif %}
 
             <div class="historico">
                 <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
@@ -631,7 +700,7 @@ def obter_previsao():
         for seq in SEQUENCIAS_VALIDAS:
             tamanho = len(seq)
             ultimas = historico_probs[:tamanho]
-            if len(ultimas) == tamanho and ultimas == seq[::-1]:
+            if len(ultimas) >= len(seq) and ultimas[-len(seq):] == seq:
                 sequencia_detectada = True
                 break
 
@@ -669,8 +738,21 @@ def obter_previsao():
 def home():
     entrada, preto, vermelho, ultima_nome, probabilidade, ultimas, ultimos_horarios, horario, acertos, erros, taxa_acerto, entradas, resultados, historico_completo, sequencia_detectada = obter_previsao()
 
+    # Definindo valores que estavam ausentes
+    PREVISAO = entrada  # Pode ser substituído por outro valor representativo da previsão
+    PROBABILIDADE_ATUAL = probabilidade if isinstance(probabilidade, float) else (probabilidade[-1] if probabilidade else None)
+    ULTIMOS_RESULTADOS = resultados[-5:] if resultados else []
+
+    # Verificando alertas iminentes com base nas últimas probabilidades
+    alertas_iminentes = encontrar_alertas_completos(probabilidade, SEQUENCIAS_VALIDAS)
+
     return render_template_string(
         TEMPLATE,
+        previsao=PREVISAO,
+        contagem_alertas=CONTAGEM_ALERTAS,
+        prob_atual=PROBABILIDADE_ATUAL,
+        ultimos_resultados=ULTIMOS_RESULTADOS,
+        alertas_iminentes=alertas_iminentes,
         entrada=entrada,
         preto=preto,
         vermelho=vermelho,
