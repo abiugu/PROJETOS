@@ -40,17 +40,17 @@ def obter_dados_blaze_sem_proxy():
                         return all_records
                     all_records.extend(data)
                     print(f"✅ Página {page} coletada com sucesso. Total: {len(all_records)} registros.")
-                    time.sleep(5)  # ✅ Delay de 5 segundos entre páginas
+                    time.sleep(10)  # ✅ Delay de 3 segundos entre páginas
                     page += 1
                     break  # próxima página
 
                 else:
-                    print(f"⚠️ Erro HTTP {response.status_code}. Retentando em 5s...")
-                    time.sleep(5)
+                    print(f"⚠️ Erro HTTP {response.status_code}. Retentando em 10s...")
+                    time.sleep(10)
 
             except Exception as e:
-                print(f"❌ Erro na página {page}: {e}. Retentando em 5s...")
-                time.sleep(10)
+                print(f"❌ Erro na página {page}: {e}. Retentando em 20s...")
+                time.sleep(20)
 
 def salvar_dados_em_planilha(records):
     if not records:
