@@ -19,6 +19,8 @@ def obter_nome_arquivo_estatisticas():
 
 ESTATISTICAS_FILE = obter_nome_arquivo_estatisticas()
 
+CONTADOR_ALERTAS_GLOBAL = 0
+ULTIMAS_SEQUENCIAS_ALERTADAS = set() 
 
 usuario = os.getlogin()
 desktop_path = fr"C:\Users\{usuario}\Desktop\SEQUENCIAS_VALIDAS.txt"
@@ -33,14 +35,10 @@ SEQUENCIAS_VALIDAS = [eval(lista) for lista in listas_encontradas]
 
 CONTAGEM_ALERTAS = {}
 
-# Exibe as 5 primeiras para testar
-for seq in SEQUENCIAS_VALIDAS[:5]:
-    print(seq)
-
 SEQUENCIAS_VALIDAS = [
-    [50.00, 50.00],
-    [50.00, 50.54],
-    [50.00, 51.06],
+    
+    [50.0, 50.54],
+    [50.0, 51.06],
     [29.17, 29.35],
     [29.35, 29.47],
     [29.47, 29.67],
@@ -298,23 +296,25 @@ SEQUENCIAS_VALIDAS = [
     [69.15, 69.39, 69.79, 69.89, 70.65, 71.28],
 ]
 
+def sequencia_bate(ultimas, sequencia):
+    if len(ultimas) < len(sequencia):
+        return False
+    ultimas_invertidas = list(reversed(ultimas))
+    return ultimas_invertidas[-len(sequencia):] == sequencia
+
+
 def encontrar_alertas_completos(ultimas, sequencias_validas):
+    """Retorna todas as sequências que foram encontradas nas últimas probabilidades."""
     alertas = []
     if not isinstance(ultimas, list):
         return alertas
-
     for seq in sequencias_validas:
-        if len(ultimas) >= len(seq) and ultimas[-len(seq):] == seq:
+        if sequencia_bate(ultimas, seq):
             alertas.append(seq)
-
-            # Transformar sequência em string para usar como chave
             chave = str(seq)
-            if chave in CONTAGEM_ALERTAS:
-                CONTAGEM_ALERTAS[chave] += 1
-            else:
-                CONTAGEM_ALERTAS[chave] = 1
-
+            CONTAGEM_ALERTAS[chave] = CONTAGEM_ALERTAS.get(chave, 0) + 1
     return alertas
+
 
 
 # Inicializa o arquivo se não existir e garante que as chaves existam
@@ -328,10 +328,13 @@ if not os.path.exists(ESTATISTICAS_FILE):
             'historico_horarios': [],
             'historico_resultados_binarios': [],
             'historico_probabilidades': [],
-            'historico_ciclos_preto': [],  # Garantir que a chave existe
-            'historico_ciclos_vermelho': [],  # Garantir que a chave existe
-            'ultima_analisada': ""
+            'historico_ciclos_preto': [],
+            'historico_ciclos_vermelho': [],
+            'ultima_analisada': "",
+            'contador_alertas': 0,  # <-- NOVO
+            'sequencias_alertadas': []  # <-- NOVO
         }, f)
+
 
 def salvar_em_excel():
     try:
@@ -340,6 +343,9 @@ def salvar_em_excel():
 
         with open(ESTATISTICAS_FILE, 'r') as f:
             stats = json.load(f)
+        ULTIMAS_PROBABILIDADES = [p for p in stats['historico_probabilidades'] if isinstance(p, (int, float))][:10]
+        alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS)
+        contador_alertas = len(alertas_iminentes)
 
         stats.setdefault('historico_horarios', [])
         stats.setdefault('historico_entradas', [])
@@ -474,6 +480,45 @@ TEMPLATE = '''
             overflow-y: auto;
             max-height: 500px;
         }
+        /* ALERTAS */
+        .alerta-grande {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 650px;
+            border-radius: 12px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        .alerta-grande + .alerta-grande { margin-top: 15px; }
+        .alerta-vermelho {
+            background-color: #ff4d4d;
+            color: #fff;
+            border-left: 8px solid #cc0000;
+            animation: pulsar 1.5s infinite;
+        }
+        .alerta-amarelo {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 8px solid #ffc107;
+        }
+        @keyframes pulsar {
+            0%, 100% { box-shadow: 0 0 15px #cc0000; }
+            50% { box-shadow: 0 0 25px #ff1a1a; }
+        }
+        .alerta-titulo {
+            font-size: 1.6em;
+            margin-bottom: 12px;
+        }
+        .alerta-grande ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        .alerta-grande li {
+            font-size: 1.4em;
+        }
     </style>
 </head>
 <body>
@@ -498,10 +543,12 @@ TEMPLATE = '''
                     som.play().catch(err => {
                         console.log("⚠️ Navegador bloqueou o som:", err);
                     });
-
                     fetch('/incrementar_contador/' + prob)
                         .then(response => response.json())
-                        .then(data => console.log(data));
+                        .then(data => {
+                            document.querySelector("#contador-alertas").innerText = data.contador;
+                        });
+
                 }
             </script>
 
@@ -510,37 +557,33 @@ TEMPLATE = '''
                 ✅ Direto: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%
             </div>
             <div class="info">📊 Ciclos — Preto: {{ preto }} | Vermelho: {{ vermelho }}</div>
-
+            <hr>
+            <div style="text-align: center; margin-top: 10px;">
+                <span style="font-size: 16px; color: #cc0000;">
+                    🔔 Contador de Alarmes: <strong id="contador-alertas">{{ contador_alertas }}</strong>
+                </span>
+            </div>
             <hr>
 
             {% if alertas_iminentes %}
-            <div style="margin-top: 10px; padding: 10px; background-color: #ffdddd; border-left: 6px solid #cc0000;">
-                <h3 style="margin: 0; color: #cc0000;">🚨 Alerta Iminente!</h3>
-                <p style="margin: 8px 0; font-size: 16px;">
-                    A seguinte sequência está prestes a se completar:
-                </p>
-                <ul style="margin: 0; padding-left: 20px;">
-                    {% for alerta in alertas_iminentes %}
-                        <li><strong>{{ alerta }}</strong></li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
+                <div class="alerta-grande alerta-vermelho">
+                    <div class="alerta-titulo">🚨 Alerta Iminente!</div>
+                    <p>A seguinte sequência está prestes a se completar:</p>
+                    <ul>
+                        {% for alerta in alertas_iminentes %}
+                            <li><strong>{{ alerta }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-            <hr>
-
-            {% if alertas_iminentes %}
-            <div style="background-color: #ffeeba; padding: 15px; border: 1px solid #ffc107; border-radius: 8px; margin-bottom: 20px;">
-                <h4>🚨 Alerta de Sequência Iminente!</h4>
-                <ul>
-                    {% for seq in alertas_iminentes %}
-                        <li><strong>Próxima sequência esperada:</strong> {{ seq }}</li>
-                    {% endfor %}
-                </ul>
-                <audio autoplay>
-                    <source src="{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}" type="audio/mpeg">
-                </audio>
-            </div>
+                <div class="alerta-grande alerta-amarelo">
+                    <div class="alerta-titulo">⚠️ Próxima sequência esperada:</div>
+                    <ul>
+                        {% for seq in alertas_iminentes %}
+                            <li><strong>{{ seq }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endif %}
 
             <div class="historico">
@@ -577,7 +620,6 @@ TEMPLATE = '''
                 </div>
             </div>
 
-
             <div class="historico">
                 <form method="POST" action="/reset">
                     <div style="display: flex; justify-content: center; margin-top: 10px;">
@@ -603,19 +645,23 @@ TEMPLATE = '''
 </html>
 '''
 
+
 @app.route('/reset', methods=['POST'])
 def reset():
     with open(ESTATISTICAS_FILE, 'w') as f:
         json.dump({
             'acertos': 0,
-            'gales': 0,
             'erros': 0,
             'historico_entradas': [],
             'historico_resultados': [],
             'historico_horarios': [],
             'historico_resultados_binarios': [],
             'historico_probabilidades': [],
-            'ultima_analisada': ""
+            'historico_ciclos_preto': [],
+            'historico_ciclos_vermelho': [],
+            'ultima_analisada': "",
+            'contador_alertas': 0,  # <-- NOVO
+            'sequencias_alertadas': []  # <-- NOVO
         }, f)
     return redirect('/')
 
@@ -623,6 +669,11 @@ def obter_previsao():
     try:
         with open(ESTATISTICAS_FILE, 'r') as f:
             stats = json.load(f)
+
+        global CONTADOR_ALERTAS_GLOBAL, ULTIMAS_SEQUENCIAS_ALERTADAS
+        CONTADOR_ALERTAS_GLOBAL = stats.get('contador_alertas', 0)
+        ULTIMAS_SEQUENCIAS_ALERTADAS = set(stats.get('sequencias_alertadas', []))
+
 
         stats.setdefault("probabilidade_anterior", None)
 
@@ -695,14 +746,23 @@ def obter_previsao():
             stats["probabilidade_anterior"] = probabilidade_nova
 
         # 🚨 Verificação de sequência
+                # 🚨 Verificação de sequência
         sequencia_detectada = False
         historico_probs = [p for p in stats['historico_probabilidades'] if isinstance(p, (int, float))][:10]
-        for seq in SEQUENCIAS_VALIDAS:
-            tamanho = len(seq)
-            ultimas = historico_probs[:tamanho]
-            if len(ultimas) >= len(seq) and ultimas[-len(seq):] == seq:
+        alertas_encontrados = encontrar_alertas_completos(historico_probs, SEQUENCIAS_VALIDAS)
+
+        for alerta in alertas_encontrados:
+            alerta_str = str(alerta)
+            if alerta_str not in ULTIMAS_SEQUENCIAS_ALERTADAS:
+                CONTADOR_ALERTAS_GLOBAL += 1  # incrementa só quando for novo
+                ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
                 sequencia_detectada = True
-                break
+        
+        # 🔹 Salvar o contador e as sequências no JSON
+        stats['contador_alertas'] = CONTADOR_ALERTAS_GLOBAL
+        stats['sequencias_alertadas'] = list(ULTIMAS_SEQUENCIAS_ALERTADAS)
+
+
 
         total_hits = stats['acertos'] + stats['erros']
         taxa = round((stats['acertos'] / total_hits) * 100, 1) if total_hits > 0 else 0
@@ -735,6 +795,7 @@ def obter_previsao():
 
 
 @app.route('/')
+
 def home():
     entrada, preto, vermelho, ultima_nome, probabilidade, ultimas, ultimos_horarios, horario, acertos, erros, taxa_acerto, entradas, resultados, historico_completo, sequencia_detectada = obter_previsao()
 
@@ -743,16 +804,20 @@ def home():
     PROBABILIDADE_ATUAL = probabilidade if isinstance(probabilidade, float) else (probabilidade[-1] if probabilidade else None)
     ULTIMOS_RESULTADOS = resultados[-5:] if resultados else []
 
-    # Verificando alertas iminentes com base nas últimas probabilidades
-    alertas_iminentes = encontrar_alertas_completos(probabilidade, SEQUENCIAS_VALIDAS)
+    ULTIMAS_PROBABILIDADES = [p for p in json.load(open(ESTATISTICAS_FILE))['historico_probabilidades'] if isinstance(p, (int, float))][:10]
+    alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS)
+
+    global CONTADOR_ALERTAS_GLOBAL
+    contador_alertas = CONTADOR_ALERTAS_GLOBAL
+
 
     return render_template_string(
         TEMPLATE,
         previsao=PREVISAO,
-        contagem_alertas=CONTAGEM_ALERTAS,
         prob_atual=PROBABILIDADE_ATUAL,
         ultimos_resultados=ULTIMOS_RESULTADOS,
         alertas_iminentes=alertas_iminentes,
+        contador_alertas=contador_alertas,  # <-- Mantemos apenas esse
         entrada=entrada,
         preto=preto,
         vermelho=vermelho,
@@ -768,7 +833,8 @@ def home():
         resultados=resultados,
         historico_completo=historico_completo,
         sequencia_detectada=sequencia_detectada
-    )
+)
+
 
 
 
