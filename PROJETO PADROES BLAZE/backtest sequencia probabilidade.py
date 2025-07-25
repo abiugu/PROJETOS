@@ -19,8 +19,8 @@ def analisar_sequencias_probabilidades(df):
 
     resultados_detalhados = []
 
-    for i in range(100, len(df)):
-        base_100 = df.iloc[i - 100:i]
+    for i in range(50, len(df)):
+        base_100 = df.iloc[i - 50:i]
         cores_base = base_100["CorInt"].tolist()
         cores_validas = [c for c in cores_base if c != 0]
 

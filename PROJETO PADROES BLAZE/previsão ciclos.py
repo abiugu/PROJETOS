@@ -450,10 +450,12 @@ def obter_previsao():
                 else:
                     resultado_binario = False
                     stats['erros'] += 1
-                stats['historico_probabilidades'].insert(0, probabilidade_anterior)
             else:
                 resultado_binario = None
-                stats['historico_probabilidades'].insert(0, None)
+        
+            # Agora salvamos a probabilidade da jogada atual no histórico
+            stats['historico_probabilidades'].insert(0, probabilidade_nova)
+        
             stats['historico_entradas'].insert(0, entrada)
             stats['historico_resultados'].insert(0, ultima_nome)
             stats['historico_horarios'].insert(0, horario_local)
@@ -464,6 +466,7 @@ def obter_previsao():
             stats['historico_ciclos_preto'].insert(0, preto)
             stats['historico_ciclos_vermelho'].insert(0, vermelho)
             stats["probabilidade_anterior"] = probabilidade_nova
+
 
         # 🚨 Sequências
         historico_probs = [p for p in stats['historico_probabilidades'] if isinstance(p, (int, float))][:10]
@@ -501,7 +504,7 @@ def obter_previsao():
             })
 
         with open(ESTATISTICAS_FILE, 'w') as f:
-            json.dump(stats, f)
+            json.dump(stats, f, indent=4)
 
         return (
             entrada, preto, vermelho, ultima_nome, probabilidade_nova,
