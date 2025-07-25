@@ -22,15 +22,22 @@ ESTATISTICAS_FILE = obter_nome_arquivo_estatisticas()
 CONTADOR_ALERTAS_GLOBAL = 0
 ULTIMAS_SEQUENCIAS_ALERTADAS = set() 
 
-desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "SEQUENCIAS_VALIDAS.txt")
+# Sequências válidas para 100 rodadas (já existente)
+desktop_path_100 = os.path.join(os.path.expanduser("~"), "Desktop", "SEQUENCIAS_VALIDAS.txt")
+with open(desktop_path_100, "r") as f:
+    conteudo_100 = f.read()
+listas_encontradas_100 = re.findall(r'\[[^\[\]]+\]', conteudo_100)
+SEQUENCIAS_VALIDAS_100 = [eval(lista) for lista in listas_encontradas_100]
 
-with open(desktop_path, "r") as f:
-    conteudo = f.read()
-
-# Encontra todas as listas dentro do conteúdo, mesmo que esteja em "SEQUENCIAS_VALIDAS = [...]"
-listas_encontradas = re.findall(r'\[[^\[\]]+\]', conteudo)
-
-SEQUENCIAS_VALIDAS = [eval(lista) for lista in listas_encontradas]
+# Sequências válidas para 50 rodadas (novo)
+desktop_path_50 = os.path.join(os.path.expanduser("~"), "Desktop", "SEQUENCIAS_VALIDAS_50.txt")
+if os.path.exists(desktop_path_50):
+    with open(desktop_path_50, "r") as f:
+        conteudo_50 = f.read()
+    listas_encontradas_50 = re.findall(r'\[[^\[\]]+\]', conteudo_50)
+    SEQUENCIAS_VALIDAS_50 = [eval(lista) for lista in listas_encontradas_50]
+else:
+    SEQUENCIAS_VALIDAS_50 = []
 
 CONTAGEM_ALERTAS = {}
 
@@ -41,18 +48,24 @@ def sequencia_bate(ultimas, sequencia):
     return ultimas_invertidas[-len(sequencia):] == sequencia
 
 
-def encontrar_alertas_completos(ultimas, sequencias_validas):
+def encontrar_alertas_completos(ultimas, *listas_sequencias):
     """Retorna todas as sequências que foram encontradas nas últimas probabilidades."""
     alertas = []
     if not isinstance(ultimas, list):
         return alertas
-    for seq in sequencias_validas:
+    
+    # Junta todas as listas de sequências em uma única
+    sequencias_combinadas = []
+    for lista in listas_sequencias:
+        sequencias_combinadas.extend(lista)
+    
+    # Verifica cada sequência
+    for seq in sequencias_combinadas:
         if sequencia_bate(ultimas, seq):
             alertas.append(seq)
             chave = str(seq)
             CONTAGEM_ALERTAS[chave] = CONTAGEM_ALERTAS.get(chave, 0) + 1
     return alertas
-
 
 
 # Inicializa o arquivo se não existir e garante que as chaves existam
@@ -65,12 +78,15 @@ if not os.path.exists(ESTATISTICAS_FILE):
             'historico_resultados': [],
             'historico_horarios': [],
             'historico_resultados_binarios': [],
-            'historico_probabilidades': [],
-            'historico_ciclos_preto': [],
-            'historico_ciclos_vermelho': [],
+            'historico_probabilidade_100': [],
+            'historico_probabilidade_50': [],
+            'historico_ciclos_preto_100': [],
+            'historico_ciclos_vermelho_100': [],
+            'historico_ciclos_preto_50': [],
+            'historico_ciclos_vermelho_50': [],
             'ultima_analisada': "",
-            'contador_alertas': 0,  # <-- NOVO
-            'sequencias_alertadas': []  # <-- NOVO
+            'contador_alertas': 0,
+            'sequencias_alertadas': []
         }, f)
 
 
@@ -81,31 +97,27 @@ def salvar_em_excel():
 
         with open(ESTATISTICAS_FILE, 'r') as f:
             stats = json.load(f)
-        ULTIMAS_PROBABILIDADES = [p for p in stats['historico_probabilidades'] if isinstance(p, (int, float))][:10]
-        alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS)
-        contador_alertas = len(alertas_iminentes)
 
-        stats.setdefault('historico_horarios', [])
-        stats.setdefault('historico_entradas', [])
-        stats.setdefault('historico_resultados', [])
-        stats.setdefault('historico_resultados_binarios', [])
-        stats.setdefault('historico_probabilidades', [])
-        stats.setdefault('historico_ciclos_preto', [])
-        stats.setdefault('historico_ciclos_vermelho', [])
+        # Sequências iminentes (só para exibir na lateral)
+        ULTIMAS_PROBABILIDADES = [p for p in stats['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
+        alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS_50, SEQUENCIAS_VALIDAS_100)
 
         historico_para_planilha = []
-        total = len(stats['historico_resultados'])  # agora usamos resultados como base (é a jogada válida)
+        total = len(stats['historico_resultados'])
 
         for i in range(total):
             historico_para_planilha.append({
                 "Horário": stats['historico_horarios'][i] if i < len(stats['historico_horarios']) else "-",
-                "Previsão": stats['historico_entradas'][i + 1] if i + 1 < len(stats['historico_entradas']) else "-",  # previsão anterior
+                "Previsão": stats['historico_entradas'][i + 1] if i + 1 < len(stats['historico_entradas']) else "-",
                 "Resultado": stats['historico_resultados'][i],
                 "Acertou": "Sim" if i < len(stats['historico_resultados_binarios']) and stats['historico_resultados_binarios'][i] is True else
-                            "Não" if i < len(stats['historico_resultados_binarios']) and stats['historico_resultados_binarios'][i] is False else "N/D",
-                "Probabilidade da Previsão": stats['historico_probabilidades'][i] if i < len(stats['historico_probabilidades']) else "-",
-                "Ciclos Preto": stats['historico_ciclos_preto'][i] if i < len(stats['historico_ciclos_preto']) else 0,
-                "Ciclos Vermelho": stats['historico_ciclos_vermelho'][i] if i < len(stats['historico_ciclos_vermelho']) else 0
+                          "Não" if i < len(stats['historico_resultados_binarios']) and stats['historico_resultados_binarios'][i] is False else "N/D",
+                "Probabilidade 100": stats['historico_probabilidade_100'][i] if i < len(stats['historico_probabilidade_100']) else "-",
+                "Probabilidade 50": stats['historico_probabilidade_50'][i] if i < len(stats['historico_probabilidade_50']) else "-",
+                "Ciclos Preto 100": stats['historico_ciclos_preto_100'][i] if i < len(stats['historico_ciclos_preto_100']) else 0,
+                "Ciclos Vermelho 100": stats['historico_ciclos_vermelho_100'][i] if i < len(stats['historico_ciclos_vermelho_100']) else 0,
+                "Ciclos Preto 50": stats['historico_ciclos_preto_50'][i] if i < len(stats['historico_ciclos_preto_50']) else 0,
+                "Ciclos Vermelho 50": stats['historico_ciclos_vermelho_50'][i] if i < len(stats['historico_ciclos_vermelho_50']) else 0,
             })
 
         df = pd.DataFrame(historico_para_planilha)
@@ -165,7 +177,6 @@ TEMPLATE = '''
             padding: 0;
             display: flex;
             justify-content: center;
-        }
         .container {
             display: flex;
             justify-content: center;
@@ -177,21 +188,23 @@ TEMPLATE = '''
             background-color: #222;
             border-radius: 10px;
             padding: 20px;
-            width: 60%;
+            width: 65%;
             margin-right: 20px;
         }
         .sidebar {
             background-color: #1a1a1a;
             border-radius: 10px;
             padding: 15px;
-            width: 35%;
+            width: 30%;
             overflow-y: auto;
             max-height: 90vh;
         }
+
         h1 { color: #0ff; text-align: center; }
         .entrada { font-size: 1.5em; margin: 10px 0; text-align: center; }
         .info { font-size: 1.1em; margin-top: 10px; text-align: center; }
-        .prob { color: #0f0; }
+        .prob { color: #0f0; font-weight: bold; }
+        .prob50 { color: #ffa500; font-weight: bold; }
         .bola {
             display: inline-block;
             width: 25px;
@@ -261,32 +274,26 @@ TEMPLATE = '''
 </head>
 <body>
     <div class="container">
+        <!-- Painel principal -->
         <div class="box">
             <h1>🎯 Previsão da Blaze (Double)</h1>
             <div class="entrada">➡️ Entrada recomendada: <strong>{{ entrada }}</strong></div>
             <div class="entrada">⚪ Proteção no branco</div>
             <hr>
             <div class="info">🎲 Última jogada: <strong>{{ ultima }}</strong> às <strong>{{ horario }}</strong></div>
-            <div class="info">📈 Probabilidade estimada: <span class="prob">{{ probabilidade }}%</span></div>
-
-            <audio id="som-alerta" src="{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}"></audio>
-
-            <script>
-                const sequencia = {{ 'true' if sequencia_detectada else 'false' }};
-                if (sequencia) {  // Agora funciona como boolean
-                    console.log("🚨 Sequência detectada! Tocando alarme...");
-                    const som = document.getElementById("som-alerta");
-                    som.play().catch(err => console.log("⚠️ Navegador bloqueou o som:", err));
-                }
-            </script>
-
-
+            <div class="info">
+                📈 Probabilidade 100 rodadas: <span class="prob">{{ probabilidade100 }}%</span><br>
+                📉 Probabilidade 50 rodadas: <span class="prob50">{{ probabilidade50 }}%</span>
+            </div>
+            <div class="info">
+                📊 Ciclos (100 rodadas) — Preto: {{ ciclos100_preto }} | Vermelho: {{ ciclos100_vermelho }}<br>
+                📊 Ciclos (50 rodadas) — Preto: {{ ciclos50_preto }} | Vermelho: {{ ciclos50_vermelho }}
+            </div>
 
             <hr>
             <div class="info">
                 ✅ Direto: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%
             </div>
-            <div class="info">📊 Ciclos — Preto: {{ preto }} | Vermelho: {{ vermelho }}</div>
             <hr>
             <div style="text-align: center; margin-top: 10px;">
                 <span style="font-size: 16px; color: #cc0000;">
@@ -295,73 +302,45 @@ TEMPLATE = '''
             </div>
             <hr>
 
-            {% if alertas_iminentes %}
-                <div class="alerta-grande alerta-vermelho">
-                    <div class="alerta-titulo">🚨 Alerta Iminente!</div>
-                    <p>A seguinte sequência está prestes a se completar:</p>
-                    <ul>
-                        {% for alerta in alertas_iminentes %}
-                            <li><strong>{{ alerta }}</strong></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <div class="alerta-grande alerta-amarelo">
-                    <div class="alerta-titulo">⚠️ Próxima sequência esperada:</div>
-                    <ul>
-                        {% for seq in alertas_iminentes %}
-                            <li><strong>{{ seq }}</strong></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-
-            <div class="historico">
-                <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
-                <div style="text-align: center;">
-                    {% for i in range(ultimas|length) %}
-                        <div style="display:inline-block; text-align:center; margin: 4px;">
-                            <div class="bola {{ ultimas[i] }}"></div>
-                            <div style="font-size: 0.7em;">{{ ultimos_horarios[i] }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            
-            <div class="historico">
-                <h3 style="text-align: center;">📋 Últimas entradas</h3>
-                <div style="text-align: center;">
-                    {% for i in range(10) %}
-                        {% if i < entradas|length and i < resultados|length %}
-                        <div style="display:inline-block; text-align:center; margin: 4px;">
-                            <div class="entrada-bola {{ entradas[i] }}"></div>
-                            <div style="font-size: 0.8em;">
-                                {% if resultados[i] == True %}
-                                    ✅
-                                {% elif resultados[i] == False %}
-                                    ❌
-                                {% else %}
-                                    ?
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="historico">
-                <form method="POST" action="/reset">
-                    <div style="display: flex; justify-content: center; margin-top: 10px;">
-                        <button class="btn-reset">🔄 Resetar Estatísticas</button>
+            <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
+            <div style="text-align: center;">
+                {% for i in range(ultimas|length) %}
+                    <div style="display:inline-block; text-align:center; margin: 4px;">
+                        <div class="bola {{ ultimas[i] }}"></div>
+                        <div style="font-size: 0.7em;">{{ ultimos_horarios[i] }}</div>
                     </div>
-                </form>
-                <div style="text-align: center; margin-top: 10px; font-size: 0.85em; color: #ccc;">
-                    Atualiza a cada 2s automaticamente
-                </div>
+                {% endfor %}
+            </div>
+
+            <h3 style="text-align: center;">📋 Últimas entradas</h3>
+            <div style="text-align: center;">
+                {% for i in range(10) %}
+                    {% if i < entradas|length and i < resultados|length %}
+                    <div style="display:inline-block; text-align:center; margin: 4px;">
+                        <div class="entrada-bola {{ entradas[i] }}"></div>
+                        <div style="font-size: 0.8em;">
+                            {% if resultados[i] == True %}
+                                ✅
+                            {% elif resultados[i] == False %}
+                                ❌
+                            {% else %}
+                                ?
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <form method="POST" action="/reset" style="text-align:center; margin-top: 15px;">
+                <button class="btn-reset">🔄 Resetar Estatísticas</button>
+            </form>
+            <div style="text-align: center; margin-top: 10px; font-size: 0.85em; color: #ccc;">
+                Atualiza a cada 2s automaticamente
             </div>
         </div>
 
+        <!-- Histórico lateral -->
         <div class="sidebar scrollable">
             <h3>📜 Histórico Completo</h3>
             {% for h in historico_completo %}
@@ -375,9 +354,8 @@ TEMPLATE = '''
 </html>
 '''
 
-
-@app.route('/reset', methods=['POST'])
-def reset():
+# Inicializa o arquivo se não existir
+if not os.path.exists(ESTATISTICAS_FILE):
     with open(ESTATISTICAS_FILE, 'w') as f:
         json.dump({
             'acertos': 0,
@@ -390,22 +368,38 @@ def reset():
             'historico_ciclos_preto': [],
             'historico_ciclos_vermelho': [],
             'ultima_analisada': "",
-            'contador_alertas': 0,  # <-- NOVO
-            'sequencias_alertadas': []  # <-- NOVO
+            'contador_alertas': 0,
+            'sequencias_alertadas': []
         }, f)
-    return redirect('/')
+
+def calcular_probabilidade_ciclos(cores, limite=100):
+    filtrado = [c for c in cores[:limite] if c != 0]
+    contagem = Counter(filtrado)
+    total = len(filtrado)
+    if total == 0:
+        return "PRETO", 0.0
+    preto = vermelho = 0
+    atual = filtrado[0]
+    for cor in filtrado[1:]:
+        if cor != atual:
+            if atual == 1: vermelho += 1
+            if atual == 2: preto += 1
+            atual = cor
+    if atual == 1: vermelho += 1
+    if atual == 2: preto += 1
+    entrada = "PRETO" if preto >= vermelho else "VERMELHO"
+    entrada_valor = 2 if entrada == "PRETO" else 1
+    probabilidade = round((contagem[entrada_valor] / total) * 100, 2)
+    return entrada, probabilidade, preto, vermelho
 
 def obter_previsao():
     try:
         with open(ESTATISTICAS_FILE, 'r') as f:
             stats = json.load(f)
-
         global CONTADOR_ALERTAS_GLOBAL, ULTIMAS_SEQUENCIAS_ALERTADAS
         CONTADOR_ALERTAS_GLOBAL = stats.get('contador_alertas', 0)
         ULTIMAS_SEQUENCIAS_ALERTADAS = set(stats.get('sequencias_alertadas', []))
         stats.setdefault("probabilidade_anterior", None)
-
-        # Blaze API
         url = "https://blaze.bet.br/api/singleplayer-originals/originals/roulette_games/recent/history/1"
         headers = {"User-Agent": "Mozilla/5.0"}
         res = requests.get(url, headers=headers)
@@ -415,30 +409,17 @@ def obter_previsao():
         horarios_raw = [r['created_at'] for r in registros]
         horarios_format = [(datetime.strptime(h, "%Y-%m-%dT%H:%M:%S.%fZ") - timedelta(hours=3)).strftime("%H:%M:%S") for h in horarios_raw]
 
-        # Contagem
-        filtrado = [c for c in cores if c != 0]
-        contagem = Counter(filtrado)
-        total = len(filtrado)
-        preto = vermelho = 0
-        atual = filtrado[0]
-        for cor in filtrado[1:]:
-            if cor != atual:
-                if atual == 1: vermelho += 1
-                if atual == 2: preto += 1
-                atual = cor
-        if atual == 1: vermelho += 1
-        if atual == 2: preto += 1
+        # Probabilidade e ciclos 100 e 50
+        entrada_100, prob_100, preto_100, vermelho_100 = calcular_probabilidade_ciclos(cores, 100)
+        entrada_50, prob_50, preto_50, vermelho_50 = calcular_probabilidade_ciclos(cores, 50)
 
-        entrada = "PRETO" if preto >= vermelho else "VERMELHO"
-        entrada_valor = 2 if entrada == "PRETO" else 1
+        entrada = entrada_100
+        probabilidade_nova = prob_100
         ultima_cor = cores[0]
         ultima_nome = "BRANCO" if ultima_cor == 0 else "VERMELHO" if ultima_cor == 1 else "PRETO"
         horario_utc = horarios_raw[0]
         horario_local = horarios_format[0]
-        probabilidade_nova = round((contagem[entrada_valor] / total) * 100, 2)
-        probabilidade_anterior = stats.get("probabilidade_anterior")
 
-        # Atualiza histórico
         if stats.get("ultima_analisada") != horario_utc:
             if stats.get("ultima_analisada") and len(stats['historico_entradas']) > 0:
                 previsao_anterior = stats['historico_entradas'][0]
@@ -452,32 +433,40 @@ def obter_previsao():
                     stats['erros'] += 1
             else:
                 resultado_binario = None
-        
-            # Agora salvamos a probabilidade da jogada atual no histórico
-            stats['historico_probabilidades'].insert(0, probabilidade_nova)
-        
+
+            # --- Inicializa novas chaves se não existirem ---
+            stats.setdefault('historico_probabilidade_100', [])
+            stats.setdefault('historico_probabilidade_50', [])
+            stats.setdefault('historico_ciclos_preto_100', [])
+            stats.setdefault('historico_ciclos_vermelho_100', [])
+            stats.setdefault('historico_ciclos_preto_50', [])
+            stats.setdefault('historico_ciclos_vermelho_50', [])
+
+            # --- Atualiza históricos ---
+            stats['historico_probabilidade_100'].insert(0, prob_100)
+            stats['historico_probabilidade_50'].insert(0, prob_50)
+
+            stats['historico_ciclos_preto_100'].insert(0, preto_100)
+            stats['historico_ciclos_vermelho_100'].insert(0, vermelho_100)
+            stats['historico_ciclos_preto_50'].insert(0, preto_50)
+            stats['historico_ciclos_vermelho_50'].insert(0, vermelho_50)
+
             stats['historico_entradas'].insert(0, entrada)
             stats['historico_resultados'].insert(0, ultima_nome)
             stats['historico_horarios'].insert(0, horario_local)
             stats['historico_resultados_binarios'].insert(0, resultado_binario)
             stats['ultima_analisada'] = horario_utc
-            stats.setdefault('historico_ciclos_preto', [])
-            stats.setdefault('historico_ciclos_vermelho', [])
-            stats['historico_ciclos_preto'].insert(0, preto)
-            stats['historico_ciclos_vermelho'].insert(0, vermelho)
-            stats["probabilidade_anterior"] = probabilidade_nova
 
 
-        # 🚨 Sequências
-        historico_probs = [p for p in stats['historico_probabilidades'] if isinstance(p, (int, float))][:10]
-        alertas_encontrados = encontrar_alertas_completos(historico_probs, SEQUENCIAS_VALIDAS)
+        historico_probs_100 = [p for p in stats['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
+        alertas_100 = encontrar_alertas_completos(historico_probs_100, SEQUENCIAS_VALIDAS_100)
+        historico_probs_50 = [p for p in stats['historico_probabilidade_50'] if isinstance(p, (int, float))][:10]
+        alertas_50 = encontrar_alertas_completos(historico_probs_50, SEQUENCIAS_VALIDAS_50)
+        alertas_encontrados = alertas_100 + alertas_50
         sequencia_atual = str(alertas_encontrados[0]) if alertas_encontrados else None
-        ultima_sequencia = stats.get('sequencia_atual', None)
-        sequencia_mudou = (sequencia_atual is not None and sequencia_atual != ultima_sequencia)
+        sequencia_mudou = (sequencia_atual is not None and sequencia_atual != stats.get('sequencia_atual'))
         stats['sequencia_atual'] = sequencia_atual
         sequencia_detectada = bool(sequencia_atual)
-
-        # Atualiza contador
         for alerta in alertas_encontrados:
             alerta_str = str(alerta)
             if alerta_str not in ULTIMAS_SEQUENCIAS_ALERTADAS:
@@ -485,12 +474,8 @@ def obter_previsao():
                 ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
         stats['contador_alertas'] = CONTADOR_ALERTAS_GLOBAL
         stats['sequencias_alertadas'] = list(ULTIMAS_SEQUENCIAS_ALERTADAS)
-
-        # Taxa
         total_hits = stats['acertos'] + stats['erros']
         taxa = round((stats['acertos'] / total_hits) * 100, 1) if total_hits > 0 else 0
-
-        # Históricos
         entradas_formatadas = ["preto" if e == "PRETO" else "vermelho" for e in stats['historico_entradas']]
         ultimas_10 = ["branco" if c == 0 else "vermelho" if c == 1 else "preto" for c in cores[:10][::-1]]
         ultimos_horarios = horarios_format[:10][::-1]
@@ -502,38 +487,32 @@ def obter_previsao():
                 "resultado": stats['historico_resultados'][i - 1],
                 "icone": "✅" if stats['historico_resultados_binarios'][i - 1] is True else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?"
             })
-
         with open(ESTATISTICAS_FILE, 'w') as f:
             json.dump(stats, f, indent=4)
-
         return (
-            entrada, preto, vermelho, ultima_nome, probabilidade_nova,
+            entrada, preto_100, vermelho_100, preto_50, vermelho_50, ultima_nome, prob_100, prob_50,
             ultimas_10, ultimos_horarios, horario_local,
-            stats['acertos'], stats['erros'], taxa, 
+            stats['acertos'], stats['erros'], taxa,
             entradas_formatadas, stats['historico_resultados_binarios'], historico_completo,
             sequencia_detectada, sequencia_mudou, sequencia_atual
         )
     except Exception as e:
         print("Erro:", e)
-        return "Erro", 0, 0, "Indefinida", 0.0, [], [], "--:--:--", 0, 0, 0, [], [], [], False, False, None
+        return "Erro", 0, 0, 0, 0, "Indefinida", 0.0, 0.0, [], [], "--:--:--", 0, 0, 0, [], [], [], False, False, None
 
 @app.route('/')
 def home():
-    (entrada, preto, vermelho, ultima_nome, probabilidade, ultimas, ultimos_horarios, horario,
-     acertos, erros, taxa_acerto, entradas, resultados, historico_completo,
-     sequencia_detectada, sequencia_mudou, sequencia_atual) = obter_previsao()
-
-    ULTIMAS_PROBABILIDADES = [p for p in json.load(open(ESTATISTICAS_FILE))['historico_probabilidades'] if isinstance(p, (int, float))][:10]
-    alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS)
+    (entrada, preto100, vermelho100, preto50, vermelho50, ultima_nome, prob100, prob50, ultimas, ultimos_horarios, horario, acertos, erros, taxa_acerto, entradas, resultados, historico_completo, sequencia_detectada, sequencia_mudou, sequencia_atual) = obter_previsao()
+    ULTIMAS_PROBABILIDADES = [p for p in json.load(open(ESTATISTICAS_FILE))['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
+    alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS_50, SEQUENCIAS_VALIDAS_100)
     contador_alertas = CONTADOR_ALERTAS_GLOBAL
-
-    return render_template_string(
-        TEMPLATE,
+    return render_template_string(TEMPLATE,
         entrada=entrada,
-        preto=preto,
-        vermelho=vermelho,
+        ciclos100_preto=preto100, ciclos100_vermelho=vermelho100,
+        ciclos50_preto=preto50, ciclos50_vermelho=vermelho50,
         ultima=ultima_nome,
-        probabilidade=probabilidade,
+        probabilidade100=prob100,
+        probabilidade50=prob50,
         ultimas=ultimas,
         ultimos_horarios=ultimos_horarios,
         horario=horario,
@@ -547,7 +526,6 @@ def home():
         contador_alertas=contador_alertas,
         sequencia_detectada=sequencia_detectada
     )
-
 
 if __name__ == '__main__':
     app.run(debug=True)
