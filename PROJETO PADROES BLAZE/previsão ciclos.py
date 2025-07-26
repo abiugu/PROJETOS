@@ -153,6 +153,7 @@ TEMPLATE = '''
     <title>Previsão Blaze (Double)</title>
     <meta http-equiv="refresh" content="2">
     <style>
+        /* Estilos do botão reset */
         .btn-reset {
             background: linear-gradient(135deg, #ff4e50, #f9d423);
             border: none;
@@ -177,12 +178,13 @@ TEMPLATE = '''
             padding: 0;
             display: flex;
             justify-content: center;
+        }
         .container {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             padding: 20px;
-            max-width: 1400px;
             width: 100%;
+            max-width: 1400px;
         }
         .box {
             background-color: #222;
@@ -198,6 +200,7 @@ TEMPLATE = '''
             width: 30%;
             overflow-y: auto;
             max-height: 90vh;
+            margin-top: 20px;
         }
 
         h1 { color: #0ff; text-align: center; }
@@ -231,6 +234,7 @@ TEMPLATE = '''
             overflow-y: auto;
             max-height: 500px;
         }
+
         /* ALERTAS */
         .alerta-grande {
             margin: 20px auto;
@@ -241,40 +245,45 @@ TEMPLATE = '''
             font-weight: bold;
             text-align: center;
             box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            display: none; /* Inicialmente escondido */
         }
-        .alerta-grande + .alerta-grande { margin-top: 15px; }
         .alerta-vermelho {
             background-color: #ff4d4d;
             color: #fff;
             border-left: 8px solid #cc0000;
             animation: pulsar 1.5s infinite;
         }
-        .alerta-amarelo {
-            background-color: #fff3cd;
-            color: #856404;
-            border-left: 8px solid #ffc107;
-        }
         @keyframes pulsar {
             0%, 100% { box-shadow: 0 0 15px #cc0000; }
             50% { box-shadow: 0 0 25px #ff1a1a; }
         }
+
         .alerta-titulo {
             font-size: 1.6em;
             margin-bottom: 12px;
         }
-        .alerta-grande ul {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0 0 0;
-        }
-        .alerta-grande li {
-            font-size: 1.4em;
-        }
     </style>
+
+<script>
+    // Verifica se a sequência foi detectada
+    if ({{ sequencia_detectada | tojson }}) {
+        // Exibe a notificação vermelha
+        document.getElementById('alerta').style.display = 'block';
+
+        // Toca o som de alerta
+        var audio = new Audio('{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}');
+        audio.play();
+    }
+</script>
 </head>
 <body>
     <div class="container">
-        <!-- Painel principal -->
+        <!-- Alerta Vermelho -->
+        <div class="alerta-grande alerta-vermelho" id="alerta">
+            <div class="alerta-titulo">🚨 Sequência Detectada! Alarme Acionado!</div>
+            <p>Uma sequência válida foi encontrada. Fique atento!</p>
+        </div>
+
         <div class="box">
             <h1>🎯 Previsão da Blaze (Double)</h1>
             <div class="entrada">➡️ Entrada recomendada: <strong>{{ entrada }}</strong></div>
@@ -301,7 +310,6 @@ TEMPLATE = '''
                 </span>
             </div>
             <hr>
-
             <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
             <div style="text-align: center;">
                 {% for i in range(ultimas|length) %}
@@ -457,7 +465,6 @@ def obter_previsao():
             stats['historico_resultados_binarios'].insert(0, resultado_binario)
             stats['ultima_analisada'] = horario_utc
 
-
         historico_probs_100 = [p for p in stats['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
         alertas_100 = encontrar_alertas_completos(historico_probs_100, SEQUENCIAS_VALIDAS_100)
         historico_probs_50 = [p for p in stats['historico_probabilidade_50'] if isinstance(p, (int, float))][:10]
@@ -467,11 +474,24 @@ def obter_previsao():
         sequencia_mudou = (sequencia_atual is not None and sequencia_atual != stats.get('sequencia_atual'))
         stats['sequencia_atual'] = sequencia_atual
         sequencia_detectada = bool(sequencia_atual)
+        # Dentro da função onde você manipula as sequências alertadas
         for alerta in alertas_encontrados:
-            alerta_str = str(alerta)
-            if alerta_str not in ULTIMAS_SEQUENCIAS_ALERTADAS:
-                CONTADOR_ALERTAS_GLOBAL += 1
-                ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
+            if alerta:  # Verifica se alerta não é vazio ou None
+                alerta_str = str(alerta)
+                if alerta_str not in ULTIMAS_SEQUENCIAS_ALERTADAS:
+                    CONTADOR_ALERTAS_GLOBAL += 1
+                    ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
+                    
+                    # Salvar a sequência com o timestamp da hora atual
+                    hora_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Formato de hora correto
+                    stats['sequencias_alertadas'].append({
+                        'sequencia': alerta_str,
+                        'hora': hora_atual  # Adicionando a hora junto com a sequência
+                    })
+        
+                    # Log para verificar se os dados estão sendo adicionados corretamente
+                    print(f"Sequência detectada: {alerta_str} com hora {hora_atual}")
+
         stats['contador_alertas'] = CONTADOR_ALERTAS_GLOBAL
         stats['sequencias_alertadas'] = list(ULTIMAS_SEQUENCIAS_ALERTADAS)
         total_hits = stats['acertos'] + stats['erros']
@@ -489,6 +509,7 @@ def obter_previsao():
             })
         with open(ESTATISTICAS_FILE, 'w') as f:
             json.dump(stats, f, indent=4)
+
         return (
             entrada, preto_100, vermelho_100, preto_50, vermelho_50, ultima_nome, prob_100, prob_50,
             ultimas_10, ultimos_horarios, horario_local,
