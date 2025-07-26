@@ -5,7 +5,7 @@ from datetime import datetime
 
 # Caminho do arquivo
 CAMINHO_DESKTOP = os.path.join(os.path.expanduser("~"), "Desktop")
-ARQUIVO_EXCEL = os.path.join(CAMINHO_DESKTOP, "historico probabilidades julho 50 rodadas.xlsx")
+ARQUIVO_EXCEL = os.path.join(CAMINHO_DESKTOP, "historico probabilidades julho.xlsx")
 
 def encontrar_sequencias_probabilidade(df, tamanho_seq=3, limite_acerto=70.0):
     df = df.copy()
@@ -20,53 +20,65 @@ def encontrar_sequencias_probabilidade(df, tamanho_seq=3, limite_acerto=70.0):
         print("🔍 Colunas disponíveis:", df.columns.tolist())
         return pd.DataFrame()
 
-    # Converte probabilidades (vírgula -> ponto) e remove caracteres inválidos
-    try:
-        df["Probabilidade"] = (
-            df["Probabilidade"]
-            .astype(str)
-            .str.replace(",", ".", regex=False)
-            .str.replace(r"[^\d\.]", "", regex=True)
-            .astype(float)
-        )
-    except Exception as e:
-        print("❌ Erro ao converter a coluna 'Probabilidade' para float.")
-        print("🔍 Primeiros valores:", df["Probabilidade"].head(10).tolist())
-        print("Detalhes:", e)
-        return pd.DataFrame()
+    # Converte probabilidades (vírgula -> ponto)
+    df["Probabilidade"] = (
+        df["Probabilidade"]
+        .astype(str)
+        .str.replace(",", ".", regex=False)
+        .str.replace(r"[^\d\.]", "", regex=True)
+        .astype(float)
+    )
 
-    # Normaliza valores da coluna Acertou
     df["Acertou"] = df["Acertou"].astype(str).str.strip()
 
-    # Dicionário para armazenar estatísticas das sequências
-    sequencias = defaultdict(lambda: {"ocorrencias": 0, "acertos": 0})
+    # Dicionário para armazenar estatísticas
+    sequencias = defaultdict(lambda: {"ocorrencias": 0, "acertos": 0, "gale": 0, "erros": 0})
 
-    for i in range(len(df) - tamanho_seq):
+    for i in range(len(df) - tamanho_seq - 1):
         try:
+            # Monta a sequência
             seq = tuple(round(df.loc[i + j, "Probabilidade"], 2) for j in range(tamanho_seq))
+
+            # Verifica a próxima jogada
             proxima = df.loc[i + tamanho_seq]
             acertou = proxima["Acertou"] == "✅"
+
             sequencias[seq]["ocorrencias"] += 1
+
             if acertou:
                 sequencias[seq]["acertos"] += 1
+            else:
+                # Tenta Gale 1
+                if i + tamanho_seq + 1 < len(df):
+                    gale1 = df.loc[i + tamanho_seq + 1, "Acertou"] == "✅"
+                    if gale1:
+                        sequencias[seq]["gale"] += 1
+                    else:
+                        sequencias[seq]["erros"] += 1
+                else:
+                    sequencias[seq]["erros"] += 1
         except Exception:
             continue
 
-    # Monta dataframe final com taxa de acerto
+    # Monta dataframe final
     resultados = []
     for seq, stats in sequencias.items():
         if stats["ocorrencias"] < 2:
             continue
-        taxa_acerto = round((stats["acertos"] / stats["ocorrencias"]) * 100, 2)
-        if taxa_acerto >= limite_acerto:
+        total_sucesso = stats["acertos"] + stats["gale"]
+        taxa_sucesso = round((total_sucesso / stats["ocorrencias"]) * 100, 2)
+        if taxa_sucesso >= limite_acerto:
             resultados.append({
                 "Sequência de Probabilidades": ', '.join([f"{p:.2f}" for p in seq]),
                 "Ocorrências": stats["ocorrencias"],
-                "Acertos": stats["acertos"],
-                "Taxa de Acerto (%)": taxa_acerto
+                "Acertos Diretos": stats["acertos"],
+                "Gale 1": stats["gale"],
+                "Erros": stats["erros"],
+                "Taxa de Sucesso (com Gale)": taxa_sucesso
             })
 
-    return pd.DataFrame(resultados).sort_values(by="Taxa de Acerto (%)", ascending=False)
+    return pd.DataFrame(resultados).sort_values(by="Taxa de Sucesso (com Gale)", ascending=False)
+
 
 def main():
     try:
