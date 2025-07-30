@@ -271,8 +271,10 @@ TEMPLATE = '''
         document.getElementById('alerta').style.display = 'block';
 
         // Toca o som de alerta
-        var audio = new Audio('{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}');
-        audio.play();
+        var audio = new Audio('{{ url_for("static", filename="ENTRADA_CONFIRMADA.mp3") }}');
+        audio.play().catch(function(error) {
+            console.log("Erro ao tentar tocar o áudio: ", error);
+        });
     }
 </script>
 </head>
@@ -340,6 +342,13 @@ TEMPLATE = '''
                 {% endfor %}
             </div>
 
+            <hr>
+            <!-- Exibindo os contadores de acertos e erros de sequências alertadas -->
+            <div class="info">
+                <strong>Acertos de Sequências Alertadas:</strong> {{ acertos_sequencias_alertadas }}<br>
+                <strong>Erros de Sequências Alertadas:</strong> {{ erros_sequencias_alertadas }}
+            </div>
+
             <form method="POST" action="/reset" style="text-align:center; margin-top: 15px;">
                 <button class="btn-reset">🔄 Resetar Estatísticas</button>
             </form>
@@ -404,10 +413,13 @@ def obter_previsao():
     try:
         with open(ESTATISTICAS_FILE, 'r') as f:
             stats = json.load(f)
+        
         global CONTADOR_ALERTAS_GLOBAL, ULTIMAS_SEQUENCIAS_ALERTADAS
         CONTADOR_ALERTAS_GLOBAL = stats.get('contador_alertas', 0)
         ULTIMAS_SEQUENCIAS_ALERTADAS = set(stats.get('sequencias_alertadas', []))
-        stats.setdefault("probabilidade_anterior", None)
+        
+        stats.setdefault("probabilidade_analisada", None)
+        
         url = "https://blaze.bet.br/api/singleplayer-originals/originals/roulette_games/recent/history/1"
         headers = {"User-Agent": "Mozilla/5.0"}
         res = requests.get(url, headers=headers)
@@ -474,26 +486,62 @@ def obter_previsao():
         sequencia_mudou = (sequencia_atual is not None and sequencia_atual != stats.get('sequencia_atual'))
         stats['sequencia_atual'] = sequencia_atual
         sequencia_detectada = bool(sequencia_atual)
-        # Dentro da função onde você manipula as sequências alertadas
-        for alerta in alertas_encontrados:
-            if alerta:  # Verifica se alerta não é vazio ou None
-                alerta_str = str(alerta)
-                if alerta_str not in ULTIMAS_SEQUENCIAS_ALERTADAS:
-                    CONTADOR_ALERTAS_GLOBAL += 1
-                    ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
-                    
-                    # Salvar a sequência com o timestamp da hora atual
-                    hora_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Formato de hora correto
-                    stats['sequencias_alertadas'].append({
-                        'sequencia': alerta_str,
-                        'hora': hora_atual  # Adicionando a hora junto com a sequência
-                    })
-        
-                    # Log para verificar se os dados estão sendo adicionados corretamente
-                    print(f"Sequência detectada: {alerta_str} com hora {hora_atual}")
+
+        # Contagem de acertos e erros de sequências alertadas
+        contador_acertos = 0
+        contador_erros = 0
+
+        # Caminho para o arquivo de texto no Desktop
+        desktop_path_txt = os.path.join(os.path.expanduser("~"), "Desktop", "sequencias_alertadas.txt")
+
+        # Criando ou abrindo o arquivo de texto no modo de adicionar
+        with open(desktop_path_txt, 'a') as file:
+            # Dentro da função onde você manipula as sequências alertadas
+            for alerta in alertas_encontrados:
+                if alerta:  # Verifica se alerta não é vazio ou None
+                    alerta_str = str(alerta)
+                    if alerta_str not in ULTIMAS_SEQUENCIAS_ALERTADAS:
+                        CONTADOR_ALERTAS_GLOBAL += 1
+                        ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
+
+                        # Salvar a sequência com o timestamp da hora atual
+                        hora_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Formato de hora correto
+
+                        # A sequência é composta por uma lista de probabilidades, então pegamos o último valor da sequência
+                        ultima_probabilidade = alerta[-1]  # O último valor da sequência (ex: "52.0")
+
+                        # Determinar qual seria a previsão da cor baseada no valor da última probabilidade
+                        if ultima_probabilidade >= 51.0:  # Considera uma cor como "PRETO"
+                            cor_prevista = "PRETO"
+                        else:  # Caso contrário, considera "VERMELHO"
+                            cor_prevista = "VERMELHO"
+
+                        # Comparar a previsão da cor com a cor real da rodada seguinte
+                        if cores[0] == 1:
+                            cor_real = "VERMELHO"
+                        elif cores[0] == 2:
+                            cor_real = "PRETO"
+                        else:
+                            cor_real = "BRANCO"
+
+                        # Definir se houve acerto ou erro na rodada seguinte
+                        if cor_real == "BRANCO":  # Se a cor for BRANCO, sempre conta como acerto
+                            resultado_binario = True
+                        elif cor_prevista == cor_real:  # Se a previsão for igual à cor real, é acerto
+                            resultado_binario = True
+                        else:
+                            resultado_binario = False  # Caso contrário, é erro
+
+                        # Escreve a sequência, hora e acerto/erro no arquivo
+                        file.write(f"Sequência: {alerta_str} - Hora: {hora_atual} - Previsão: {cor_prevista} - Cor Real: {cor_real} - Acerto: {resultado_binario}\n")
+
+                        # Toca o som de alerta quando a sequência for encontrada
+                        print(f"Sequência detectada: {alerta_str} com hora {hora_atual} - Previsão: {cor_prevista} - Cor Real: {cor_real} - Acerto: {resultado_binario}")
 
         stats['contador_alertas'] = CONTADOR_ALERTAS_GLOBAL
         stats['sequencias_alertadas'] = list(ULTIMAS_SEQUENCIAS_ALERTADAS)
+        stats['acertos_sequencias_alertadas'] = contador_acertos  # Salvar o contador de acertos
+        stats['erros_sequencias_alertadas'] = contador_erros  # Salvar o contador de erros
         total_hits = stats['acertos'] + stats['erros']
         taxa = round((stats['acertos'] / total_hits) * 100, 1) if total_hits > 0 else 0
         entradas_formatadas = ["preto" if e == "PRETO" else "vermelho" for e in stats['historico_entradas']]
@@ -505,7 +553,7 @@ def obter_previsao():
                 "horario": stats['historico_horarios'][i - 1],
                 "previsao": stats['historico_entradas'][i],
                 "resultado": stats['historico_resultados'][i - 1],
-                "icone": "✅" if stats['historico_resultados_binarios'][i - 1] is True else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?"
+                "icone": "✅" if stats['historico_resultados_binarios'][i - 1] is True else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?",
             })
         with open(ESTATISTICAS_FILE, 'w') as f:
             json.dump(stats, f, indent=4)
@@ -524,9 +572,19 @@ def obter_previsao():
 @app.route('/')
 def home():
     (entrada, preto100, vermelho100, preto50, vermelho50, ultima_nome, prob100, prob50, ultimas, ultimos_horarios, horario, acertos, erros, taxa_acerto, entradas, resultados, historico_completo, sequencia_detectada, sequencia_mudou, sequencia_atual) = obter_previsao()
-    ULTIMAS_PROBABILIDADES = [p for p in json.load(open(ESTATISTICAS_FILE))['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
+
+    # Acessando os contadores de acertos e erros das sequências alertadas
+    with open(ESTATISTICAS_FILE, 'r') as f:
+        stats = json.load(f)
+    acertos_sequencias_alertadas = stats.get('acertos_sequencias_alertadas', 0)
+    erros_sequencias_alertadas = stats.get('erros_sequencias_alertadas', 0)
+
+    ULTIMAS_PROBABILIDADES = [p for p in stats['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
     alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS_50, SEQUENCIAS_VALIDAS_100)
+    
     contador_alertas = CONTADOR_ALERTAS_GLOBAL
+
+    # Passando os valores de acertos e erros de sequências alertadas para o template
     return render_template_string(TEMPLATE,
         entrada=entrada,
         ciclos100_preto=preto100, ciclos100_vermelho=vermelho100,
@@ -545,7 +603,9 @@ def home():
         historico_completo=historico_completo,
         alertas_iminentes=alertas_iminentes,
         contador_alertas=contador_alertas,
-        sequencia_detectada=sequencia_detectada
+        sequencia_detectada=sequencia_detectada,
+        acertos_sequencias_alertadas=stats.get('acertos_sequencias_alertadas', 0),  # Passando o contador de acertos
+        erros_sequencias_alertadas=stats.get('erros_sequencias_alertadas', 0)   # Passando o contador de erros
     )
 
 if __name__ == '__main__':
