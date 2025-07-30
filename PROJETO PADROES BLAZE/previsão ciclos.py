@@ -9,6 +9,8 @@ import threading
 import time
 import atexit
 import re
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 
 app = Flask(__name__)
 
@@ -119,27 +121,26 @@ def salvar_em_excel():
         with open(ESTATISTICAS_FILE, 'r') as f:
             stats = json.load(f)
 
-        # Sequências iminentes (só para exibir na lateral)
-        ULTIMAS_PROBABILIDADES = [p for p in stats['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
-        alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS_50, SEQUENCIAS_VALIDAS_100)
-
         historico_para_planilha = []
         total = len(stats['historico_resultados'])
 
-        for i in range(total):
+        for i in range(1, total):
+            previsao = stats['historico_entradas'][i]
+            resultado = stats['historico_resultados'][i - 1]
+            acertou = stats['historico_resultados_binarios'][i - 1]
             historico_para_planilha.append({
-                "Horário": stats['historico_horarios'][i] if i < len(stats['historico_horarios']) else "-",
-                "Previsão": stats['historico_entradas'][i + 1] if i + 1 < len(stats['historico_entradas']) else "-",
-                "Resultado": stats['historico_resultados'][i],
-                "Acertou": "Sim" if i < len(stats['historico_resultados_binarios']) and stats['historico_resultados_binarios'][i] is True else
-                          "Não" if i < len(stats['historico_resultados_binarios']) and stats['historico_resultados_binarios'][i] is False else "N/D",
-                "Probabilidade 100": stats['historico_probabilidade_100'][i] if i < len(stats['historico_probabilidade_100']) else "-",
-                "Probabilidade 50": stats['historico_probabilidade_50'][i] if i < len(stats['historico_probabilidade_50']) else "-",
-                "Ciclos Preto 100": stats['historico_ciclos_preto_100'][i] if i < len(stats['historico_ciclos_preto_100']) else 0,
-                "Ciclos Vermelho 100": stats['historico_ciclos_vermelho_100'][i] if i < len(stats['historico_ciclos_vermelho_100']) else 0,
-                "Ciclos Preto 50": stats['historico_ciclos_preto_50'][i] if i < len(stats['historico_ciclos_preto_50']) else 0,
-                "Ciclos Vermelho 50": stats['historico_ciclos_vermelho_50'][i] if i < len(stats['historico_ciclos_vermelho_50']) else 0,
+                "Horário": stats['historico_horarios'][i - 1] if i - 1 < len(stats['historico_horarios']) else "-",
+                "Previsão": previsao,
+                "Resultado": resultado,
+                "Acertou": "Sim" if acertou is True else "Não" if acertou is False else "N/D",
+                "Probabilidade 100": stats['historico_probabilidade_100'][i - 1] if i - 1 < len(stats['historico_probabilidade_100']) else "-",
+                "Probabilidade 50": stats['historico_probabilidade_50'][i - 1] if i - 1 < len(stats['historico_probabilidade_50']) else "-",
+                "Ciclos Preto 100": stats['historico_ciclos_preto_100'][i - 1] if i - 1 < len(stats['historico_ciclos_preto_100']) else 0,
+                "Ciclos Vermelho 100": stats['historico_ciclos_vermelho_100'][i - 1] if i - 1 < len(stats['historico_ciclos_vermelho_100']) else 0,
+                "Ciclos Preto 50": stats['historico_ciclos_preto_50'][i - 1] if i - 1 < len(stats['historico_ciclos_preto_50']) else 0,
+                "Ciclos Vermelho 50": stats['historico_ciclos_vermelho_50'][i - 1] if i - 1 < len(stats['historico_ciclos_vermelho_50']) else 0,
             })
+
 
         df = pd.DataFrame(historico_para_planilha)
 
@@ -510,20 +511,34 @@ def obter_previsao():
                         previsao = item["previsao"]
                         cor_prevista = 2 if previsao == "PRETO" else 1
                         cor_real = ultima_cor
+
                         if cor_real == cor_prevista or cor_real == 0:
-                            item["status"] = "acerto"
+                            item["status"] = "acerto_direto"
                             contador_acertos += 1
                             with open(txt_path, "a", encoding="utf-8") as f_txt:
-                                f_txt.write(f"[✅ ACERTO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
-                        else:
-                            item["status"] = "erro"
-                            contador_erros += 1
-                            with open(txt_path, "a", encoding="utf-8") as f_txt:
-                                f_txt.write(f"[❌ ERRO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
-                    novos_pendentes.append(item)
+                                f_txt.write(f"[ACERTO DIRETO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
+
+                        elif "tentativa" not in item:
+                            item["tentativa"] = 1
+                            novos_pendentes.append(item)
+
+                        elif item["tentativa"] == 1:
+                            if cor_real == cor_prevista or cor_real == 0:
+                                item["status"] = "acerto_gale"
+                                contador_acertos += 1
+                                with open(txt_path, "a", encoding="utf-8") as f_txt:
+                                    f_txt.write(f"[ACERTO GALE] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
+                            else:
+                                item["status"] = "erro"
+                                contador_erros += 1
+                                with open(txt_path, "a", encoding="utf-8") as f_txt:
+                                    f_txt.write(f"[ERRO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
+                    else:
+                        novos_pendentes.append(item)
 
                 with open(pendentes_path, "w") as f:
                     json.dump(novos_pendentes, f, indent=4)
+
 
         # DETECTAR NOVAS SEQUÊNCIAS
         historico_probs_100 = [p for p in stats['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]

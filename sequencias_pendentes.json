@@ -2306,6 +2306,29 @@
         ],
         "hora_alerta": "2025-07-30 18:01:33",
         "previsao": "PRETO",
-        "status": "pendente"
+        "status": "acerto"
+    },
+    {
+        "sequencia": [
+            54.17,
+            53.12,
+            52.08,
+            51.58,
+            50.53
+        ],
+        "hora_alerta": "2025-07-30 18:02:57",
+        "previsao": "VERMELHO",
+        "status": "acerto"
+    },
+    {
+        "sequencia": [
+            52.17,
+            50.0,
+            51.11,
+            50.0
+        ],
+        "hora_alerta": "2025-07-30 18:15:46",
+        "previsao": "VERMELHO",
+        "status": "erro"
     }
 ]
