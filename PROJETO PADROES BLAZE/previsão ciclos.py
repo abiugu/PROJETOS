@@ -175,7 +175,48 @@ TEMPLATE = '''
     <title>Previsão Blaze (Double)</title>
     <meta http-equiv="refresh" content="2">
     <style>
-        /* Estilos do botão reset */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            padding: 20px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .box {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 20px;
+            width: 65%;
+            margin-right: 20px;
+        }
+
+        .sidebar {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 15px;
+            width: 30%;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
         .btn-reset {
             background: linear-gradient(135deg, #ff4e50, #f9d423);
             border: none;
@@ -188,44 +229,42 @@ TEMPLATE = '''
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
+
         .btn-reset:hover {
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0,0,0,0.4);
         }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            color: #eee;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-            width: 100%;
-            max-width: 1400px;
-        }
-        .box {
-            background-color: #222;
-            border-radius: 10px;
-            padding: 20px;
-            width: 65%;
-            margin-right: 20px;
-        }
-        .sidebar {
-            background-color: #1a1a1a;
-            border-radius: 10px;
-            padding: 15px;
-            width: 30%;
-            overflow-y: auto;
-            max-height: 90vh;
-            margin-top: 20px;
+
+        .alerta-grande {
+            display: none;
+            background-color: #ff4d4d;
+            color: white;
+            border-radius: 8px;
+            padding: 15px 25px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+            animation: pulsar 1.5s infinite;
+            text-align: center;
         }
 
-        h1 { color: #0ff; text-align: center; }
+        .alerta-grande button {
+            margin-top: 10px;
+            background-color: white;
+            color: #cc0000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @keyframes pulsar {
+            0%, 100% { box-shadow: 0 0 10px #cc0000; }
+            50% { box-shadow: 0 0 20px #ff1a1a; }
+        }
+
         .entrada { font-size: 1.5em; margin: 10px 0; text-align: center; }
         .info { font-size: 1.1em; margin-top: 10px; text-align: center; }
         .prob { color: #0f0; font-weight: bold; }
@@ -252,143 +291,127 @@ TEMPLATE = '''
             border-bottom: 1px solid #444;
             padding: 5px 0;
         }
-        .scrollable {
-            overflow-y: auto;
-            max-height: 500px;
-        }
 
-        /* ALERTAS */
-        .alerta-grande {
-            margin: 20px auto;
-            padding: 20px;
-            max-width: 650px;
-            border-radius: 12px;
-            font-size: 1.3em;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3);
-            display: none; /* Inicialmente escondido */
-        }
-        .alerta-vermelho {
-            background-color: #ff4d4d;
-            color: #fff;
-            border-left: 8px solid #cc0000;
-            animation: pulsar 1.5s infinite;
-        }
-        @keyframes pulsar {
-            0%, 100% { box-shadow: 0 0 15px #cc0000; }
-            50% { box-shadow: 0 0 25px #ff1a1a; }
-        }
-
-        .alerta-titulo {
-            font-size: 1.6em;
-            margin-bottom: 12px;
-        }
     </style>
-
-<script>
-    // Verifica se a sequência foi detectada
-    if ({{ sequencia_detectada | tojson }}) {
-        // Exibe a notificação vermelha
-        document.getElementById('alerta').style.display = 'block';
-
-        // Toca o som de alerta
-        var audio = new Audio('{{ url_for("static", filename="ENTRADA_CONFIRMADA.mp3") }}');
-        audio.play().catch(function(error) {
-            console.log("Erro ao tentar tocar o áudio: ", error);
-        });
-    }
-</script>
 </head>
 <body>
     <div class="container">
-        <!-- Alerta Vermelho -->
-        <div class="alerta-grande alerta-vermelho" id="alerta">
-            <div class="alerta-titulo">🚨 Sequência Detectada! Alarme Acionado!</div>
-            <p>Uma sequência válida foi encontrada. Fique atento!</p>
+        <div class="alerta-grande" id="alerta">
+            🚨 Sequência Detectada! Alarme Acionado!<br>
+            <button onclick="pararAlarme()">🔇 Silenciar Alarme</button>
         </div>
 
-        <div class="box">
-            <h1>🎯 Previsão da Blaze (Double)</h1>
-            <div class="entrada">➡️ Entrada recomendada: <strong>{{ entrada }}</strong></div>
-            <div class="entrada">⚪ Proteção no branco</div>
-            <hr>
-            <div class="info">🎲 Última jogada: <strong>{{ ultima }}</strong> às <strong>{{ horario }}</strong></div>
-            <div class="info">
-                📈 Probabilidade 100 rodadas: <span class="prob">{{ probabilidade100 }}%</span><br>
-                📉 Probabilidade 50 rodadas: <span class="prob50">{{ probabilidade50 }}%</span>
-            </div>
-            <div class="info">
-                📊 Ciclos (100 rodadas) — Preto: {{ ciclos100_preto }} | Vermelho: {{ ciclos100_vermelho }}<br>
-                📊 Ciclos (50 rodadas) — Preto: {{ ciclos50_preto }} | Vermelho: {{ ciclos50_vermelho }}
-            </div>
-
-            <hr>
-            <div class="info">
-                ✅ Direto: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%
-            </div>
-            <hr>
-            <div style="text-align: center; margin-top: 10px;">
-                <span style="font-size: 16px; color: #cc0000;">
-                    🔔 Contador de Alarmes: <strong id="contador-alertas">{{ contador_alertas }}</strong>
-                </span>
-            </div>
-            <hr>
-            <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
-            <div style="text-align: center;">
-                {% for i in range(ultimas|length) %}
-                    <div style="display:inline-block; text-align:center; margin: 4px;">
-                        <div class="bola {{ ultimas[i] }}"></div>
-                        <div style="font-size: 0.7em;">{{ ultimos_horarios[i] }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <h3 style="text-align: center;">📋 Últimas entradas</h3>
-            <div style="text-align: center;">
-                {% for i in range(10) %}
-                    {% if i < entradas|length and i < resultados|length %}
-                    <div style="display:inline-block; text-align:center; margin: 4px;">
-                        <div class="entrada-bola {{ entradas[i] }}"></div>
-                        <div style="font-size: 0.8em;">
-                            {% if resultados[i] == True %}
-                                ✅
-                            {% elif resultados[i] == False %}
-                                ❌
-                            {% else %}
-                                ?
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-
-            <hr>
-            <!-- Exibindo os contadores de acertos e erros de sequências alertadas -->
-            <div class="info">
-                <strong>Acertos de Sequências Alertadas:</strong> {{ acertos_sequencias_alertadas }}<br>
-                <strong>Erros de Sequências Alertadas:</strong> {{ erros_sequencias_alertadas }}
-            </div>
-
-            <form method="POST" action="/reset" style="text-align:center; margin-top: 15px;">
-                <button class="btn-reset">🔄 Resetar Estatísticas</button>
-            </form>
-            <div style="text-align: center; margin-top: 10px; font-size: 0.85em; color: #ccc;">
-                Atualiza a cada 2s automaticamente
-            </div>
-        </div>
-
-        <!-- Histórico lateral -->
-        <div class="sidebar scrollable">
-            <h3>📜 Histórico Completo</h3>
-            {% for h in historico_completo %}
-                <div class="linha-historico">
-                    {{ h['horario'] }} - Previsão: <b>{{ h['previsao'] }}</b> - Resultado: {{ h['resultado'] }} {{ h['icone'] }}
+        <div class="main-content">
+            <div class="box">
+                <h1 style="text-align: center; color: #0ff;">🎯 Previsão da Blaze (Double)</h1>
+                <div class="entrada">➡️ Entrada recomendada: <strong>{{ entrada }}</strong></div>
+                <div class="entrada">⚪ Proteção no branco</div>
+                <hr>
+                <div class="info">🎲 Última jogada: <strong>{{ ultima }}</strong> às <strong>{{ horario }}</strong></div>
+                <div class="info">
+                    📈 Probabilidade 100 rodadas: <span class="prob">{{ probabilidade100 }}%</span><br>
+                    📉 Probabilidade 50 rodadas: <span class="prob50">{{ probabilidade50 }}%</span>
                 </div>
-            {% endfor %}
+                <div class="info">
+                    📊 Ciclos (100 rodadas) — Preto: {{ ciclos100_preto }} | Vermelho: {{ ciclos100_vermelho }}<br>
+                    📊 Ciclos (50 rodadas) — Preto: {{ ciclos50_preto }} | Vermelho: {{ ciclos50_vermelho }}
+                </div>
+                <hr>
+                <div class="info">
+                    ✅ Direto: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%
+                </div>
+                <hr>
+                <div style="text-align: center; margin-top: 10px;">
+                    <span style="font-size: 16px; color: #cc0000;">
+                        🔔 Contador de Alarmes: <strong id="contador-alertas">{{ contador_alertas }}</strong>
+                    </span>
+                </div>
+                <hr>
+                <h3 style="text-align: center;">🕒 Últimas 10 jogadas</h3>
+                <div style="text-align: center;">
+                    {% for i in range(ultimas|length) %}
+                        <div style="display:inline-block; text-align:center; margin: 4px;">
+                            <div class="bola {{ ultimas[i] }}"></div>
+                            <div style="font-size: 0.7em;">{{ ultimos_horarios[i] }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <h3 style="text-align: center;">📋 Últimas entradas</h3>
+                <div style="text-align: center;">
+                    {% for i in range(10) %}
+                        {% if i < entradas|length and i < resultados|length %}
+                        <div style="display:inline-block; text-align:center; margin: 4px;">
+                            <div class="entrada-bola {{ entradas[i] }}"></div>
+                            <div style="font-size: 0.8em;">
+                                {% if resultados[i] == True %}
+                                    ✅
+                                {% elif resultados[i] == False %}
+                                    ❌
+                                {% else %}
+                                    ?
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <hr>
+                <div class="info">
+                    <strong>Acertos de Sequências Alertadas:</strong> {{ acertos_sequencias_alertadas }}<br>
+                    <strong>Erros de Sequências Alertadas:</strong> {{ erros_sequencias_alertadas }}
+                </div>
+                <form method="POST" action="/reset" style="text-align:center; margin-top: 15px;">
+                    <button class="btn-reset">🔄 Resetar Estatísticas</button>
+                </form>
+                <div style="text-align: center; margin-top: 10px; font-size: 0.85em; color: #ccc;">
+                    Atualiza a cada 2s automaticamente
+                </div>
+            </div>
+
+            <div class="sidebar scrollable">
+                <h3>📜 Histórico Completo</h3>
+                {% for h in historico_completo %}
+                    <div class="linha-historico">
+                        {{ h['horario'] }} - Previsão: <b>{{ h['previsao'] }}</b> - Resultado: {{ h['resultado'] }} {{ h['icone'] }}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
+
+    <script>
+        let audio = null;
+        document.addEventListener("DOMContentLoaded", function() {
+            const alerta = document.getElementById("alerta");
+            const sequenciaAtual = {{ sequencia_atual | tojson if sequencia_atual is not none else '"undefined"' }};
+
+            // Verifica se o alerta foi silenciado para esta sequência
+            const ultimaSequenciaSilenciada = localStorage.getItem("ultima_sequencia_silenciada");
+
+            if ({{ sequencia_detectada | tojson }} && sequenciaAtual !== ultimaSequenciaSilenciada) {
+                alerta.style.display = "block";
+                audio = new Audio('{{ url_for("static", filename="ENTRADA_CONFIRMADA.mp3") }}');
+                audio.loop = true;
+                audio.play().catch(function(e) {
+                    console.log("Erro ao tocar o áudio:", e);
+                });
+            }
+        });
+
+        function pararAlarme() {
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+            const alerta = document.getElementById("alerta");
+            if (alerta) alerta.style.display = "none";
+
+            // Salva no localStorage que essa sequência foi silenciada
+            const sequenciaAtual = {{ sequencia_atual | tojson }};
+            localStorage.setItem("ultima_sequencia_silenciada", sequenciaAtual);
+        }
+    </script>
 </body>
 </html>
 '''
@@ -500,7 +523,6 @@ def obter_previsao():
             stats['historico_resultados_binarios'].insert(0, resultado_binario)
             stats['ultima_analisada'] = horario_utc
 
-            # VERIFICAR SEQUÊNCIAS PENDENTES
             if os.path.exists(pendentes_path):
                 with open(pendentes_path, "r") as f:
                     pendentes = json.load(f)
@@ -510,31 +532,34 @@ def obter_previsao():
                     if item["status"] == "pendente":
                         previsao = item["previsao"]
                         cor_prevista = 2 if previsao == "PRETO" else 1
-                        cor_real = ultima_cor
 
-                        if cor_real == cor_prevista or cor_real == 0:
-                            item["status"] = "acerto_direto"
-                            contador_acertos += 1
-                            with open(txt_path, "a", encoding="utf-8") as f_txt:
-                                f_txt.write(f"[ACERTO DIRETO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
-
-                        elif "tentativa" not in item:
-                            item["tentativa"] = 1
-                            novos_pendentes.append(item)
-
-                        elif item["tentativa"] == 1:
-                            if cor_real == cor_prevista or cor_real == 0:
-                                item["status"] = "acerto_gale"
+                        if len(cores) > 1:
+                            cor_1 = cores[1]
+                            nome_1 = "BRANCO" if cor_1 == 0 else "VERMELHO" if cor_1 == 1 else "PRETO"
+                            if cor_1 == cor_prevista or cor_1 == 0:
+                                item["status"] = "acerto_direto"
                                 contador_acertos += 1
-                                with open(txt_path, "a", encoding="utf-8") as f_txt:
-                                    f_txt.write(f"[ACERTO GALE] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
+                                with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+                                    f_txt.write(f"[ACERTO DIRETO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {nome_1}\n")
+                            elif len(cores) > 2:
+                                cor_2 = cores[2]
+                                nome_2 = "BRANCO" if cor_2 == 0 else "VERMELHO" if cor_2 == 1 else "PRETO"
+                                if cor_2 == cor_prevista or cor_2 == 0:
+                                    item["status"] = "acerto_gale"
+                                    contador_acertos += 1
+                                    with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+                                        f_txt.write(f"[ACERTO GALE] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {nome_2}\n")
+                                else:
+                                    item["status"] = "erro"
+                                    contador_erros += 1
+                                    with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+                                        f_txt.write(f"[ERRO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {nome_2}\n")
                             else:
-                                item["status"] = "erro"
-                                contador_erros += 1
-                                with open(txt_path, "a", encoding="utf-8") as f_txt:
-                                    f_txt.write(f"[ERRO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {ultima_nome}\n")
-                    else:
-                        novos_pendentes.append(item)
+                                # Ainda falta a segunda jogada (gale) — manter pendente
+                                novos_pendentes.append(item)
+                        else:
+                            # Ainda falta a primeira jogada — manter pendente
+                            novos_pendentes.append(item)
 
                 with open(pendentes_path, "w") as f:
                     json.dump(novos_pendentes, f, indent=4)
@@ -598,22 +623,32 @@ def obter_previsao():
 
 @app.route('/')
 def home():
+    # Inicializa sequencia_atual antes de usá-la
+    sequencia_atual = "undefined"  # ou algum valor padrão que faça sentido no seu caso
+    
+    return renderizar_tela(sequencia_atual)
+
+@app.route('/reset', methods=['POST'])
+def resetar():
+    resetar_estatisticas()
+    return redirect('/')
+
+def renderizar_tela(sequencia_atual):
+    # Aqui você obtém as previsões (a lógica continua a mesma)
     (entrada, preto100, vermelho100, preto50, vermelho50, ultima_nome, prob100, prob50, ultimas, ultimos_horarios, horario, acertos, erros, taxa_acerto, entradas, resultados, historico_completo, sequencia_detectada, sequencia_mudou, sequencia_atual) = obter_previsao()
 
-    # Acessando os contadores de acertos e erros das sequências alertadas
+    # Carrega estatísticas para enviar ao template
     with open(ESTATISTICAS_FILE, 'r') as f:
         stats = json.load(f)
-    acertos_sequencias_alertadas = stats.get('acertos_sequencias_alertadas', 0)
-    erros_sequencias_alertadas = stats.get('erros_sequencias_alertadas', 0)
-
+    
     ULTIMAS_PROBABILIDADES = [p for p in stats['historico_probabilidade_100'] if isinstance(p, (int, float))][:10]
     alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS_50, SEQUENCIAS_VALIDAS_100)
-    
     contador_alertas = CONTADOR_ALERTAS_GLOBAL
 
-    # Passando os valores de acertos e erros de sequências alertadas para o template
+    # Agora, sequencia_atual é passada corretamente para o template
     return render_template_string(TEMPLATE,
         entrada=entrada,
+        sequencia_atual=sequencia_atual,  # Passando a variável corretamente para o template
         ciclos100_preto=preto100, ciclos100_vermelho=vermelho100,
         ciclos50_preto=preto50, ciclos50_vermelho=vermelho50,
         ultima=ultima_nome,
@@ -631,9 +666,43 @@ def home():
         alertas_iminentes=alertas_iminentes,
         contador_alertas=contador_alertas,
         sequencia_detectada=sequencia_detectada,
-        acertos_sequencias_alertadas=stats.get('acertos_sequencias_alertadas', 0),  # Passando o contador de acertos
-        erros_sequencias_alertadas=stats.get('erros_sequencias_alertadas', 0)   # Passando o contador de erros
+        acertos_sequencias_alertadas=stats.get('acertos_sequencias_alertadas', 0),
+        erros_sequencias_alertadas=stats.get('erros_sequencias_alertadas', 0)
     )
+
+def resetar_estatisticas():
+    with open(ESTATISTICAS_FILE, 'w') as f:
+        json.dump({
+            'acertos': 0,
+            'erros': 0,
+            'historico_entradas': [],
+            'historico_resultados': [],
+            'historico_horarios': [],
+            'historico_resultados_binarios': [],
+            'historico_probabilidade_100': [],
+            'historico_probabilidade_50': [],
+            'historico_ciclos_preto_100': [],
+            'historico_ciclos_vermelho_100': [],
+            'historico_ciclos_preto_50': [],
+            'historico_ciclos_vermelho_50': [],
+            'ultima_analisada': "",
+            'contador_alertas': 0,
+            'sequencias_alertadas': [],
+            'acertos_sequencias_alertadas': 0,
+            'erros_sequencias_alertadas': 0
+        }, f)
+
+    try:
+        os.remove("sequencias_pendentes.json")
+    except FileNotFoundError:
+        pass
+
+    try:
+        os.remove(os.path.join(os.path.expanduser("~"), "Desktop", "sequencias_alertadas.txt"))
+    except FileNotFoundError:
+        pass
+
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)
