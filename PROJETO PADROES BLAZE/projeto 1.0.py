@@ -14,9 +14,127 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 app = Flask(__name__)
 
+# Função para obter o nome do arquivo de estatísticas baseado na data
 def obter_nome_arquivo_estatisticas():
     hoje = date.today().strftime('%Y-%m-%d')
     return f"estatisticas_{hoje}.json"
+
+def analisar_com_historial(arquivo_json, previsao, txt_path):
+    """
+    Aguarda o histórico de entradas ter pelo menos duas jogadas adicionais e depois faz a análise de acerto ou erro.
+    """
+    try:
+        # Carrega o histórico de entradas do arquivo JSON
+        with open(arquivo_json, 'r') as f:
+            stats = json.load(f)
+        
+        historico_entradas = stats.get("historico_entradas", [])
+        
+        # Verifica se o histórico tem pelo menos 2 jogadas para analisar
+        jogadas_atuais = len(historico_entradas)
+        while jogadas_atuais < 2:  # Aguarda pelo menos duas jogadas novas
+            print("Aguardando jogadas futuras...")
+            time.sleep(2)  # Aguarda 2 segundos antes de verificar novamente
+            with open(arquivo_json, 'r') as f:
+                stats = json.load(f)
+            historico_entradas = stats.get("historico_entradas", [])
+            jogadas_atuais = len(historico_entradas)
+        
+        # Agora temos pelo menos 2 jogadas, podemos analisar
+        primeira_jogada = historico_entradas[-2]  # A penúltima jogada
+        segunda_jogada = historico_entradas[-1]   # A última jogada
+        
+        # Define o valor da previsão (1 para vermelho, 2 para preto)
+        cor_prevista = 2 if previsao == "PRETO" else 1  # 2 para preto, 1 para vermelho
+        
+        # Compara com a primeira jogada (sem gravar acerto/erro)
+        if primeira_jogada == previsao:
+            with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+                f_txt.write(f"[PREVISÃO: {previsao}] - Resultado: {primeira_jogada}\n")
+            return "acerto_direto"
+        
+        # Se não for acerto direto, tenta o gale (segunda jogada)
+        if segunda_jogada == previsao:
+            with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+                f_txt.write(f"[PREVISÃO: {previsao}] - Resultado: {segunda_jogada}\n")
+            return "acerto_gale"
+        
+        # Se nenhuma das jogadas for um acerto, apenas registra a previsão e o resultado
+        with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+            f_txt.write(f"[PREVISÃO: {previsao}] - Resultados: {primeira_jogada}, {segunda_jogada}\n")
+        
+        return "erro"
+
+    except Exception as e:
+        print(f"Erro ao analisar o histórico: {e}")
+        return "Erro ao carregar histórico"
+    
+def verificar_alarme(sequencia_atual, previsao, arquivo_json, txt_path):
+    """
+    Verifica se uma nova sequência foi identificada e chama a função para análise de acerto ou erro.
+    """
+    if sequencia_atual is not None:
+        print(f"Sequência detectada: {sequencia_atual}")
+        
+        # Chama a função para aguardar e analisar o histórico
+        resultado = analisar_com_historial(arquivo_json, previsao, txt_path)
+        
+        # Aqui você pode tomar ações com base no resultado retornado
+        print(f"Resultado da análise: {resultado}")
+        return resultado
+    return None
+
+def verificar_acerto_erro(cores, previsao):
+    """
+    Verifica se a previsão da próxima jogada está correta com base na próxima jogada real.
+    A previsão será para a próxima jogada, e a comparação será feita com a cor real dessa jogada.
+    """
+    if len(cores) < 2:  # Se não houver pelo menos 2 jogadas futuras, retorna "pendente"
+        return "pendente"  # Aguarda as jogadas futuras para avaliar
+    
+    # A previsão será para a próxima jogada após a sequência
+    cor_prevista = 2 if previsao == "PRETO" else 1  # 2 para preto, 1 para vermelho
+    
+    # A próxima jogada real após a previsão
+    jogada_futura = cores[0]  # A próxima jogada após a sequência
+    
+    # Verifica se a previsão bate com a cor real da próxima jogada
+    if jogada_futura == cor_prevista or jogada_futura == 0:  # Considera "BRANCO" como acerto também
+        return "acerto"
+    else:
+        return "erro"
+
+def analisar_rodadas_futuras(cores, previsao, txt_path):
+    """
+    Analisa as rodadas que ocorreram após o alarme, para verificar se houve acerto direto, gale ou erro.
+    Espera-se que as rodadas futuras já tenham ocorrido.
+    """
+    if len(cores) < 2:  # Verifica se há pelo menos 2 jogadas (para a primeira e a segunda jogada)
+        return "pendente"  # Aguarda as jogadas futuras para avaliar
+    
+    # Previsão para a próxima jogada
+    cor_prevista = 2 if previsao == "PRETO" else 1  # 2 para preto, 1 para vermelho
+    
+    # Primeira jogada após a previsão (acerto direto)
+    primeira_jogada = cores[0]
+    if primeira_jogada == cor_prevista or primeira_jogada == 0:  # Considera "BRANCO" como acerto também
+        with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+            f_txt.write(f"[PREVISÃO: {previsao}] - Resultado: {primeira_jogada}\n")
+        return "acerto_direto"
+
+    # Se a primeira jogada falhar, tenta o gale (segunda jogada)
+    if len(cores) > 1:  # Verifica se há pelo menos duas jogadas
+        segunda_jogada = cores[1]
+        if segunda_jogada == cor_prevista or segunda_jogada == 0:  # Considera "BRANCO" como acerto também
+            with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+                f_txt.write(f"[PREVISÃO: {previsao}] - Resultado: {segunda_jogada}\n")
+            return "acerto_gale"
+    
+    # Se nem o acerto direto, nem o gale forem acertados, apenas registra a previsão e o resultado
+    with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
+        f_txt.write(f"[PREVISÃO: {previsao}] - Resultado: {cores[1] if len(cores) > 1 else 'N/A'}\n")
+    
+    return "erro"
 
 def salvar_alerta_pendente(sequencia, previsao):
     pendentes_path = os.path.join(os.getcwd(), "sequencias_pendentes.json")
@@ -28,30 +146,33 @@ def salvar_alerta_pendente(sequencia, previsao):
         "status": "pendente"
     }
 
-    if os.path.exists(pendentes_path):
-        with open(pendentes_path, "r") as f:
-            dados = json.load(f)
-    else:
-        dados = []
+    try:
+        if os.path.exists(pendentes_path):
+            with open(pendentes_path, "r") as f:
+                dados = json.load(f)
+        else:
+            dados = []
 
-    dados.append(nova_entrada)
+        dados.append(nova_entrada)
 
-    with open(pendentes_path, "w") as f:
-        json.dump(dados, f, indent=4)
+        with open(pendentes_path, "w") as f:
+            json.dump(dados, f, indent=4)
+    except Exception as e:
+        print(f"Erro ao salvar alerta pendente: {e}")
 
 ESTATISTICAS_FILE = obter_nome_arquivo_estatisticas()
 
 CONTADOR_ALERTAS_GLOBAL = 0
 ULTIMAS_SEQUENCIAS_ALERTADAS = set() 
 
-# Sequências válidas para 100 rodadas (já existente)
-desktop_path_100 = os.path.join(os.path.expanduser("~"), "Desktop", "SEQUENCIAS_VALIDAS.txt")
+# Sequências válidas para 100 rodadas
+desktop_path_100 = os.path.join(os.path.expanduser("~"), "Desktop", "TODAS_SEQUENCIAS_VALIDAS.txt")
 with open(desktop_path_100, "r") as f:
     conteudo_100 = f.read()
 listas_encontradas_100 = re.findall(r'\[[^\[\]]+\]', conteudo_100)
 SEQUENCIAS_VALIDAS_100 = [eval(lista) for lista in listas_encontradas_100]
 
-# Sequências válidas para 50 rodadas (novo)
+# Sequências válidas para 50 rodadas
 desktop_path_50 = os.path.join(os.path.expanduser("~"), "Desktop", "SEQUENCIAS_VALIDAS_50.txt")
 if os.path.exists(desktop_path_50):
     with open(desktop_path_50, "r") as f:
@@ -63,13 +184,11 @@ else:
 
 CONTAGEM_ALERTAS = {}
 
-
 def sequencia_bate(ultimas, sequencia):
     if len(ultimas) < len(sequencia):
         return False
     ultimas_invertidas = list(reversed(ultimas))
     return ultimas_invertidas[-len(sequencia):] == sequencia
-
 
 def encontrar_alertas_completos(ultimas, *listas_sequencias):
     """Retorna todas as sequências que foram encontradas nas últimas probabilidades."""
@@ -89,7 +208,6 @@ def encontrar_alertas_completos(ultimas, *listas_sequencias):
             chave = str(seq)
             CONTAGEM_ALERTAS[chave] = CONTAGEM_ALERTAS.get(chave, 0) + 1
     return alertas
-
 
 # Inicializa o arquivo se não existir e garante que as chaves existam
 if not os.path.exists(ESTATISTICAS_FILE):
@@ -111,7 +229,6 @@ if not os.path.exists(ESTATISTICAS_FILE):
             'contador_alertas': 0,
             'sequencias_alertadas': []
         }, f)
-
 
 def salvar_em_excel():
     try:
@@ -357,10 +474,6 @@ TEMPLATE = '''
                     {% endfor %}
                 </div>
                 <hr>
-                <div class="info">
-                    <strong>Acertos de Sequências Alertadas:</strong> {{ acertos_sequencias_alertadas }}<br>
-                    <strong>Erros de Sequências Alertadas:</strong> {{ erros_sequencias_alertadas }}
-                </div>
                 <form method="POST" action="/reset" style="text-align:center; margin-top: 15px;">
                     <button class="btn-reset">🔄 Resetar Estatísticas</button>
                 </form>
@@ -454,6 +567,37 @@ def calcular_probabilidade_ciclos(cores, limite=100):
     probabilidade = round((contagem[entrada_valor] / total) * 100, 2)
     return entrada, probabilidade, preto, vermelho
 
+def verificar_estrategia_combinada(previsao_anterior, ultima_cor, status100, status50, prob100, prob50):
+    estrategia = None
+
+    if previsao_anterior == "VERMELHO" and ultima_cor == 0:
+        if status100 and not status50 and prob100 > 50 and prob50 > 50:
+            estrategia = "Estratégia 1"
+        elif status100 and not status50 and (prob100 > 50 or (prob100 > 50 and prob50 > 50)):
+            estrategia = "Estratégia 2"
+        elif not status100 and status50 and prob100 <= 50 and prob50 <= 50:
+            estrategia = "Estratégia 3"
+    elif previsao_anterior == "VERMELHO" and ultima_cor == 2:
+        if not status100 and not status50 and prob50 > 50:
+            estrategia = "Estratégia 4"
+    elif previsao_anterior == "PRETO" and ultima_cor == 0:
+        if status100 and not status50 and prob100 > 50 and prob50 > 50:
+            estrategia = "Estratégia 5"
+        elif status100 and not status50 and (prob100 > 50 or (prob100 > 50 and prob50 > 50)):
+            estrategia = "Estratégia 6"
+        elif status100 and not status50:
+            estrategia = "Estratégia 7 (CORINGA)"
+        elif not status100 and status50 and prob100 <= 50 and prob50 <= 50:
+            estrategia = "Estratégia 8"
+        elif not status100 and status50 and ((prob100 <= 50 and prob50 <= 50) or (prob100 > 50 and prob50 > 50)):
+            estrategia = "Estratégia 9"
+    elif previsao_anterior == "PRETO" and ultima_cor in [0, 1, 2]:
+        if not status100 and  status50:
+            estrategia = "Estratégia teste"
+
+    return estrategia
+
+
 def obter_previsao():
     try:
         with open(ESTATISTICAS_FILE, 'r') as f:
@@ -481,13 +625,9 @@ def obter_previsao():
         horario_utc = horarios_raw[0]
         horario_local = horarios_format[0]
 
-        contador_acertos = stats.get("acertos_sequencias_alertadas", 0)
-        contador_erros = stats.get("erros_sequencias_alertadas", 0)
-
         # CAMINHOS
         desktop = os.path.join(os.path.expanduser("~"), "Desktop")
         pendentes_path = os.path.join(os.getcwd(), "sequencias_pendentes.json")
-        txt_path = os.path.join(desktop, "sequencias_alertadas.txt")
 
         # Processa nova rodada
         if stats.get("ultima_analisada") != horario_utc:
@@ -538,31 +678,22 @@ def obter_previsao():
                             nome_1 = "BRANCO" if cor_1 == 0 else "VERMELHO" if cor_1 == 1 else "PRETO"
                             if cor_1 == cor_prevista or cor_1 == 0:
                                 item["status"] = "acerto_direto"
-                                contador_acertos += 1
-                                with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
-                                    f_txt.write(f"[ACERTO DIRETO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {nome_1}\n")
                             elif len(cores) > 2:
                                 cor_2 = cores[2]
                                 nome_2 = "BRANCO" if cor_2 == 0 else "VERMELHO" if cor_2 == 1 else "PRETO"
                                 if cor_2 == cor_prevista or cor_2 == 0:
                                     item["status"] = "acerto_gale"
-                                    contador_acertos += 1
-                                    with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
-                                        f_txt.write(f"[ACERTO GALE] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {nome_2}\n")
                                 else:
                                     item["status"] = "erro"
-                                    contador_erros += 1
-                                    with open(txt_path, "a", encoding="cp1252", errors="ignore") as f_txt:
-                                        f_txt.write(f"[ERRO] {item['hora_alerta']} - {item['sequencia']} - Previsão: {previsao} - Resultado: {nome_2}\n")
                             else:
                                 # Ainda falta a segunda jogada (gale) — manter pendente
                                 novos_pendentes.append(item)
+                                continue
                         else:
                             # Ainda falta a primeira jogada — manter pendente
                             novos_pendentes.append(item)
+                            continue
 
-                with open(pendentes_path, "w") as f:
-                    json.dump(novos_pendentes, f, indent=4)
 
 
         # DETECTAR NOVAS SEQUÊNCIAS
@@ -576,20 +707,35 @@ def obter_previsao():
         sequencia_mudou = sequencia_atual is not None and sequencia_atual != stats.get('sequencia_atual')
         stats['sequencia_atual'] = sequencia_atual
         sequencia_detectada = bool(sequencia_atual)
+        estrategia_disparada = None
 
         for alerta in alertas_encontrados:
             alerta_str = str(alerta)
             if alerta_str not in ULTIMAS_SEQUENCIAS_ALERTADAS:
-                CONTADOR_ALERTAS_GLOBAL += 1
-                ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
                 previsao = "PRETO" if alerta[-1] >= 51.0 else "VERMELHO"
-                hora_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                salvar_alerta_pendente(alerta, previsao)
+                estrategia_disparada = verificar_estrategia_combinada(
+                    previsao, ultima_cor,
+                    preto_100 > 0 if previsao == "PRETO" else vermelho_100 > 0,
+                    preto_50 > 0 if previsao == "PRETO" else vermelho_50 > 0,
+                    alerta[-1],  # prob100
+                    stats['historico_probabilidade_50'][0] if stats['historico_probabilidade_50'] else 0  # prob50
+                )
 
+                print("Estratégia ativada:", estrategia_disparada)  # ← ADICIONE AQUI
+                if estrategia_disparada:
+                    CONTADOR_ALERTAS_GLOBAL += 1
+                    ULTIMAS_SEQUENCIAS_ALERTADAS.add(alerta_str)
+                    hora_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    salvar_alerta_pendente(alerta, previsao)
+
+                    # Logar estratégia
+                    txt_path = os.path.join(os.path.expanduser("~"), "Desktop", "sequencias_alertadas.txt")
+                    with open(txt_path, "a", encoding="cp1252", errors="ignore") as f:
+                        f.write(f"[ALERTA] {hora_atual} - {alerta} - Previsão: {previsao} - Estratégia: {estrategia_disparada}\n")
+
+        sequencia_detectada = estrategia_disparada is not None
         stats['contador_alertas'] = CONTADOR_ALERTAS_GLOBAL
         stats['sequencias_alertadas'] = list(ULTIMAS_SEQUENCIAS_ALERTADAS)
-        stats['acertos_sequencias_alertadas'] = contador_acertos
-        stats['erros_sequencias_alertadas'] = contador_erros
 
         total_hits = stats['acertos'] + stats['erros']
         taxa = round((stats['acertos'] / total_hits) * 100, 1) if total_hits > 0 else 0
@@ -634,7 +780,6 @@ def resetar():
     return redirect('/')
 
 def renderizar_tela(sequencia_atual):
-    # Aqui você obtém as previsões (a lógica continua a mesma)
     (entrada, preto100, vermelho100, preto50, vermelho50, ultima_nome, prob100, prob50, ultimas, ultimos_horarios, horario, acertos, erros, taxa_acerto, entradas, resultados, historico_completo, sequencia_detectada, sequencia_mudou, sequencia_atual) = obter_previsao()
 
     # Carrega estatísticas para enviar ao template
@@ -645,7 +790,7 @@ def renderizar_tela(sequencia_atual):
     alertas_iminentes = encontrar_alertas_completos(ULTIMAS_PROBABILIDADES, SEQUENCIAS_VALIDAS_50, SEQUENCIAS_VALIDAS_100)
     contador_alertas = CONTADOR_ALERTAS_GLOBAL
 
-    # Agora, sequencia_atual é passada corretamente para o template
+    # Passa a sequencia_atual para o template
     return render_template_string(TEMPLATE,
         entrada=entrada,
         sequencia_atual=sequencia_atual,  # Passando a variável corretamente para o template
@@ -665,9 +810,7 @@ def renderizar_tela(sequencia_atual):
         historico_completo=historico_completo,
         alertas_iminentes=alertas_iminentes,
         contador_alertas=contador_alertas,
-        sequencia_detectada=sequencia_detectada,
-        acertos_sequencias_alertadas=stats.get('acertos_sequencias_alertadas', 0),
-        erros_sequencias_alertadas=stats.get('erros_sequencias_alertadas', 0)
+        sequencia_detectada=sequencia_detectada
     )
 
 def resetar_estatisticas():
@@ -687,10 +830,8 @@ def resetar_estatisticas():
             'historico_ciclos_vermelho_50': [],
             'ultima_analisada': "",
             'contador_alertas': 0,
-            'sequencias_alertadas': [],
-            'acertos_sequencias_alertadas': 0,
-            'erros_sequencias_alertadas': 0
-        }, f)
+            'sequencias_alertadas': []
+        }, f, indent=4)  # Use indent para formatar o JSON de forma mais legível
 
     try:
         os.remove("sequencias_pendentes.json")
