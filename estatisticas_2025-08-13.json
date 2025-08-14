@@ -1,7 +1,9 @@
 {
-    "acertos": 575,
-    "erros": 483,
+    "acertos": 576,
+    "erros": 484,
     "historico_entradas": [
+        "PRETO",
+        "VERMELHO",
         "PRETO",
         "VERMELHO",
         "PRETO",
@@ -1064,6 +1066,8 @@
         "PRETO"
     ],
     "historico_resultados": [
+        "PRETO",
+        "BRANCO",
         "VERMELHO",
         "VERMELHO",
         "PRETO",
@@ -2126,6 +2130,8 @@
         "VERMELHO"
     ],
     "historico_horarios": [
+        "21:36:44",
+        "21:36:14",
         "21:35:44",
         "21:35:14",
         "21:34:44",
@@ -3188,6 +3194,8 @@
         "00:59:26"
     ],
     "historico_resultados_binarios": [
+        false,
+        true,
         true,
         false,
         true,
@@ -4250,6 +4258,8 @@
         null
     ],
     "historico_probabilidade_100": [
+        59.78,
+        41.3,
         59.14,
         40.86,
         59.14,
@@ -5312,6 +5322,8 @@
         55.32
     ],
     "historico_probabilidade_50": [
+        55.32,
+        55.32,
         56.25,
         57.45,
         59.57,
@@ -6375,6 +6387,8 @@
     ],
     "historico_ciclos_preto_100": [
         26,
+        25,
+        26,
         26,
         26,
         26,
@@ -7436,6 +7450,8 @@
         23
     ],
     "historico_ciclos_vermelho_100": [
+        25,
+        26,
         26,
         27,
         26,
@@ -8498,6 +8514,8 @@
         23
     ],
     "historico_ciclos_preto_50": [
+        16,
+        15,
         15,
         15,
         15,
@@ -9562,6 +9580,8 @@
     "historico_ciclos_vermelho_50": [
         15,
         15,
+        15,
+        15,
         14,
         14,
         14,
@@ -10621,20 +10641,9 @@
         12,
         12
     ],
-    "ultima_analisada": "2025-08-14T00:35:44.839Z",
-    "contador_alertas": 10,
+    "ultima_analisada": "2025-08-14T00:36:44.963Z",
+    "contador_alertas": 0,
     "sequencia_ativa": false,
     "estrategia_ativa": "",
-    "sequencias_alertadas": [
-        "Sem alerta - Probabilidade n\u00e3o atendida - 21:35:14",
-        "Sem alerta - Probabilidade n\u00e3o atendida - 21:34:44",
-        "Sem alerta - Probabilidade n\u00e3o atendida - 21:34:14",
-        "Acerto Direto! Previs\u00e3o correta: PRETO - 21:32:44",
-        "Acerto Direto! Previs\u00e3o correta: PRETO - 21:32:14",
-        "Acerto Direto! Previs\u00e3o correta: PRETO - 21:31:44",
-        "Acerto Direto! Previs\u00e3o correta: PRETO - 21:31:14",
-        "Alerta de Gale! Proxima previs\u00e3o: None - 20:08:00",
-        "Alerta de Gale! Proxima previs\u00e3o: None - 19:55:28",
-        "Alerta de Gale! Proxima previs\u00e3o: None - 19:49:27"
-    ]
+    "sequencias_alertadas": []
 }
