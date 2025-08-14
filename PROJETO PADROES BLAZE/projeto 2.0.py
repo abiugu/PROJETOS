@@ -1,5 +1,3 @@
-# blaze_novo_sistema.py
-
 from flask import Flask, render_template_string, redirect, url_for
 import requests
 import json
@@ -11,7 +9,119 @@ from datetime import datetime, timedelta, date
 from collections import Counter
 import atexit
 
+# Alarme para Probabilidade 100
+ALARM_PROB100 = {
+    "35.71", "46.00", "58.82", "48.00", "46.43", "67.39", "30.11", "47.62", "62.63", "66.29",
+    "44.00", "31.58", "43.00", "69.79", "32.65", "36.78", "31.25", "59.52", "31.63", "30.53",
+    "71.28", "67.71", "29.67", "62.35", "69.15", "45.78", "30.61", "62.00", "33.71", "29.35",
+    "30.43", "37.65", "68.75", "35.35", "65.91", "68.89", "70.00", "69.23", "29.47", "70.21",
+    "37.00", "29.03", "41.00", "68.09", "66.28", "60.71", "68.04", "44.58", "45.12", "30.30",
+    "67.82", "69.57", "34.48", "35.63", "48.78", "47.56", "64.65", "53.01", "40.48", "35.23",
+    "34.09", "32.95", "71.88"
+}
+
+# Alarme para Probabilidade 50
+ALARM_PROB50 = {
+    "32.50", "76.60", "58.97", "73.17", "22.22", "80.43", "69.23", "21.74", "25.58", "30.77",
+    "75.51", "74.00", "26.83", "61.54", "44.74", "47.37", "22.73", "42.11", "78.05", "24.00",
+    "39.47", "78.72", "80.00", "18.75", "22.92", "68.42"
+}
+
+# Alarme para a combinação de Probabilidade 100 e Probabilidade 50
+ALARM_PROB100_PROB50 = {
+    ("48.89", "52.27"), ("44.79", "37.5"), ("45.65", "47.73"), ("48.94", "39.13"),
+    ("40.86", "41.3"), ("52.63", "62.5"), ("44.57", "47.73"), ("43.01", "46.67"),
+    ("53.33", "47.73"), ("59.57", "56.25"), ("43.62", "44.9"), ("51.61", "54.55"),
+    ("58.51", "62.5"), ("44.57", "41.67"), ("45.92", "48.98"), ("57.14", "63.04"),
+    ("48.98", "45.83"), ("60.42", "58.33"), ("50.54", "60.87"), ("51.55", "56"),
+    ("53.76", "43.48"), ("43.3", "37.5"), ("44.44", "44.68"), ("47.25", "47.92"),
+    ("50.53", "60.42"), ("46.15", "48.84"), ("61.05", "58.33"), ("56.04", "47.83"),
+    ("57.29", "63.27"), ("53.26", "42.22"), ("44.68", "40.82"), ("48.31", "44.44"),
+    ("44.68", "48.98"), ("47.73", "46.51"), ("53.26", "45.83"), ("61.05", "62.5"),
+    ("54.17", "54"), ("45.16", "42.86"), ("42.22", "44.44"), ("55.91", "46.81"),
+    ("60.22", "62.22"), ("53.93", "48.89"), ("56.38", "46.81"), ("62.11", "65.96"),
+    ("43.82", "46.67"), ("49.45", "46.51"), ("48.91", "56.82"), ("43.88", "40.82"),
+    ("47.83", "57.78"), ("60", "65.96"), ("48.31", "43.18"), ("47.25", "36.96"),
+    ("56.38", "66.67"), ("49.46", "43.18"), ("45.65", "52.27"), ("51.14", "45.45"),
+    ("48.35", "56.82"), ("48.35", "47.92"), ("46.88", "55.1"), ("40.66", "40"),
+    ("47.78", "56.82"), ("48.45", "42.55"), ("45.26", "36.73"), ("51.65", "56.25"),
+    ("51.58", "48"), ("58.51", "57.14"), ("57.78", "60.87"), ("44.68", "34.78"),
+    ("39.36", "37.5"), ("52.22", "55.81"), ("49.47", "40.82"), ("52.08", "61.22"),
+    ("45.83", "47.83"), ("45.92", "46"), ("52.17", "62.22"), ("45.05", "41.67"),
+    ("54.44", "46.67"), ("43.48", "47.73"), ("56.18", "54.55"), ("54.84", "52.27"),
+    ("60", "54.35"), ("44.21", "36.96"), ("45.16", "43.18"), ("51.69", "53.19"),
+    ("41.24", "39.58"), ("41.76", "35.56"), ("55.91", "64.44"), ("49.47", "61.7"),
+    ("40.22", "42.55"), ("42.55", "46.94"), ("46.07", "51.16"), ("44.68", "37.78"),
+    ("45.05", "33.33"), ("58.7", "61.7"), ("46.59", "44.19"), ("55.79", "47.83"),
+    ("50.56", "46.51"), ("47.73", "40.91"), ("51.11", "60"), ("46.88", "36.73"),
+    ("45.83", "52.17"), ("47.42", "57.14"), ("55.79", "65.22"), ("51.69", "45.45")
+}
+
+
 app = Flask(__name__)
+
+# Substitua com o token do seu bot e ID do chat
+BOT_TOKEN = '8426186947:AAFd4ZSTWfnffJGusY9CiOka0oblLpQvsgU'
+CHAT_ID = '1139158385'
+
+# Função para enviar uma mensagem para o Telegram
+def enviar_mensagem_telegram(mensagem):
+    url = f"https://api.telegram.org/bot8426186947:AAFd4ZSTWfnffJGusY9CiOka0oblLpQvsgU/sendMessage"
+    params = {
+        "chat_id": 1139158385,
+        "text": mensagem
+    }
+    try:
+        response = requests.post(url, data=params)
+        if response.status_code != 200:
+            print(f"Erro ao enviar mensagem para o Telegram: {response.text}")
+    except Exception as e:
+        print(f"Erro de conexão: {e}")
+
+# Função para salvar os dados em Excel
+def salvar_em_excel():
+    try:
+        # Certifique-se de que o ARQUIVO_JSON existe
+        if not os.path.exists(ARQUIVO_JSON):
+            print("[✘] Arquivo JSON não encontrado.")
+            return
+
+        # Lê o arquivo JSON
+        with open(ARQUIVO_JSON, 'r') as f:
+            stats = json.load(f)
+
+        # Prepara os dados para salvar em Excel
+        historico_para_planilha = []
+        total = len(stats['historico_resultados'])
+
+        for i in range(1, total):
+            previsao = stats['historico_entradas'][i]
+            resultado = stats['historico_resultados'][i - 1]
+            acertou = stats['historico_resultados_binarios'][i - 1]
+            historico_para_planilha.append({
+                "Horário": stats['historico_horarios'][i - 1] if i - 1 < len(stats['historico_horarios']) else "-",
+                "Previsão": previsao,
+                "Resultado": resultado,
+                "Acertou": "Sim" if acertou is True else "Não" if acertou is False else "N/D",
+                "Probabilidade 100": stats['historico_probabilidade_100'][i - 1] if i - 1 < len(stats['historico_probabilidade_100']) else "-",
+                "Probabilidade 50": stats['historico_probabilidade_50'][i - 1] if i - 1 < len(stats['historico_probabilidade_50']) else "-",
+                "Ciclos Preto 100": stats['historico_ciclos_preto_100'][i - 1] if i - 1 < len(stats['historico_ciclos_preto_100']) else 0,
+                "Ciclos Vermelho 100": stats['historico_ciclos_vermelho_100'][i - 1] if i - 1 < len(stats['historico_ciclos_vermelho_100']) else 0,
+                "Ciclos Preto 50": stats['historico_ciclos_preto_50'][i - 1] if i - 1 < len(stats['historico_ciclos_preto_50']) else 0,
+                "Ciclos Vermelho 50": stats['historico_ciclos_vermelho_50'][i - 1] if i - 1 < len(stats['historico_ciclos_vermelho_50']) else 0,
+            })
+
+        # Converte para DataFrame
+        df = pd.DataFrame(historico_para_planilha)
+
+        # Salva o arquivo Excel na área de trabalho
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "historico diario percentuais", f"historico_completo_{date.today()}.xlsx")
+        os.makedirs(os.path.dirname(desktop_path), exist_ok=True)
+        df.to_excel(desktop_path, index=False)
+        print(f"Planilha salva automaticamente: {desktop_path}")
+
+    except Exception as e:
+        print(f"[✘] Falha ao salvar planilha: {e}")
 
 ARQUIVO_JSON = f"estatisticas_{date.today()}.json"
 
@@ -36,7 +146,6 @@ if not os.path.exists(ARQUIVO_JSON):
             "estrategia_ativa": ""
         }, f)
 
-
 def calcular_estatisticas(cores, limite):
     filtrado = [c for c in cores[:limite] if c != 0]
     contagem = Counter(filtrado)
@@ -57,55 +166,73 @@ def calcular_estatisticas(cores, limite):
     probabilidade = round((contagem[entrada_valor] / total) * 100, 2)
     return entrada, probabilidade, preto, vermelho
 
+def verificar_alarme(prob100, prob50):
+    prob100_str = f"{prob100:.2f}"
+    prob50_str = f"{prob50:.2f}"
 
-def verificar_estrategia_combinada(previsao_anterior, ultima_cor, status100, status50, prob100, prob50):
-    # Normaliza entrada
-    prev = (previsao_anterior or "").strip().upper()
+    if (prob100_str, prob50_str) in ALARM_PROB100_PROB50:
+        return "Alarme: Prob100 & Prob50"
+    if prob100_str in ALARM_PROB100:
+        return "Alarme: Prob100"
+    if prob50_str in ALARM_PROB50:
+        return "Alarme: Prob50"
+    return None  # Nenhum alarme
 
-    # Só avaliamos quando saiu BRANCO
-    if ultima_cor != 0:
-        print("→ Sem estratégia (última cor não é BRANCO).")
-        return None
 
-    print(f"\n→ Verificando Estratégia:")
-    print(f"Previsão: {prev} | Última cor: {ultima_cor} (BRANCO)")
-    print(f"Status100: {status100}, Status50: {status50}")
-    print(f"Prob100(E): {prob100}, Prob50(F): {prob50}")
+def verificar_estrategia_combinada(prob100, prob50, ultima_cor, previsao_anterior=None, status100=None, status50=None, entrada100=None, horario=None):
+    prob100_str = f"{prob100:.2f}"
+    prob50_str = f"{prob50:.2f}"
 
-    # Helpers para leitura
-    ambas_maior_50 = (prob100 > 50) and (prob50 > 50)
-    col_e_maior_50 = (prob100 > 50)  # Coluna E
-    col_f_maior_50 = (prob50  > 50)  # Coluna F
+    # Mapear cores por nome para emojis
+    cor_emoji = {
+        "Vermelho": "🔴",
+        "Preto": "⚫",
+        "Branco": "⚪"
+    }
 
-    estrategia = None
+    # Emoji de alerta
+    alarme_emoji = "🔔"
 
-    # 1) VERMELHO | white | S100=V | S50=F | Ambas > 50
-    if prev == "VERMELHO" and status100 and not status50 and ambas_maior_50:
-        estrategia = "Estrategia 1"
+    # Mensagem clean
+    mensagem = f"{alarme_emoji} Alerta acionado! {alarme_emoji}\n"
 
-    # 2) PRETO | white | S100=V | S50=F | Coluna F > 50
-    elif prev == "PRETO" and status100 and not status50 and col_f_maior_50:
-        estrategia = "Estrategia 2"
+    # Previsão com emoji da cor
+    if entrada100:
+        emoji_cor = cor_emoji.get(entrada100.capitalize(), "❓")
+        mensagem += f"{alarme_emoji} Previsão: {emoji_cor} {entrada100}\n"
 
-    # 3) PRETO | white | S100=V | S50=F | Coluna E > 50
-    elif prev == "PRETO" and status100 and not status50 and col_e_maior_50:
-        estrategia = "Estrategia 3"
+    # Hora da jogada
+    if horario:
+        mensagem += f"🕒 Hora da jogada: {horario}\n"
 
-    # 4) VERMELHO | white | S100=V | S50=F | Coluna F > 50
-    elif prev == "VERMELHO" and status100 and not status50 and col_f_maior_50:
-        estrategia = "Estrategia 4"
+    # Verificar alarmes
+    if (prob100_str, prob50_str) in ALARM_PROB100_PROB50:
+        mensagem += f"{alarme_emoji} Alarme Prob100 & Prob50: {prob100_str}% / {prob50_str}%\n"
+        enviar_mensagem_telegram(mensagem)
+        return f"Alarme Prob100 & Prob50: ({prob100_str}% / {prob50_str}%)"
 
-    # 5) VERMELHO | white | S100=V | S50=V | Coluna F > 50
-    elif prev == "VERMELHO" and status100 and status50 and col_f_maior_50:
-        estrategia = "Estrategia 5"
+    if prob100_str in ALARM_PROB100:
+        mensagem += f"{alarme_emoji} Alarme Prob100: {prob100_str}%\n"
+        enviar_mensagem_telegram(mensagem)
+        return f"Alarme Prob100: ({prob100_str}%)"
 
-    # 6) VERMELHO | white | S100=V | S50=V | Ambas > 50
-    elif prev == "VERMELHO" and status100 and status50 and ambas_maior_50:
-        estrategia = "Estrategia 6"
+    if prob50_str in ALARM_PROB50:
+        mensagem += f"{alarme_emoji} Alarme Prob50: {prob50_str}%\n"
+        enviar_mensagem_telegram(mensagem)
+        return f"Alarme Prob50: ({prob50_str}%)"
 
-    print(f"Estratégia retornada: {estrategia}")
-    return estrategia
+    return None
 
+# Função para determinar a cor da previsão
+def verificar_cor(cor):
+    if cor == 0:
+        return "BRANCO"
+    elif cor == 1:
+        return "VERMELHO"
+    elif cor == 2:
+        return "PRETO"
+    else:
+        return "Desconhecido"
 
 
 @app.route('/')
@@ -114,11 +241,10 @@ def index():
         res = requests.get("https://blaze.bet.br/api/singleplayer-originals/originals/roulette_games/recent/history/1")
         data = res.json()
 
-        # Tentativas de buscar os dados da API
         tentativas = 0
         while 'records' not in data and tentativas < 3:
             print(f"[✘] Erro: campo 'records' não encontrado. Tentando novamente ({tentativas+1}/3)...")
-            time.sleep(3)  # espera 3 segundos
+            time.sleep(3)
             try:
                 res = requests.get("https://blaze.bet.br/api/singleplayer-originals/originals/roulette_games/recent/history/1")
                 data = res.json()
@@ -126,15 +252,11 @@ def index():
                 print(f"[✘] Erro ao requisitar API: {e}")
             tentativas += 1
 
-        # Se depois de 3 tentativas ainda não veio, recarrega a página
         if 'records' not in data:
             print("[!] Falha após 3 tentativas, recarregando...")
             return redirect(url_for('index'))
 
-
-
         registros = data['records']
-        
         cores = [r['color'] for r in registros]
         horarios = [(datetime.strptime(r['created_at'], "%Y-%m-%dT%H:%M:%S.%fZ") - timedelta(hours=3)).strftime("%H:%M:%S") for r in registros]
 
@@ -165,10 +287,8 @@ def index():
                 "contador_alertas": 0
             }
 
-        # VERIFICAÇÃO CORRETA DA JOGADA JÁ ANALISADA
         ultima_api = registros[0]['created_at']
         if stats['ultima_analisada'] == ultima_api:
-            # Jogada já processada, não atualiza nada, só renderiza
             entradas = ["preto" if e == "PRETO" else "vermelho" for e in stats['historico_entradas'][:10]]
             ultimas = ["branco" if c == 0 else "vermelho" if c == 1 else "preto" for c in cores[:10][::-1]]
             ultimos_horarios = horarios[:10][::-1]
@@ -184,7 +304,7 @@ def index():
 
             return render_template_string(TEMPLATE,
                 entrada=stats['historico_entradas'][0] if stats['historico_entradas'] else "N/A",
-                sequencia_atual="estrategia",
+                sequencia_atual= "Prob100: {} | Prob50: {}".format(prob100, prob50),
                 ciclos100_preto=preto100,
                 ciclos100_vermelho=vermelho100,
                 ciclos50_preto=preto50,
@@ -203,10 +323,8 @@ def index():
                 historico_completo=historico_completo,
                 contador_alertas=stats['contador_alertas'],
                 sequencia_detectada=stats.get('sequencia_ativa', False),
-                nome_estrategia = stats.get('estrategia_ativa', "")
-
+                nome_estrategia = "Prob100: {} | Prob50: {}".format(prob100, prob50)
             )
-
 
         previsao_anterior = stats['historico_entradas'][0] if len(stats['historico_entradas']) > 1 else None
         resultado_binario = None
@@ -225,13 +343,14 @@ def index():
             status50 = preto50 < vermelho50
 
             estrategia_disparada = verificar_estrategia_combinada(
-                previsao_anterior=previsao_anterior,  # ✅ Correto
-                ultima_cor=ultima_cor,
-                status100=status100,
-                status50=status50,
-                prob100=prob100,
-                prob50=prob50
-)
+            previsao_anterior=previsao_anterior,
+            ultima_cor=ultima_cor,
+            status100=status100,
+            status50=status50,
+            prob100=prob100,
+            prob50=prob50,
+            entrada100=entrada100  # Passando a previsão para a função de alarme
+        )
 
 
         stats['historico_entradas'].insert(0, entrada100)
@@ -250,17 +369,13 @@ def index():
             stats['sequencia_ativa'] = True
             stats['estrategia_ativa'] = estrategia_disparada
 
-            # Adiciona estratégia + horário ao histórico de alertas
             if "sequencias_alertadas" not in stats:
                 stats["sequencias_alertadas"] = []
 
             stats["sequencias_alertadas"].insert(0, f"{estrategia_disparada} - {horario}")
-
         else:
-            # Sempre limpar se não houve nova estratégia, independente de nova rodada
             stats['sequencia_ativa'] = False
             stats['estrategia_ativa'] = ""
-
 
         with open(ARQUIVO_JSON, 'w') as f:
             json.dump(stats, f, indent=4)
@@ -276,7 +391,7 @@ def index():
             len(stats['historico_horarios']),
             len(stats['historico_resultados_binarios'])
         )
-        
+
         for i in range(1, tamanho):
             historico_completo.append({
                 "horario": stats['historico_horarios'][i - 1],
@@ -288,7 +403,7 @@ def index():
 
         return render_template_string(TEMPLATE,
             entrada=entrada100,
-            sequencia_atual=stats.get('estrategia_ativa', ""),
+            sequencia_atual="Prob100: {} | Prob50: {}".format(prob100, prob50),
             ciclos100_preto=preto100,
             ciclos100_vermelho=vermelho100,
             ciclos50_preto=preto50,
@@ -307,60 +422,23 @@ def index():
             historico_completo=historico_completo,
             contador_alertas=stats['contador_alertas'],
             sequencia_detectada=bool(estrategia_disparada),
-            nome_estrategia = stats.get('estrategia_ativa', "")
+            nome_estrategia = "Prob100: {} | Prob50: {}".format(prob100, prob50)
         )
 
     except Exception as e:
         return f"Erro: {e}"
 
 
-@app.route('/reset', methods=['POST'])
-def reset():
-    if os.path.exists(ARQUIVO_JSON):
-        os.remove(ARQUIVO_JSON)
-    return redirect('/')
+# Função que roda o Flask no background (Thread separado)
+def run_flask():
+    app.run(debug=True, use_reloader=False)
 
+# Inicia o servidor Flask em um thread
+flask_thread = threading.Thread(target=run_flask)
+flask_thread.daemon = True
+flask_thread.start()
 
-def salvar_em_excel():
-    try:
-        if not os.path.exists(ARQUIVO_JSON):
-            return
-
-        with open(ARQUIVO_JSON, 'r') as f:
-            stats = json.load(f)
-
-        historico_para_planilha = []
-        total = len(stats['historico_resultados'])
-
-        for i in range(1, total):
-            previsao = stats['historico_entradas'][i]
-            resultado = stats['historico_resultados'][i - 1]
-            acertou = stats['historico_resultados_binarios'][i - 1]
-            historico_para_planilha.append({
-                "Horário": stats['historico_horarios'][i - 1] if i - 1 < len(stats['historico_horarios']) else "-",
-                "Previsão": previsao,
-                "Resultado": resultado,
-                "Acertou": "Sim" if acertou is True else "Não" if acertou is False else "N/D",
-                "Probabilidade 100": stats['historico_probabilidade_100'][i - 1] if i - 1 < len(stats['historico_probabilidade_100']) else "-",
-                "Probabilidade 50": stats['historico_probabilidade_50'][i - 1] if i - 1 < len(stats['historico_probabilidade_50']) else "-",
-                "Ciclos Preto 100": stats['historico_ciclos_preto_100'][i - 1] if i - 1 < len(stats['historico_ciclos_preto_100']) else 0,
-                "Ciclos Vermelho 100": stats['historico_ciclos_vermelho_100'][i - 1] if i - 1 < len(stats['historico_ciclos_vermelho_100']) else 0,
-                "Ciclos Preto 50": stats['historico_ciclos_preto_50'][i - 1] if i - 1 < len(stats['historico_ciclos_preto_50']) else 0,
-                "Ciclos Vermelho 50": stats['historico_ciclos_vermelho_50'][i - 1] if i - 1 < len(stats['historico_ciclos_vermelho_50']) else 0,
-            })
-
-
-        df = pd.DataFrame(historico_para_planilha)
-
-        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "historico diario percentuais", f"historico_completo_{date.today()}.xlsx")
-        os.makedirs(os.path.dirname(desktop_path), exist_ok=True)
-        df.to_excel(desktop_path, index=False)
-        print(f"Planilha salva automaticamente: {desktop_path}")
-
-    except Exception as e:
-        print(f"[✘] Falha ao salvar planilha: {e}")
-
-# Função que roda a cada 10 minutos em thread separada
+# Restante do código para salvar automaticamente e processar dados em segundo plano
 def iniciar_salvamento_automatico(intervalo_em_segundos=600):
     def loop_salvamento():
         while True:
@@ -370,11 +448,11 @@ def iniciar_salvamento_automatico(intervalo_em_segundos=600):
     thread = threading.Thread(target=loop_salvamento, daemon=True)
     thread.start()
 
-# Inicia salvamento ao sair
-atexit.register(salvar_em_excel)
-
 # Inicia salvamento automático periódico
 iniciar_salvamento_automatico()
+
+atexit.register(salvar_em_excel)
+
 
 TEMPLATE = '''
 <!DOCTYPE html>
@@ -505,7 +583,7 @@ TEMPLATE = '''
 <body>
     <div class="container">
         <div class="alerta-grande" id="alerta">
-            🚨 Estratégia Acionada: <strong id="nome-estrategia">{{ nome_estrategia or "N/D" }}</strong>
+            🚨 Estratégia Acionada 🚨</strong></strong>
             <button onclick="pararAlarme()">🔇 Silenciar Alarme</button>
         </div>
 
@@ -629,5 +707,14 @@ TEMPLATE = '''
 </html>
 '''
 
+def run_flask():
+    app.run(debug=True, use_reloader=False)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
+
+    # Se quiser manter o programa aberto e evitar sair, pode usar:
+    while True:
+        time.sleep(0)

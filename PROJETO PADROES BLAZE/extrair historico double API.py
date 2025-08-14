@@ -14,7 +14,7 @@ USER_AGENTS = [
 ]
 
 START_DATE = "2025-01-01T04:00:00.000Z"
-END_DATE = "2025-07-18T23:05:47.000Z"
+END_DATE = "2025-08-12T23:05:47.000Z"
 
 def traduzir_cor(cor):
     return {0: "white", 1: "red", 2: "black"}.get(cor, "unknown")
@@ -40,17 +40,17 @@ def obter_dados_blaze_sem_proxy():
                         return all_records
                     all_records.extend(data)
                     print(f"✅ Página {page} coletada com sucesso. Total: {len(all_records)} registros.")
-                    time.sleep(5)  # ✅ Delay de 5 segundos entre páginas
+                    time.sleep(3)  # ✅ Delay de 5 segundos entre páginas
                     page += 1
                     break  # próxima página
 
                 else:
                     print(f"⚠️ Erro HTTP {response.status_code}. Retentando em 5s...")
-                    time.sleep(5)
+                    time.sleep(3)
 
             except Exception as e:
                 print(f"❌ Erro na página {page}: {e}. Retentando em 5s...")
-                time.sleep(10)
+                time.sleep(5)
 
 def salvar_dados_em_planilha(records):
     if not records:
@@ -62,7 +62,7 @@ def salvar_dados_em_planilha(records):
             record["color"] = traduzir_cor(record["color"])
 
     desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    caminho_arquivo = os.path.join(desktop, "historico_blaze_julho.xlsx")
+    caminho_arquivo = os.path.join(desktop, "historico_blaze_agosto.xlsx")
 
     df = pd.DataFrame(records)
     df.to_excel(caminho_arquivo, index=False)
