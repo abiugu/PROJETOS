@@ -17,14 +17,14 @@ ALARM_PROB100 = {
     "30.43", "37.65", "68.75", "35.35", "65.91", "68.89", "70.00", "69.23", "29.47", "70.21",
     "37.00", "29.03", "41.00", "68.09", "66.28", "60.71", "68.04", "44.58", "45.12", "30.30",
     "67.82", "69.57", "34.48", "35.63", "48.78", "47.56", "64.65", "53.01", "40.48", "35.23",
-    "34.09", "32.95", "71.88"
+    "34.09", "32.95", "71.88", "50.00"
 }
 
 # Alarme para Probabilidade 50
 ALARM_PROB50 = {
     "32.50", "76.60", "58.97", "73.17", "22.22", "80.43", "69.23", "21.74", "25.58", "30.77",
     "75.51", "74.00", "26.83", "61.54", "44.74", "47.37", "22.73", "42.11", "78.05", "24.00",
-    "39.47", "78.72", "80.00", "18.75", "22.92", "68.42"
+    "39.47", "78.72", "80.00", "18.75", "22.92", "68.42", "50.00"
 }
 
 # Alarme para a combinação de Probabilidade 100 e Probabilidade 50
@@ -166,62 +166,136 @@ def calcular_estatisticas(cores, limite):
     probabilidade = round((contagem[entrada_valor] / total) * 100, 2)
     return entrada, probabilidade, preto, vermelho
 
+def enviar_alerta(mensagem):
+    """Função para enviar uma mensagem para o Telegram."""
+    enviar_mensagem_telegram(mensagem)
+
 def verificar_alarme(prob100, prob50):
     prob100_str = f"{prob100:.2f}"
     prob50_str = f"{prob50:.2f}"
 
+    # Verifica os critérios de alarme para cada probabilidade
     if (prob100_str, prob50_str) in ALARM_PROB100_PROB50:
-        return "Alarme: Prob100 & Prob50"
+        return f"Alarme: Prob100 & Prob50 acionado ({prob100_str}% / {prob50_str}%)"
     if prob100_str in ALARM_PROB100:
-        return "Alarme: Prob100"
+        return f"Alarme: Prob100 acionado ({prob100_str}%)"
     if prob50_str in ALARM_PROB50:
-        return "Alarme: Prob50"
-    return None  # Nenhum alarme
+        return f"Alarme: Prob50 acionado ({prob50_str}%)"
+    
+    return None  # Não há alarme
 
+def aguardar_atualizacao_json(stats_atualizado):
+    """Verifica se houve atualização no JSON, comparando a data da última jogada.""" 
+    ultima_analisada_atual = stats_atualizado.get('ultima_analisada', '')
 
-def verificar_estrategia_combinada(prob100, prob50, ultima_cor, previsao_anterior=None, status100=None, status50=None, entrada100=None, horario=None):
+    # Se a data da última jogada mudou, significa que houve atualização no JSON
+    if ultima_analisada_atual != stats_atualizado['ultima_analisada']:
+        stats_atualizado['ultima_analisada'] = ultima_analisada_atual
+        return True  # Houve atualização
+
+    return False  # Não houve atualização
+
+def verificar_acerto_ou_erro(stats):
+    # Verifica se o histórico de resultados binários está vazio
+    if not stats['historico_resultados_binarios']:
+        return None  # Se não houver histórico, não há acerto nem erro
+
+    # Pega o último valor do histórico de acertos/erros (True/False)
+    resultado_binario = stats['historico_resultados_binarios'][0]
+
+    # Se for True, significa que foi um acerto
+    if resultado_binario:
+        return "Acerto Direto"
+
+    # Se for False, significa que foi um erro, então precisamos de uma previsão de Gale
+    else:
+        return "Erro - Previsão de Gale"
+
+def aguardar_e_verificar_acerto_ou_erro(stats, previsao_anterior, entrada_template=None):
+    """Aguarda a atualização do JSON e verifica o resultado para determinar a próxima ação."""  
+    ultima_atualizacao = stats['ultima_analisada']  # Armazenando o valor inicial da última atualização
+    
+    while True:  # Laço infinito para aguardar a atualização do JSON
+        # Lê o arquivo JSON
+        with open(ARQUIVO_JSON, 'r') as f:
+            stats_atualizado = json.load(f)
+        
+        # Verifica se houve atualização no JSON
+        if stats_atualizado['ultima_analisada'] != ultima_atualizacao:
+            ultima_atualizacao = stats_atualizado['ultima_analisada']  # Atualiza a variável de última atualização
+            break  # Sair do loop quando houver atualização
+
+    # Verificar se houve acerto ou erro
+    resultado = verificar_acerto_ou_erro(stats)
+
+    if resultado == "Acerto Direto":
+        # Enviar mensagem de acerto direto
+        mensagem_acerto = f"🔔 Acerto Direto! 🎯 Previsão correta!"
+        enviar_mensagem_telegram(mensagem_acerto)
+        return "Acerto Direto"
+    
+    elif resultado == "Erro - Previsão de Gale":
+        # Enviar mensagem para nova previsão de Gale
+        mensagem_gale = f"🔔 Erro! 🚨 Enviando previsão de Gale!"
+        if entrada_template:
+            mensagem_gale += f" Nova previsão de Gale: {entrada_template}"
+        enviar_mensagem_telegram(mensagem_gale)
+        
+        # Aguarda o Gale ser resolvido
+        resultado_gale = aguardar_e_verificar_acerto_ou_erro(stats, previsao_anterior, entrada_template)
+        return resultado_gale
+    
+    return "Nenhuma atualização após 3 tentativas"
+
+def verificar_estrategia_combinada(stats, prob100, prob50, ultima_cor, previsao_anterior=None, status100=None, status50=None, entrada100=None, horario=None):
     prob100_str = f"{prob100:.2f}"
     prob50_str = f"{prob50:.2f}"
 
-    # Mapear cores por nome para emojis
+    # Mapeamento de cores para emojis
     cor_emoji = {
         "Vermelho": "🔴",
         "Preto": "⚫",
         "Branco": "⚪"
     }
 
+    # Formatação do horário para HH:MM:SS
+    horario = datetime.now().strftime("%H:%M:%S")
+
     # Emoji de alerta
     alarme_emoji = "🔔"
 
-    # Mensagem clean
-    mensagem = f"{alarme_emoji} Alerta acionado! {alarme_emoji}\n"
+    # Verifica se a probabilidade atende aos critérios para disparar um alarme
+    alarme = verificar_alarme(prob100, prob50)
 
-    # Previsão com emoji da cor
-    if entrada100:
-        emoji_cor = cor_emoji.get(entrada100.capitalize(), "❓")
-        mensagem += f"{alarme_emoji} Previsão: {emoji_cor} {entrada100}\n"
+    if alarme:  # Se atender aos critérios de alarme
+        # Cria a mensagem de alerta
+        mensagem = f"{alarme_emoji} Alerta acionado! {alarme_emoji}\n"
 
-    # Hora da jogada
-    if horario:
-        mensagem += f"🕒 Hora da jogada: {horario}\n"
+        # Previsão com emoji da cor
+        if entrada100:
+            emoji_cor = cor_emoji.get(entrada100.capitalize(), "❓")
+            mensagem += f"{alarme_emoji} Previsão: {emoji_cor} {entrada100}\n"
 
-    # Verificar alarmes
-    if (prob100_str, prob50_str) in ALARM_PROB100_PROB50:
-        mensagem += f"{alarme_emoji} Alarme Prob100 & Prob50: {prob100_str}% / {prob50_str}%\n"
+        # Adiciona as probabilidades 100 e 50 nas mensagens
+        mensagem += f"📊 Probabilidade 100: {prob100_str}% | Probabilidade 50: {prob50_str}%\n"
+
+        # Hora da jogada
+        if horario:
+            mensagem += f"🕒 Hora da jogada: {horario}\n"
+
+        # Envia a mensagem para o Telegram
         enviar_mensagem_telegram(mensagem)
-        return f"Alarme Prob100 & Prob50: ({prob100_str}% / {prob50_str}%)"
 
-    if prob100_str in ALARM_PROB100:
-        mensagem += f"{alarme_emoji} Alarme Prob100: {prob100_str}%\n"
-        enviar_mensagem_telegram(mensagem)
-        return f"Alarme Prob100: ({prob100_str}%)"
+        # Aguardar e verificar acerto/erro
+        resultado = aguardar_e_verificar_acerto_ou_erro(stats, previsao_anterior, entrada100)
 
-    if prob50_str in ALARM_PROB50:
-        mensagem += f"{alarme_emoji} Alarme Prob50: {prob50_str}%\n"
-        enviar_mensagem_telegram(mensagem)
-        return f"Alarme Prob50: ({prob50_str}%)"
+        if resultado == "Acerto Direto":
+            print("Acerto direto! Prosseguir com a próxima jogada.")
+        elif resultado == "Erro - Previsão de Gale":
+            print("Erro! Realizar previsão de Gale.")
+    else:
+        print("Não há alarme, não será enviado mensagem.")
 
-    return None
 
 # Função para determinar a cor da previsão
 def verificar_cor(cor):
@@ -349,7 +423,8 @@ def index():
             status50=status50,
             prob100=prob100,
             prob50=prob50,
-            entrada100=entrada100  # Passando a previsão para a função de alarme
+            entrada100=entrada100,
+            stats=stats
         )
 
 
