@@ -27172,13 +27172,8 @@
         9
     ],
     "ultima_analisada": "2025-08-13T02:58:47.726Z",
-    "contador_alertas": 4,
+    "contador_alertas": 0,
     "sequencia_ativa": true,
     "estrategia_ativa": "Alarme: Prob100 (50.00%)",
-    "sequencias_alertadas": [
-        "Alarme: Prob100 (50.00%) - 23:58:47",
-        "Alarme: Prob100 (50.00%) - 23:53:47",
-        "Alarme: Prob100 (50.00%) - 23:52:16",
-        "Alarme: Prob50 (50.00%) - 23:50:46"
-    ]
+    "sequencias_alertadas": []
 }
