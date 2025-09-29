@@ -28,6 +28,11 @@ def processar_arquivo_excel(caminho_arquivo):
     cor_map = {"red": 1, "black": 2, "white": 0}
     df['CorMap'] = df['Cor'].map(cor_map)
 
+    # Criar colunas separadas para cada cor
+    df['Red'] = df['CorMap'].apply(lambda x: 1 if x == 1 else 0)
+    df['Black'] = df['CorMap'].apply(lambda x: 1 if x == 2 else 0)
+    df['White'] = df['CorMap'].apply(lambda x: 1 if x == 0 else 0)
+
     prob_preto_100 = []
     prob_preto_50 = []
     ciclos_preto_100 = []
@@ -54,6 +59,12 @@ def processar_arquivo_excel(caminho_arquivo):
     df['Ciclos VERMELHO 100'] = ciclos_vermelho_100
     df['Ciclos VERMELHO 50'] = ciclos_vermelho_50
 
+    # Contar combinações de cores
+    df['Combinação'] = df[['Red', 'Black', 'White']].agg('sum', axis=1).apply(lambda x: str(x))
+
+    # Contagem das combinações únicas
+    combinacoes_contagem = df['Combinação'].value_counts().to_dict()
+
     # Adiciona a coluna Previsão com base na linha anterior
     previsoes = []
     for i in range(len(df)):
@@ -68,7 +79,7 @@ def processar_arquivo_excel(caminho_arquivo):
     df['Previsão'] = previsoes
 
     df.drop(columns=['CorMap'], inplace=True)
-    return df
+    return df, combinacoes_contagem
 
 def escolher_arquivo():
     root = Tk()
@@ -80,10 +91,16 @@ def escolher_arquivo():
 caminho_arquivo = escolher_arquivo()
 
 if caminho_arquivo and os.path.exists(caminho_arquivo):
-    df_resultado = processar_arquivo_excel(caminho_arquivo)
+    df_resultado, combinacoes_contagem = processar_arquivo_excel(caminho_arquivo)
 
+    # Salva o arquivo com as novas colunas
     desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "saida_completa.xlsx")
     df_resultado.to_excel(desktop_path, index=False)
     print(f"✅ Arquivo salvo em: {desktop_path}")
+
+    # Exibe a contagem de combinações
+    print("📝 Contagem das combinações de cores:")
+    for combinacao, contagem in combinacoes_contagem.items():
+        print(f"{combinacao}: {contagem} ocorrências")
 else:
     print("❌ Nenhum arquivo selecionado ou caminho inválido.")

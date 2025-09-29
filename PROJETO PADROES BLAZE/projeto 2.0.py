@@ -3,6 +3,7 @@ import requests, json, os, threading, time, pandas as pd
 from datetime import datetime, timedelta, date
 from collections import Counter, deque
 import atexit, websocket
+from alarms import ALARM_PROB100, ALARM_PROB50, ALARM_PROB100_PROB50
 
 # ======== 1) CONFIG ===========================================================
 API_HISTORY_URL = "https://blaze.bet.br/api/singleplayer-originals/originals/roulette_games/recent/history"
@@ -17,11 +18,8 @@ TG_MIN_INTERVAL = 6                  # anti-flood no TG
 SEND_FAST_TG_EVERY_ROUND = False
 SEND_FAST_TG_ON_CHANGE   = True
 MIN_RODADAS_PARA_ALARME  = 100       # gating
-
 ARQUIVO_JSON = f"estatisticas_{date.today()}.json"
 
-# ======== 2) IMPORTA ALARMES (arquivo separado para reduzir linhas) ==========
-from alarms import ALARM_PROB100, ALARM_PROB50, ALARM_PROB100_PROB50
 
 # ======== 3) ESTADO GLOBAL ====================================================
 app = Flask(__name__)
@@ -46,9 +44,11 @@ ciclos100_vermelhos = 0
 ciclos100_preto = 0
 contador_acertos_alarm = {"Prob100": 0, "Prob50": 0, "Prob100 & Prob50": 0}
 contador_erros_alarm = {"Prob100": 0, "Prob50": 0, "Prob100 & Prob50": 0}
-
+sequencia_alerta_ativa = False
+estrategia_disparada = False  # Variável global para controlar se a estratégia foi disparada
 
 # ======== 4) UTILS: STATS JSON, LABELS, AUX ==================================
+
 def preencher_json_diario_minimo_api(minimo=100, timeout=(4, 8)):
     """
     Baixa as últimas `minimo` rodadas da API e adiciona ao JSON do dia
@@ -65,7 +65,7 @@ def preencher_json_diario_minimo_api(minimo=100, timeout=(4, 8)):
         if not records:
             print("[API] Nenhum record retornado.")
             return False
-
+ 
         # Normalizar e ordenar (antigo -> novo)
         norm = []
         for r0 in records:
@@ -101,6 +101,31 @@ def preencher_json_diario_minimo_api(minimo=100, timeout=(4, 8)):
         print(f"[BOOT/API] Falha ao preencher JSON via API: {e}")
         return False
 
+# Função que salva as estatísticas no arquivo JSON
+def save_stats(stats):
+    """Salva as estatísticas no arquivo JSON"""
+    try:
+        tmp = ARQUIVO_JSON + ".tmp"
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(stats, f, ensure_ascii=False, indent=4)
+        os.replace(tmp, ARQUIVO_JSON)
+        print("[INFO] Dados salvos no JSON com sucesso.")
+    except Exception as e:
+        print(f"[ERRO] Falha ao salvar no JSON: {e}")
+
+def salvar_em_json(alarme_tipo, previsao_cor, prob100, prob50, horario):
+    stats = load_stats()  # Carrega as estatísticas atuais
+
+    # Adiciona a nova jogada ao histórico
+    stats['historico_entradas'].insert(0, previsao_cor)
+    stats['historico_resultados'].insert(0, alarme_tipo)
+    stats['historico_horarios'].insert(0, horario)
+    stats['historico_probabilidade_100'].insert(0, prob100)
+    stats['historico_probabilidade_50'].insert(0, prob50)
+    stats['contador_alertas'] += 1  # Incrementa o contador de alertas
+    stats('sequencias_alertadas').insert(0, f"{alarme_tipo} - {horario}")
+    # Salva o arquivo JSON com as novas informações
+    save_stats(stats)  # Chama a função que realmente salva no JSON
 
 def default_stats():
     return {
@@ -111,21 +136,37 @@ def default_stats():
         "historico_ciclos_preto_100": [], "historico_ciclos_vermelho_100": [],
         "historico_ciclos_preto_50": [],  "historico_ciclos_vermelho_50": [],
         "ultima_analisada": "", "ultima_uid_ws": "",
-        "contador_alertas": 0, "sequencia_ativa": False, "estrategia_ativa": ""
+        "contador_alertas": 0, "sequencia_ativa": False, "estrategia_ativa": "",
+        "sequencias_alertadas": []  # Este campo foi adicionado
     }
+
 
 def load_stats():
     try:
         with open(ARQUIVO_JSON, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception:
-        return default_stats()
+            stats = json.load(f)
+            # Certifique-se de que a chave sequencias_alertadas existe e é uma lista
+            if 'sequencias_alertadas' not in stats:
+                stats['sequencias_alertadas'] = []  # Garante que a chave exista
+            if 'contador_alertas' not in stats:
+                stats['contador_alertas'] = 0  # Inicializa contador de alertas, se não existir
+            return stats
+    except Exception as e:
+        print(f"[ERRO] Falha ao carregar JSON: {e}")
+        return default_stats()  # Retorna valores padrão se ocorrer erro ao carregar
+
 
 def save_stats(stats):
-    tmp = ARQUIVO_JSON + ".tmp"
-    with open(tmp, 'w', encoding='utf-8') as f:
-        json.dump(stats, f, ensure_ascii=False, indent=4)
-    os.replace(tmp, ARQUIVO_JSON)
+    """Salva as estatísticas no arquivo JSON"""
+    try:
+        tmp = ARQUIVO_JSON + ".tmp"
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(stats, f, ensure_ascii=False, indent=4)
+        os.replace(tmp, ARQUIVO_JSON)  # Substitui o arquivo original
+        print("[INFO] Dados salvos no JSON com sucesso.")
+    except Exception as e:
+        print(f"[ERRO] Falha ao salvar no JSON: {e}")
+
 
 def reconstruir_ws_buffers_de_json(max_itens=100):
     """Recarrega _ws_cores/_ws_horarios a partir do JSON diário (mais antigo -> mais novo), mas só se houver no mínimo 100 jogadas."""
@@ -213,7 +254,7 @@ def boot_inicial():
     iniciar_websocket_fastlane()
 
 def _api_buscar_historico(n=100, timeout=(4, 8)):
-    """Busca até n registros mais recentes via API. Retorna lista normalizada."""
+    """Busca até n registros mais recentes via API. Retorna lista normalizada."""    
     for size in (n, max(150, n), 120, 100, 80):
         try:
             j = requests.get(f"{API_HISTORY_URL}/1", timeout=timeout).json()
@@ -234,14 +275,30 @@ def _api_buscar_historico(n=100, timeout=(4, 8)):
             print("[API] tentativa historico falhou:", e)
     return []
 
-def enviar_mensagem_telegram(mensagem):
+def enviar_mensagem_telegram(mensagem, alarme_tipo, horario):
+    # Enviar mensagem via Telegram
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     try:
         r = requests.post(url, data={"chat_id": CHAT_ID, "text": mensagem})
-        if r.status_code != 200:
-            print(f"[TG] erro: {r.text}")
+        if r.status_code == 200:
+            print(f"[TG] Mensagem enviada com sucesso.")
+            
+            # Atualiza o contador de alertas no JSON
+            stats = load_stats()  # Carrega as estatísticas atuais
+            
+            # Incrementa o contador de alertas
+            stats['contador_alertas'] += 1  # Incrementa o contador de alertas
+            
+            # Adiciona a nova sequência ao histórico de alertas
+            stats.setdefault("sequencias_alertadas", []).insert(0, f"{alarme_tipo} - {horario}")
+            
+            # Salva as alterações no JSON
+            save_stats(stats)  # Chama a função para salvar as estatísticas
+
+        else:
+            print(f"[TG] Erro ao enviar a mensagem: {r.text}")
     except Exception as e:
-        print(f"[TG] erro conexão: {e}")
+        print(f"[TG] Erro ao enviar a mensagem: {e}")
 
 def enviar_alerta(mensagem): enviar_mensagem_telegram(mensagem)
 
@@ -263,12 +320,32 @@ def salvar_em_excel():
         historico_para_planilha = []
         total = len(stats['historico_resultados'])
 
+        # Verificando o tamanho das listas antes de acessar
+        if len(stats['historico_horarios']) < total:
+            total = len(stats['historico_horarios'])
+        if len(stats['historico_entradas']) < total:
+            total = len(stats['historico_entradas'])
+        if len(stats['historico_resultados_binarios']) < total:
+            total = len(stats['historico_resultados_binarios'])
+        if len(stats['historico_probabilidade_100']) < total:
+            total = len(stats['historico_probabilidade_100'])
+        if len(stats['historico_probabilidade_50']) < total:
+            total = len(stats['historico_probabilidade_50'])
+        if len(stats['historico_ciclos_preto_100']) < total:
+            total = len(stats['historico_ciclos_preto_100'])
+        if len(stats['historico_ciclos_vermelho_100']) < total:
+            total = len(stats['historico_ciclos_vermelho_100'])
+        if len(stats['historico_ciclos_preto_50']) < total:
+            total = len(stats['historico_ciclos_preto_50'])
+        if len(stats['historico_ciclos_vermelho_50']) < total:
+            total = len(stats['historico_ciclos_vermelho_50'])
+
         # Adiciona os dados do histórico
         for i in range(1, total):
             historico_para_planilha.append({
                 "Horário": stats['historico_horarios'][i-1] if i-1 < len(stats['historico_horarios']) else "-",
                 "Previsão": stats['historico_entradas'][i],
-                "Resultado": stats['historico_resultados'][i-1],
+                "Resultado": stats['historico_resultados'][i-1] if i-1 < len(stats['historico_resultados']) else "-",
                 "Acertou": "Sim" if stats['historico_resultados_binarios'][i-1] is True
                            else "Não" if stats['historico_resultados_binarios'][i-1] is False else "N/D",
                 "Probabilidade 100": stats['historico_probabilidade_100'][i-1] if i-1 < len(stats['historico_probabilidade_100']) else "-",
@@ -321,15 +398,16 @@ def calcular_estatisticas(cores, limite):
     probabilidade = round((contagem[entrada_valor] / total) * 100, 2)
     return entrada, probabilidade, preto, vermelho
 
+
 def verificar_estrategia_combinada(prob100, prob50, ultima_cor, previsao_anterior=None,
                                    status100=None, status50=None, entrada100=None, horario=None):
-    global ciclos100_vermelhos, ciclos100_preto
-    
+    global ciclos100_vermelhos, ciclos100_preto, sequencia_alerta_ativa, estrategia_disparada  # Incluindo a variável para controlar a sequência
+
     # Atualiza os ciclos de acordo com os últimos resultados
     entrada100, prob100, preto100, vermelho100 = calcular_estatisticas(_ws_cores, 100)
     ciclos100_vermelhos = vermelho100
     ciclos100_preto = preto100
-    
+
     prob100_str = f"{prob100:.2f}"
     prob50_str = f"{prob50:.2f}"
     if not horario:
@@ -337,56 +415,61 @@ def verificar_estrategia_combinada(prob100, prob50, ultima_cor, previsao_anterio
     alarme_emoji = "🔔"
     msg = f"{alarme_emoji} Alerta acionado! {alarme_emoji}\n"
 
+    # Dicionário para associar cores a emojis
     cor_emoji = {"Vermelho": "🔴", "Preto": "⚫", "Branco": "⚪"}
 
-    alarme_tipo = None  # Variável para registrar o tipo de alarme
+    alarme_tipo = None  # Tipo de alarme a ser disparado
+    previsao_cor = None  # Cor da previsão
 
-    # Lógica para verificar os quatro casos possíveis
-    def verificar_probabilidades(prob100, prob50):
-        if prob100 > 50 and prob50 > 50:
-            return f"✔️ Ambas as probabilidades são MAIORES que 50!\n", "Ambas maiores"
-        elif prob100 < 50 and prob50 < 50:
-            return f"✅ Ambas as probabilidades são MENORES que 50!\n", "Ambas menores"
-        elif prob100 <= 50 < prob50:
-            return f"⚠️ Prob50 é MAIOR que 50, mas Prob100 NÃO é!\n", "Prob50 maior"
-        elif prob50 <= 50 < prob100:
-            return f"⚠️ Prob100 é MAIOR que 50, mas Prob50 NÃO é!\n", "Prob100 maior"
-        else:
-            return None
+    # Condições para acionar os alarmes de acordo com as probabilidades
+    if (prob100_str, prob50_str) in ALARM_PROB100_PROB50:
+        alarme_tipo = "⚪️ BRANCO"
+        previsao_cor = "Branco"
+    elif (prob100_str, prob50_str) in ALARM_PROB100:  # Verifica apenas prob100 e prob50 em ALARM_PROB100
+        alarme_tipo = "⚫️ PRETO"
+        previsao_cor = "Preto"
+    elif (prob100_str, prob50_str) in ALARM_PROB50:  # Verifica apenas prob100 e prob50 em ALARM_PROB50
+        alarme_tipo = "🔴 VERMELHO"
+        previsao_cor = "Vermelho"
+    else:
+        alarme_tipo = None  # Nenhum alarme disparado
 
-    # Previsão principal
-    if entrada100:
-        msg += f"{alarme_emoji} Previsão: {cor_emoji.get(entrada100.capitalize(),'❓')} {entrada100}\n"
+    # Se houver previsão, inclui a mensagem
+    if previsao_cor:
+        msg += f"{alarme_emoji} Previsão: {cor_emoji.get(previsao_cor.capitalize(), '❓')} {previsao_cor}\n"
 
-        # Previsão Gale
-        previsao_gale = "Vermelho" if ciclos100_preto == ciclos100_vermelhos else "Preto"
-        msg += f"🎯 Previsão Gale: {cor_emoji.get(previsao_gale,'❓')} {previsao_gale}\n"
-
-    # Infos adicionais
+    # Infos adicionais do alarme
     msg += f"🕒 Hora da jogada: {horario}\n"
     msg += f"🔴 Ciclos Vermelho 100: {ciclos100_vermelhos}\n"
     msg += f"⚫ Ciclos Preto 100: {ciclos100_preto}\n"
 
-
-    # ---------------------------
-    # Verifica alarmes e envia apenas 1 alerta
-    # ---------------------------
-    mensagem, tipo_mensagem = verificar_probabilidades(prob100, prob50)
-    if mensagem:
-        # Só determina tipo e envia alerta se estiver em algum alarme
-        if (prob100_str, prob50_str) in ALARM_PROB100_PROB50:
-            alarme_tipo = "Prob100 & Prob50"
-        elif prob100_str in ALARM_PROB100:
-            alarme_tipo = "Prob100"
-        elif prob50_str in ALARM_PROB50:
-            alarme_tipo = "Prob50"
+    # Função interna para verificar as probabilidades
+    def verificar_probabilidades(prob100, prob50):
+        """Verifica as probabilidades e retorna uma mensagem de alarme e o tipo de mensagem."""
+        if prob100 > 50 and prob50 > 50:
+            return f"✔️ Ambas as probabilidades são MAIORES que 50!\n", "Ambas maiores"
+        elif prob100 < 50 and prob50 < 50:
+            return f"✅ Ambas as probabilidades são MENORES que 50!\n", "Ambas menores"
+        elif prob100 > 50 and prob50 <= 50:
+            return f"⚠️ Prob100 é MAIOR que 50, mas Prob50 NÃO é!\n", "Prob100 maior"
+        elif prob50 > 50 and prob100 <= 50:
+            return f"⚠️ Prob50 é MAIOR que 50, mas Prob100 NÃO é!\n", "Prob50 maior"
         else:
-            alarme_tipo = None  # Nenhum alarme real, não envia
+            return None, None  # Caso não se encaixe em nenhuma das opções acima
 
-        if alarme_tipo:  # Só envia se houver alarme
-            msg += mensagem
-            enviar_alerta(msg + f"Probabilidade 100: {prob100_str}% | Probabilidade 50: {prob50_str}%")
-            return f"Alarme {alarme_tipo}: ({prob100_str}% / {prob50_str}%)", alarme_tipo
+    # Verifica as probabilidades e gera a mensagem de alarme
+    mensagem, tipo_mensagem = verificar_probabilidades(prob100, prob50)
+
+    # Envia a mensagem e atualiza o contador de alarmes
+    if alarme_tipo and mensagem:
+        # Envia a mensagem para o Telegram
+        enviar_mensagem_telegram(msg + f"Probabilidade 100: {prob100_str}% | Probabilidade 50: {prob50_str}%", alarme_tipo, horario)
+        # Atualiza a estratégia e marca como disparada
+        estrategia_disparada = True  # Ativa a variável para indicar que a estratégia foi disparada
+        # Incrementa o contador de alertas
+        stats = load_stats()  # Carrega as estatísticas atuais
+        stats['contador_alertas'] += 1  # Incrementa o contador de alertas
+        save_stats(stats)  # Salva as alterações no JSON
 
 
     return None, None
@@ -418,6 +501,7 @@ def _ws_try_extract_full(body):
             round_id = rid
     return cor, created_at, numero, round_id
 
+# Se for uma execução inicial, passe bootstrap=True
 def processar_resultado_ws_fast(cor, created_at_iso=None, numero=None, round_id=None, bootstrap=False):
     """Atualiza buffers/estatísticas e persiste no JSON; controla alarmes com janela mínima."""
     global _ws_last_uid, _printed_uid
@@ -449,7 +533,7 @@ def processar_resultado_ws_fast(cor, created_at_iso=None, numero=None, round_id=
         entrada50,  prob50,  preto50,  vermelho50  = calcular_estatisticas(_ws_cores, 50)
         janela_ok = _pode_disparar_alarme()
 
-        stats = load_stats()
+        stats = load_stats()  # Carrega as estatísticas atuais
         previsao_anterior = stats['historico_entradas'][0] if stats.get('historico_entradas') else None
 
         if (not bootstrap) and janela_ok:
@@ -466,9 +550,11 @@ def processar_resultado_ws_fast(cor, created_at_iso=None, numero=None, round_id=
             if previsao_anterior is not None:
                 cor_prevista = 2 if previsao_anterior == "PRETO" else 1
                 if cor == cor_prevista or cor == 0:
-                    resultado_binario = True;  stats['acertos'] += 1
+                    resultado_binario = True
+                    stats['acertos'] += 1
                 else:
-                    resultado_binario = False; stats['erros'] += 1
+                    resultado_binario = False
+                    stats['erros'] += 1
 
             ultima_nome = _ws_cor_nome(cor)
             stats['historico_entradas'].insert(0, entrada100)
@@ -486,7 +572,7 @@ def processar_resultado_ws_fast(cor, created_at_iso=None, numero=None, round_id=
             stats['ultima_uid_ws'] = uid
 
             if estrategia_disparada:
-                stats['contador_alertas'] += 1
+                stats['contador_alertas'] += 1  # Incrementa o contador de alertas
                 stats['sequencia_ativa'] = True
                 stats['estrategia_ativa'] = estrategia_disparada
                 stats.setdefault("sequencias_alertadas", []).insert(0, f"{estrategia_disparada} - {horario}")
@@ -500,7 +586,7 @@ def processar_resultado_ws_fast(cor, created_at_iso=None, numero=None, round_id=
                 stats['sequencia_ativa'] = False
                 stats['estrategia_ativa'] = ""
 
-            save_stats(stats)
+            save_stats(stats)  # Chama a função para salvar as estatísticas
 
     count_atual = max(len(_ws_cores), len(load_stats().get('historico_resultados', [])))
     nome_estrategia = (f"Aguardando {MIN_RODADAS_PARA_ALARME} jogadas ({count_atual}/{MIN_RODADAS_PARA_ALARME})"
@@ -668,9 +754,9 @@ def render_somente_cache():
             len(stats.get('historico_resultados_binarios', [])) + 1)
     for i in range(1, n):
         historico_completo.append({
-            "horario": stats['historico_horarios'][i-1],
+            "horario": stats['historico_horarios'][i-1] if i-1 < len(stats['historico_horarios']) else "-",
             "previsao": stats['historico_entradas'][i],
-            "resultado": stats['historico_resultados'][i-1],
+            "resultado": stats['historico_resultados'][i-1] if i-1 < len(stats['historico_resultados']) else "-",
             "icone": "✅" if stats['historico_resultados_binarios'][i-1] is True
                      else "❌" if stats['historico_resultados_binarios'][i-1] is False else "?",
         })
@@ -731,7 +817,7 @@ def index():
                     "previsao":  stats['historico_entradas'][i],
                     "resultado": stats['historico_resultados'][i - 1],
                     "icone": "✅" if stats['historico_resultados_binarios'][i - 1] is True
-                             else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?"
+                             else "❌" if stats['historico_resultados_binarios'][i - 1] is False else "?",
                 })
 
             return render_template_string(
@@ -739,7 +825,7 @@ def index():
                 entrada=entrada100,
                 sequencia_atual=f"Prob100: {prob100} | Prob50: {prob50}",
                 ciclos100_preto=preto100, ciclos100_vermelho=vermelho100,
-                ciclos50_preto=preto50,  ciclos50_vermelho=vermelho50,
+                ciclos50_preto=preto50, ciclos50_vermelho=vermelho50,
                 ultima=ultima_nome, probabilidade100=prob100, probabilidade50=prob50,
                 ultimas=ultimas, ultimos_horarios=ultimos_horarios, horario=horario,
                 acertos=stats['acertos'], erros=stats['erros'],
@@ -854,7 +940,7 @@ TEMPLATE = '''
 </head>
 <body>
 <div class="container">
-    <div class="alerta-grande" id="alerta">
+    <div class="alerta-grande" id="alerta" style="display: none;">
         🚨 Estratégia Acionada 🚨
         <button onclick="pararAlarme()">🔇 Silenciar Alarme</button>
     </div>
@@ -874,7 +960,7 @@ TEMPLATE = '''
                 📊 Ciclos (50 rodadas) — Preto: {{ ciclos50_preto }} | Vermelho: {{ ciclos50_vermelho }}
             </div>
             <hr>
-            <div class="info">✅ Direto: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%</div>
+            <div class="info">✅ Acertos: {{ acertos }} | ❌ Erros: {{ erros }} | 🎯 Taxa: {{ taxa_acerto }}%</div>
             <hr>
             <div style="text-align:center;margin-top:10px;">
                 <span style="font-size:16px;color:#cc0000;">🔔 Contador de Alarmes: <strong id="contador-alertas">{{ contador_alertas }}</strong></span>
@@ -915,26 +1001,43 @@ TEMPLATE = '''
     </div>
 </div>
 <script>
-let audio=null;
-document.addEventListener("DOMContentLoaded",function(){
-    const alerta=document.getElementById("alerta");
-    const ultimaRodada="{{ horario }}";
-    const chave_silenciada="silenciado_para_rodada";
-    const rodada_silenciada=localStorage.getItem(chave_silenciada);
-    if ({{ sequencia_detectada | tojson }} && rodada_silenciada!==ultimaRodada){
-        alerta.style.display="block";
-        if(!window.audio || window.audio_rodada!==ultimaRodada){
-            try{
-                window.audio=new Audio("{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}");
-                window.audio.loop=true; window.audio.play(); window.audio_rodada=ultimaRodada;
-            }catch(e){ console.log("Erro ao tocar o áudio:",e); }
+let audio = null;
+
+document.addEventListener("DOMContentLoaded", function() {
+    const alerta = document.getElementById("alerta");
+    const ultimaRodada = "{{ horario }}";
+    const chave_silenciada = "silenciado_para_rodada";
+    const rodada_silenciada = localStorage.getItem(chave_silenciada);
+
+    // Verifica se a sequência foi detectada e se o alarme não foi silenciado para esta rodada
+    if ({{ sequencia_detectada | tojson }} && rodada_silenciada !== ultimaRodada) {
+        alerta.style.display = "block";
+        
+        // Tocar o áudio somente se ele não estiver tocando já para a rodada atual
+        if (!window.audio || window.audio_rodada !== ultimaRodada) {
+            try {
+                window.audio = new Audio("{{ url_for('static', filename='ENTRADA_CONFIRMADA.mp3') }}");
+                window.audio.loop = true;
+                window.audio.play();
+                window.audio_rodada = ultimaRodada;
+            } catch (e) {
+                console.log("Erro ao tocar o áudio:", e);
+            }
         }
-    } else { alerta.style.display="none"; }
+    } else {
+        alerta.style.display = "none";  // Se não for alarme, esconde o alerta
+    }
 });
-function pararAlarme(){
-    if(window.audio){ window.audio.pause(); window.audio.currentTime=0; }
-    document.getElementById("alerta").style.display="none";
-    const rodadaAtual="{{ horario }}"; localStorage.setItem("silenciado_para_rodada", rodadaAtual);
+
+// Função para parar o alarme (pausar o áudio)
+function pararAlarme() {
+    if (window.audio) {
+        window.audio.pause();
+        window.audio.currentTime = 0;
+    }
+    document.getElementById("alerta").style.display = "none";
+    const rodadaAtual = "{{ horario }}";
+    localStorage.setItem("silenciado_para_rodada", rodadaAtual);  // Marca a rodada como silenciada
 }
 </script>
 </body>
@@ -955,4 +1058,3 @@ if __name__ == '__main__':
 
     # Flask
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
-

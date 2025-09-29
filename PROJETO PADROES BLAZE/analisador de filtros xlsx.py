@@ -8,15 +8,15 @@ import time
 # =========================
 # UI helpers
 # =========================
-def escolher_arquivo():
+def escolher_arquivos():
     root = Tk()
     root.withdraw()
-    caminho = filedialog.askopenfilename(
-        title="Selecione o arquivo Excel",
+    caminhos = filedialog.askopenfilenames(
+        title="Selecione os arquivos Excel",
         filetypes=[("Excel files", "*.xlsx")]
     )
     root.quit()
-    return caminho
+    return caminhos
 
 def perguntar_tipo_assertividade():
     root = Tk(); root.withdraw()
@@ -126,19 +126,11 @@ def perguntar_min_total():
 # =========================
 
 def _detectar_coluna_verificacao(df):
-    candidatos = [
-        "Verificação", "Verificacao", "verificação", "verificacao",
-        "Resultado", "Status", "Check", "Outcome",
-        "Verificação Branco", "Verificacao Branco"
-    ]
+    candidatos = ["acerto_erro"]
     for c in candidatos:
         if c in df.columns:
             return c
-    for col in df.columns:
-        low = col.lower()
-        if ("verific" in low) or ("result" in low) or ("status" in low) or ("outcome" in low) or ("check" in low):
-            return col
-    raise ValueError("Não encontrei coluna de verificação (ex.: 'Verificação', 'Resultado', 'Status').")
+    raise ValueError("Não encontrei a coluna de acerto/erro.")
 
 def analisar_combinacoes_fast(df, colunas_iterar, filtros_fixos, min_acerto=90, min_total=1, tipo_assertividade="1"):
     if not isinstance(colunas_iterar, list):
@@ -158,12 +150,10 @@ def analisar_combinacoes_fast(df, colunas_iterar, filtros_fixos, min_acerto=90, 
     # 3) Define tokens conforme tipo escolhido
     s = df_work[col_verif].astype(str).str.strip().str.lower()
     if tipo_assertividade == "2":
-        success_tokens = {"branco direto", "branco gale"}
+        success_tokens = {"acerto branco"}
     else:
-        success_tokens = {
-            "acerto direto", "acerto gale", "acerto", "win", "verde",
-            "branco direto", "branco gale"
-        }
+        success_tokens = {"acerto", "acerto branco"}
+
     df_work["is_acerto"] = s.isin(success_tokens).astype("int8")
 
     # 4) Resumo único
@@ -192,8 +182,8 @@ def analisar_combinacoes_fast(df, colunas_iterar, filtros_fixos, min_acerto=90, 
     agg["Acerto (%)"] = (agg["acertos"] / agg["total"] * 100).round(2)
     agg["Erro (%)"] = (agg["erros"] / agg["total"] * 100).round(2)
 
-    out = agg.loc[
-        (agg["Acerto (%)"] >= float(min_acerto)) &
+    out = agg.loc[ 
+        (agg["Acerto (%)"] >= float(min_acerto)) & 
         (agg["total"] >= int(min_total))
     ].copy()
 
@@ -212,67 +202,52 @@ def analisar_combinacoes_fast(df, colunas_iterar, filtros_fixos, min_acerto=90, 
 def main():
     start_time = time.time()
 
-    caminho_arquivo = escolher_arquivo()
-    if not (caminho_arquivo and os.path.exists(caminho_arquivo)):
-        print("❌ Nenhum arquivo selecionado ou caminho inválido.")
+    caminhos_arquivos = escolher_arquivos()
+    if not caminhos_arquivos:
+        print("❌ Nenhum arquivo selecionado.")
         return
 
-    try:
-        df = pd.read_excel(caminho_arquivo, engine="openpyxl")
-    except Exception as e:
-        print(f"❌ Erro ao ler o Excel: {e}")
-        return
-
-    colunas_iterar = selecionar_colunas_iteracao(df)
-    filtros_fixos = coletar_filtros_fixos(df)
+    # Perguntar as configurações de análise
+    colunas_iterar = selecionar_colunas_iteracao(pd.read_excel(caminhos_arquivos[0]))
+    filtros_fixos = coletar_filtros_fixos(pd.read_excel(caminhos_arquivos[0]))
     min_acerto = perguntar_min_acerto()
     min_total = perguntar_min_total()
     tipo_assertividade = perguntar_tipo_assertividade()
 
-    try:
-        df_resultado = analisar_combinacoes_fast(
-            df,
-            colunas_iterar=colunas_iterar,
-            filtros_fixos=filtros_fixos,
-            min_acerto=min_acerto,
-            min_total=min_total,
-            tipo_assertividade=tipo_assertividade
-        )
-    except ValueError as e:
-        messagebox.showerror("Erro", str(e))
-        print(f"❌ {e}")
-        return
-    except Exception as e:
-        messagebox.showerror("Erro inesperado", str(e))
-        print(f"❌ Erro inesperado: {e}")
-        return
-
-    base_name = "resultado_combinacoes_fast"
-    if colunas_iterar:
-        base_name += "_" + "_".join([str(c).replace(" ", "_") for c in colunas_iterar])
-    base_name += f"_min{int(min_total)}_{int(min_acerto)}pct"
-
-    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", f"{base_name}.xlsx")
-    try:
-        df_resultado.to_excel(desktop_path, index=False)
-        ok_msg = (
-            f"✅ Arquivo salvo com sucesso em:\n{desktop_path}\n\n"
-            f"Colunas iteradas: {colunas_iterar if colunas_iterar else 'nenhuma'}\n"
-            f"Filtros fixos: {filtros_fixos if filtros_fixos else 'nenhum'}\n"
-            f"Mínimo de acerto: {min_acerto:.2f}% | Mínimo de amostras: {min_total}\n"
-            f"Tipo de assertividade: {'Apenas Brancos' if tipo_assertividade=='2' else 'Comum'}"
-        )
+    # Análise para cada arquivo
+    for caminho_arquivo in caminhos_arquivos:
         try:
-            messagebox.showinfo("Concluído", ok_msg)
-        except Exception:
-            pass
-        print(ok_msg)
-    except Exception as e:
+            df = pd.read_excel(caminho_arquivo, engine="openpyxl")
+        except Exception as e:
+            print(f"❌ Erro ao ler o Excel: {e}")
+            continue
+
         try:
-            messagebox.showerror("Erro ao salvar", str(e))
-        except Exception:
-            pass
-        print(f"❌ Erro ao salvar: {e}")
+            df_resultado = analisar_combinacoes_fast(
+                df,
+                colunas_iterar=colunas_iterar,
+                filtros_fixos=filtros_fixos,
+                min_acerto=min_acerto,
+                min_total=min_total,
+                tipo_assertividade=tipo_assertividade
+            )
+        except ValueError as e:
+            messagebox.showerror("Erro", str(e))
+            print(f"❌ {e}")
+            continue
+        except Exception as e:
+            messagebox.showerror("Erro inesperado", str(e))
+            print(f"❌ Erro inesperado: {e}")
+            continue
+
+        base_name = f"resultado_combinacoes_{os.path.basename(caminho_arquivo)}"
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop","combinações dados", base_name)
+        
+        try:
+            df_resultado.to_excel(desktop_path, index=False)
+            print(f"✅ Arquivo salvo com sucesso em:\n{desktop_path}")
+        except Exception as e:
+            print(f"❌ Erro ao salvar: {e}")
 
     elapsed_time = time.time() - start_time
     print(f"⏱️ Tempo de execução: {elapsed_time:.2f} segundos")
