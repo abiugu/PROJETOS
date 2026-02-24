@@ -14,7 +14,7 @@ USER_AGENTS = [
 ]
 
 START_DATE = "2025-01-01T04:00:00.000Z"
-END_DATE = "2025-09-29T00:41:39.977Z"
+END_DATE = "2025-11-10T00:41:39.977Z"
 
 def traduzir_cor(cor):
     return {0: "white", 1: "red", 2: "black"}.get(cor, "unknown")
@@ -62,7 +62,7 @@ def salvar_dados_em_planilha(records):
             record["color"] = traduzir_cor(record["color"])
 
     desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    caminho_arquivo = os.path.join(desktop, "historico_blaze_setembro.xlsx")
+    caminho_arquivo = os.path.join(desktop, "historico_blaze_dezembro.xlsx")
 
     df = pd.DataFrame(records)
     df.to_excel(caminho_arquivo, index=False)

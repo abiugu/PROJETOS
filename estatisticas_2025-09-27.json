@@ -1,7 +1,8 @@
 {
     "acertos": 2176,
-    "erros": 1862,
+    "erros": 1863,
     "historico_entradas": [
+        "PRETO",
         "PRETO",
         "PRETO",
         "VERMELHO",
@@ -4043,6 +4044,7 @@
         "PRETO"
     ],
     "historico_resultados": [
+        "VERMELHO",
         "PRETO",
         "PRETO",
         "VERMELHO",
@@ -8084,6 +8086,7 @@
         "VERMELHO"
     ],
     "historico_horarios": [
+        "21:42:40",
         "21:42:10",
         "21:41:39",
         "21:41:09",
@@ -12125,6 +12128,7 @@
         "11:58:12"
     ],
     "historico_resultados_binarios": [
+        false,
         true,
         false,
         true,
@@ -16167,6 +16171,7 @@
     ],
     "historico_probabilidade_100": [
         52.81,
+        52.81,
         51.69,
         49.44,
         49.44,
@@ -20207,6 +20212,7 @@
         48.35
     ],
     "historico_probabilidade_50": [
+        62.22,
         62.22,
         60.0,
         60.0,
@@ -24250,6 +24256,7 @@
     "historico_ciclos_preto_100": [
         20,
         20,
+        20,
         19,
         19,
         19,
@@ -28289,6 +28296,7 @@
         27
     ],
     "historico_ciclos_vermelho_100": [
+        20,
         20,
         20,
         20,
@@ -32338,6 +32346,7 @@
         10,
         10,
         10,
+        10,
         9,
         9,
         10,
@@ -36377,6 +36386,7 @@
         10,
         10,
         10,
+        10,
         9,
         10,
         10,
@@ -40411,8 +40421,8 @@
         15,
         15
     ],
-    "ultima_analisada": "2025-09-29T00:42:10.129Z",
-    "ultima_uid_ws": "2025-09-29T00:42:10.129Z",
+    "ultima_analisada": "2025-09-29T00:42:40.196Z",
+    "ultima_uid_ws": "2025-09-29T00:42:40.196Z",
     "contador_alertas": 0,
     "sequencia_ativa": false,
     "estrategia_ativa": "",

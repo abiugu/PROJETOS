@@ -122,21 +122,22 @@ def perguntar_min_total():
             messagebox.showerror("Valor inválido", "Digite um número inteiro (>=1).")
 
 # =========================
-# Núcleo rápido (vetorizado)
+# Núcleo de análise adaptado
 # =========================
 
 def _detectar_coluna_verificacao(df):
-    candidatos = ["acerto_erro", "assertividade"]  # Adicionando "assertividade"
-    for c in candidatos:
-        if c in df.columns:
-            return c
-    raise ValueError("Não encontrei a coluna de acerto/erro.")
+    obrigatorias = ["Cor", "Previsão"]
+    for col in obrigatorias:
+        if col not in df.columns:
+            raise ValueError(f"A planilha deve conter a coluna '{col}'.")
+    return True
+
 
 def analisar_combinacoes_fast(df, colunas_iterar, filtros_fixos, min_acerto=90, min_total=1, tipo_assertividade="1"):
     if not isinstance(colunas_iterar, list):
         colunas_iterar = list(colunas_iterar) if colunas_iterar else []
 
-    # 1) Filtros fixos
+    # 1) Aplicar filtros fixos
     df_work = df.copy()
     for col, val in (filtros_fixos or {}).items():
         if col in df_work.columns:
@@ -144,31 +145,47 @@ def analisar_combinacoes_fast(df, colunas_iterar, filtros_fixos, min_acerto=90, 
     if df_work.empty:
         return pd.DataFrame()
 
-    # 2) Detecta coluna de verificação
-    col_verif = _detectar_coluna_verificacao(df_work)
+    # 2) Verifica se colunas obrigatórias existem
+    _detectar_coluna_verificacao(df_work)
 
-    # 3) Define tokens conforme tipo escolhido
-    s = df_work[col_verif].astype(str).str.strip().str.lower()
-    
-    # Para o tipo de assertividade 1 (todos os acertos)
-    if tipo_assertividade == "1":
-        # Tokens para qualquer tipo de "acerto", incluindo "acerto direto", "acerto gale", "acerto branco", etc.
-        success_tokens = {"acerto direto", "acerto gale", "acerto branco"}
-    else:
-        # Apenas "acerto branco"
-        success_tokens = {"acerto branco"}
+    # 3) Normalização de valores (aceita PT/EN)
+    mapping = {
+        "preto": "black", "black": "black",
+        "vermelho": "red", "red": "red",
+        "branco": "white", "white": "white"
+    }
 
-    # Definindo se é um acerto ou erro com base nos tokens
-    df_work["is_acerto"] = s.isin(success_tokens).astype("int8")
+    def norm_col(serie):
+        s = serie.astype(str).str.strip().str.lower()
+        return s.map(mapping).fillna(s)
 
-    # 4) Resumo único (caso não tenha colunas para iterar)
+    df_work["cor_norm"] = norm_col(df_work["Cor"])
+    df_work["previsao_norm"] = norm_col(df_work["Previsão"])
+
+    # 4) Gera lista para comparação das duas jogadas seguintes
+    cores = df_work["cor_norm"].tolist()
+    previsoes = df_work["previsao_norm"].tolist()
+
+    resultados = []
+    for i in range(len(df_work)):
+        previsao = previsoes[i]
+        prox1 = cores[i + 1] if i + 1 < len(cores) else None
+        prox2 = cores[i + 2] if i + 2 < len(cores) else None
+        # Se a previsão aparecer em uma das duas próximas cores, conta como acerto
+        resultados.append(1 if previsao in (prox1, prox2) else 0)
+
+    df_work["is_acerto"] = resultados
+
+    # 5) Caso não haja colunas para iterar, faz resumo único
     if not colunas_iterar:
         total = len(df_work)
         acertos = int(df_work["is_acerto"].sum())
-        erros = int(total - acertos)
+        erros = total - acertos
         perc = round(acertos / total * 100, 2) if total else 0.0
+
         if perc < float(min_acerto) or total < int(min_total):
             return pd.DataFrame()
+
         return pd.DataFrame([{
             "Total Entradas": total,
             "Acertos": acertos,
@@ -177,32 +194,33 @@ def analisar_combinacoes_fast(df, colunas_iterar, filtros_fixos, min_acerto=90, 
             "Erro (%)": round(100 - perc, 2),
         }])
 
-    # 5) Agrupamento
+    # 6) Agrupamento conforme colunas selecionadas
     for col in colunas_iterar:
         if col in df_work.columns:
             df_work[col] = df_work[col].astype("category")
+
     g = df_work.groupby(colunas_iterar, observed=True, sort=False)
     agg = g["is_acerto"].agg(total="count", acertos="sum").reset_index()
     agg["erros"] = agg["total"] - agg["acertos"]
     agg["Acerto (%)"] = (agg["acertos"] / agg["total"] * 100).round(2)
     agg["Erro (%)"] = (agg["erros"] / agg["total"] * 100).round(2)
 
-    # Filtra com base no mínimo de acerto e total
-    out = agg.loc[ 
-        (agg["Acerto (%)"] >= float(min_acerto)) & 
+    # 7) Filtra combinações que atingem critérios mínimos
+    out = agg.loc[
+        (agg["Acerto (%)"] >= float(min_acerto)) &
         (agg["total"] >= int(min_total))
     ].copy()
 
-    # Renomeando as colunas para melhor entendimento
+    # 8) Ajusta colunas e ordena
     out = out.rename(columns={
         "total": "Total Entradas",
         "acertos": "Acertos",
         "erros": "Erros",
     })
-
-    # Ordena o DataFrame pela porcentagem de acertos e pelo total de entradas
     out = out.sort_values(["Acerto (%)", "Total Entradas"], ascending=[False, False], ignore_index=True)
+
     return out
+
 # =========================
 # Execução principal
 # =========================
@@ -214,14 +232,14 @@ def main():
         print("❌ Nenhum arquivo selecionado.")
         return
 
-    # Perguntar as configurações de análise
+    # Perguntar configurações de análise
     colunas_iterar = selecionar_colunas_iteracao(pd.read_excel(caminhos_arquivos[0]))
     filtros_fixos = coletar_filtros_fixos(pd.read_excel(caminhos_arquivos[0]))
     min_acerto = perguntar_min_acerto()
     min_total = perguntar_min_total()
     tipo_assertividade = perguntar_tipo_assertividade()
 
-    # Análise para cada arquivo
+    # Processa cada arquivo
     for caminho_arquivo in caminhos_arquivos:
         try:
             df = pd.read_excel(caminho_arquivo, engine="openpyxl")
@@ -247,9 +265,11 @@ def main():
             print(f"❌ Erro inesperado: {e}")
             continue
 
+        # Salva resultado
         base_name = f"resultado_combinacoes_{os.path.basename(caminho_arquivo)}"
-        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop","combinações dados", base_name)
-        
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop", "combinações dados", base_name)
+        os.makedirs(os.path.dirname(desktop_path), exist_ok=True)
+
         try:
             df_resultado.to_excel(desktop_path, index=False)
             print(f"✅ Arquivo salvo com sucesso em:\n{desktop_path}")

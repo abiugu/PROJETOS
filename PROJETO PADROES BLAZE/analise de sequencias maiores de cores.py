@@ -1,238 +1,286 @@
 import requests
-from datetime import datetime, timedelta
 import time
-import threading
+import pandas as pd
+from datetime import datetime, timedelta, timezone
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
-from openpyxl import Workbook
 import os
-import random
+import threading
 
-# ============================================================
-# 📌 Função para baixar dados da Blaze (API UTC)
-# ============================================================
-def obter_dados_blaze(start_date, end_date):
-    # Datas escolhidas no Brasil (UTC-3)
-    start_local = datetime.strptime(start_date, "%Y-%m-%d")
-    end_local   = datetime.strptime(end_date, "%Y-%m-%d")
+# =====================================================
+# CONFIGURAÇÕES
+# =====================================================
+URL_BASE = "https://blaze.bet.br/api/singleplayer-originals/originals/roulette_games/recent/history/1"
+DESKTOP_PATH = os.path.join(os.path.expanduser("~"), "Desktop")
+OUTPUT_FILE = os.path.join(DESKTOP_PATH, "sequencias_blaze.xlsx")
 
-    # Converter para UTC
-    start_utc = start_local + timedelta(hours=3)
+# =====================================================
+# COR
+# =====================================================
+def cor_nome(c):
+    return {0: "White", 1: "Red", 2: "Black"}.get(c, "Unknown")
 
-    end_utc_teorico = end_local + timedelta(days=1, hours=3) - timedelta(milliseconds=1)
-    agora_utc = datetime.utcnow()
-    end_utc = min(end_utc_teorico, agora_utc)
-
-    start = start_utc.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-    end   = end_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
-
-    print("\n🧠 Janela da API (UTC):")
-    print("START:", start)
-    print("END  :", end)
-
-    url = "https://blaze.bet.br/api/singleplayer-originals/originals/roulette_games/recent/history/1"
+# =====================================================
+# COLETA DA API
+# =====================================================
+def coletar_dados_blaze(start_date, end_date):
+    registros = []
     page = 1
-    all_records = []
+
+    print("\n🚀 Iniciando análise de páginas da API Blaze")
+    print(f"📅 Período: {start_date} → {end_date}\n")
 
     while True:
-        print(f"📄 Página {page}")
-        params = {"startDate": start, "endDate": end, "page": page}
-
+        print(f"📄 Baixando página {page}...")
         tentativas = 0
-        while tentativas < 5:
+
+        while tentativas < 10:
             try:
-                r = requests.get(
-                    url,
-                    params=params,
-                    headers={"User-Agent": random.choice(["Mozilla", "Chrome", "Safari"])},
-                    timeout=10
-                )
+                url = f"{URL_BASE}?startDate={start_date}&endDate={end_date}&page={page}"
+                r = requests.get(url, timeout=20)
 
-                if r.status_code == 429:
+                if r.status_code == 200:
+                    data = r.json().get("records", [])
+                    if not data:
+                        print("✅ Página vazia encontrada — fim da coleta\n")
+                        return registros
+
+                    registros.extend(data)
+                    print(f"✅ Página {page} OK — {len(data)} registros")
+                    page += 1
+                    time.sleep(1)
+                    break
+                else:
                     tentativas += 1
-                    print("⚠️ 429 — aguardando 2s")
-                    time.sleep(2)
-                    continue
-
-                r.raise_for_status()
-                dados = r.json()
-
-                if not dados:
-                    print("⛔ Fim dos dados.")
-                    return all_records
-
-                all_records.extend(dados)
-                page += 1
-                time.sleep(1)
-                break
+                    print(f"⚠️ HTTP {r.status_code} — tentativa {tentativas}/5")
+                    time.sleep(2.5)
 
             except Exception as e:
                 tentativas += 1
-                print("❌ Erro:", e)
-                time.sleep(2)
+                print(f"⚠️ Erro {e} — tentativa {tentativas}/5")
+                time.sleep(2.5)
 
-        else:
-            print("⛔ 429 consecutivo detectado.")
-            print("📌 Assumindo fim dos dados da API.")
-            print(f"📊 Total coletado: {len(all_records)}\n")
-            return all_records  
+        if tentativas >= 10:
+            print("❌ Falha definitiva. Encerrando coleta.")
+            return registros
 
+# =====================================================
+# DATAFRAME BASE
+# =====================================================
+def records_para_df(records):
+    linhas = []
 
-# ============================================================
-# 📌 Agrupar por data/hora do BRASIL (UTC-3)
-# ============================================================
-def agrupar_por_horario(registros):
-    dias = {}
-
-    for r in registros:
-        # 🔁 Converter UTC → Brasil
+    for r in records:
         dt_utc = datetime.fromisoformat(r["created_at"].replace("Z", "+00:00"))
-        dt_br  = dt_utc - timedelta(hours=3)
+        dt = dt_utc.astimezone(timezone(timedelta(hours=-3)))
 
-        dia = dt_br.date().isoformat()
-        hora = dt_br.strftime("%H:%M")
+        linhas.append({
+            "DataHora": dt,                 # 🔑 chave real
+            "Data": dt.date(),              # só data (excel)
+            "Horário": dt.strftime("%H:%M"),
+            "Cor": cor_nome(r["color"])
+        })
 
-        color = r["color"]
-        if color == 0:
-            cor = "white"
-        elif color == 1:
-            cor = "red"
-        elif color == 2:
-            cor = "black"
-        else:
-            continue
-
-        dias.setdefault(dia, {}).setdefault(hora, []).append(cor)
-
-    return dias
+    return pd.DataFrame(linhas).sort_values("DataHora")
 
 
-# ============================================================
-# 📌 Cor dominante
-# ============================================================
-def cor_dominante(lista):
-    if len(lista) == 1:
-        return lista[0]
-    if len(lista) >= 2 and lista[0] == lista[1]:
-        return lista[0]
-    return None
+# =====================================================
+# ANÁLISE DE SEQUÊNCIAS
+# =====================================================
+def analisar_sequencias(df, minimo):
+    resultados = []
 
-
-# ============================================================
-# 📌 Sequências
-# ============================================================
-def encontrar_sequencias(dias):
-    sequencias = []
-
-    datas = sorted(dias.keys())
-    horarios = sorted({h for d in dias for h in dias[d]})
-
-    for h in horarios:
-        ultima_cor = None
+    for horario, grupo_h in df.groupby("Horário"):
+        cor_base = None
         inicio = None
-        contador = 0
-        dia_ant = None
+        ultimo_dia = None
+        cont = 0
 
-        for d in datas:
-            cor = dias[d].get(h)
+        for data, grupo_d in grupo_h.groupby("Data"):
+            cores = grupo_d["Cor"].tolist()
+            datahora_quebra = grupo_d["DataHora"].max()
 
-            if cor == ultima_cor and cor:
-                contador += 1
+            # valida cor do dia
+            if len(cores) == 1 and cores[0] in ["Red", "Black"]:
+                cor_dia = cores[0]
+            elif len(cores) == 2 and cores[0] == cores[1] and cores[0] in ["Red", "Black"]:
+                cor_dia = cores[0]
             else:
-                if contador > 0:
-                    sequencias.append((h, ultima_cor, inicio, dia_ant, contador))
-                if cor:
-                    ultima_cor = cor
-                    inicio = d
-                    contador = 1
-                else:
-                    ultima_cor = None
-                    inicio = None
-                    contador = 0
+                cor_dia = None
 
-            dia_ant = d
+            # quebra por pulo de dia
+            if ultimo_dia and data != ultimo_dia + timedelta(days=1):
+                if cor_base and cont >= minimo:
+                    resultados.append({
+                        "Horário": horario,
+                        "Cor base": cor_base,
+                        "Data inicial": inicio,
+                        "Data final": ultimo_dia,
+                        "Dias consecutivos": cont,
+                        "Data quebra": data,
+                        "Dupla quebra": " + ".join(cores),
 
-        if contador > 0:
-            sequencias.append((h, ultima_cor, inicio, dia_ant, contador))
+                        "Últimas 10": calcular_percentuais(df, datahora_quebra, 10),
+                        "Últimas 25": calcular_percentuais(df, datahora_quebra, 25),
+                        "Últimas 50": calcular_percentuais(df, datahora_quebra, 50),
+                        "Últimas 100": calcular_percentuais(df, datahora_quebra, 100),
+                    })
+                cor_base = None
+                cont = 0
 
-    return sequencias
+            # quebra por white ou cor inválida
+            if cor_dia is None:
+                if cor_base and cont >= minimo:
+                    resultados.append({
+                        "Horário": horario,
+                        "Cor base": cor_base,
+                        "Data inicial": inicio,
+                        "Data final": ultimo_dia,
+                        "Dias consecutivos": cont,
+                        "Data quebra": data,
+                        "Dupla quebra": " + ".join(cores),
 
+                        "Últimas 10": calcular_percentuais(df, datahora_quebra, 10),
+                        "Últimas 25": calcular_percentuais(df, datahora_quebra, 25),
+                        "Últimas 50": calcular_percentuais(df, datahora_quebra, 50),
+                        "Últimas 100": calcular_percentuais(df, datahora_quebra, 100),
+                    })
 
-# ============================================================
-# 📌 Excel
-# ============================================================
-def exportar_excel(seqs):
-    caminho = os.path.join(os.path.expanduser("~"), "Desktop", "sequencias_horarios.xlsx")
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Sequências"
+                cor_base = None
+                cont = 0
+                ultimo_dia = data
+                continue
 
-    ws.append(["Horário (BR)", "Cor", "Data Início", "Data Fim", "Dias Seguidos"])
-    for s in seqs:
-        ws.append(s)
+            if cor_base is None:
+                cor_base = cor_dia
+                inicio = data
+                cont = 1
+            elif cor_dia == cor_base:
+                cont += 1
+            else:
+                if cont >= minimo:
+                    resultados.append({
+                        "Horário": horario,
+                        "Cor base": cor_base,
+                        "Data inicial": inicio,
+                        "Data final": ultimo_dia,
+                        "Dias consecutivos": cont,
+                        "Data quebra": data,
+                        "Dupla quebra": " + ".join(cores),
 
-    wb.save(caminho)
-    return caminho
+                        "Últimas 10": calcular_percentuais(df, datahora_quebra, 10),
+                        "Últimas 25": calcular_percentuais(df, datahora_quebra, 25),
+                        "Últimas 50": calcular_percentuais(df, datahora_quebra, 50),
+                        "Últimas 100": calcular_percentuais(df, datahora_quebra, 100),
+                    })
 
+                cor_base = cor_dia
+                inicio = data
+                cont = 1
 
-# ============================================================
-# 📌 Processo principal
-# ============================================================
-def rodar():
+            ultimo_dia = data
+
+    return pd.DataFrame(resultados)
+
+# =====================================================
+# EXECUÇÃO
+# =====================================================
+def executar():
     try:
-        inicio = inicio_cal.get_date().strftime("%Y-%m-%d")
-        fim    = fim_cal.get_date().strftime("%Y-%m-%d")
-        minimo = int(entrada_minimo.get())
+        data_ini_local = datetime.combine(
+            cal_ini.get_date(),
+            datetime.min.time()
+        ).replace(tzinfo=timezone(timedelta(hours=-3)))
 
-        registros = obter_dados_blaze(inicio, fim)
+        data_fim_local = datetime.combine(
+            cal_fim.get_date(),
+            datetime.max.time()
+        ).replace(tzinfo=timezone(timedelta(hours=-3)))
 
-        if not registros:
-            messagebox.showwarning("Aviso", "Nenhum dado encontrado.")
-            return
+        ini = data_ini_local.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        fim = data_fim_local.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.999Z")
 
-        dias = agrupar_por_horario(registros)
+        minimo = int(entry_min.get())
+    except:
+        messagebox.showerror("Erro", "Preencha corretamente o mínimo de dias")
+        return
 
-        dias_proc = {}
-        for d in dias:
-            for h in dias[d]:
-                c = cor_dominante(dias[d][h])
-                if c:
-                    dias_proc.setdefault(d, {})[h] = c
+    btn_executar.config(state="disabled")
 
-        seqs = encontrar_sequencias(dias_proc)
-        filtradas = [s for s in seqs if s[4] >= minimo]
+    def tarefa():
+        try:
+            records = coletar_dados_blaze(ini, fim)
+            df = records_para_df(records)
+            seq = analisar_sequencias(df, minimo)
 
-        if not filtradas:
-            messagebox.showwarning("Aviso", "Nenhuma sequência encontrada.")
-            return
+            with pd.ExcelWriter(OUTPUT_FILE, engine="openpyxl") as w:
+                seq.to_excel(w, index=False, sheet_name="Sequências")
 
-        caminho = exportar_excel(filtradas)
-        messagebox.showinfo("Finalizado", f"Arquivo salvo em:\n{caminho}")
+            root.after(0, lambda: messagebox.showinfo(
+                "OK", "Planilha gerada com sucesso"
+            ))
 
-    except Exception as e:
-        messagebox.showerror("Erro", str(e))
+        except Exception as e:
+            root.after(0, lambda: messagebox.showerror("Erro", str(e)))
+
+        finally:
+            root.after(0, lambda: btn_executar.config(state="normal"))
+
+    threading.Thread(target=tarefa, daemon=True).start()
+
+def records_para_df(records):
+    linhas = []
+
+    for r in records:
+        dt_utc = datetime.fromisoformat(r["created_at"].replace("Z", "+00:00"))
+        dt = dt_utc.astimezone(timezone(timedelta(hours=-3)))
+
+        linhas.append({
+            "DataHora": dt,                 # 🔑 chave real
+            "Data": dt.date(),              # só data (excel)
+            "Horário": dt.strftime("%H:%M"),
+            "Cor": cor_nome(r["color"])
+        })
+
+    return pd.DataFrame(linhas).sort_values("DataHora")
+
+def calcular_percentuais(df, datahora_quebra, n):
+    # pega apenas jogadas ANTES da quebra
+    base = df[df["DataHora"] < datahora_quebra].tail(n)
+
+    if base.empty:
+        return "R:0% | B:0% | W:0%"
+
+    total = len(base)
+
+    r = (base["Cor"] == "Red").sum() / total * 100
+    b = (base["Cor"] == "Black").sum() / total * 100
+    w = (base["Cor"] == "White").sum() / total * 100
+
+    return f"R:{r:.0f}% | B:{b:.0f}% | W:{w:.0f}%"
 
 
-# ============================================================
-# 📌 Interface
-# ============================================================
-janela = tk.Tk()
-janela.title("Sequências Blaze")
+# =====================================================
+# INTERFACE
+# =====================================================
+root = tk.Tk()
+root.title("Blaze • Sequências de Cor")
 
-tk.Label(janela, text="Data início:").pack()
-inicio_cal = DateEntry(janela, date_pattern="yyyy-mm-dd")
-inicio_cal.pack()
+ttk.Label(root, text="Data inicial").grid(row=0, column=0)
+cal_ini = DateEntry(root, date_pattern="dd/mm/yyyy")
+cal_ini.grid(row=0, column=1)
 
-tk.Label(janela, text="Data fim:").pack()
-fim_cal = DateEntry(janela, date_pattern="yyyy-mm-dd")
-fim_cal.pack()
+ttk.Label(root, text="Data final").grid(row=1, column=0)
+cal_fim = DateEntry(root, date_pattern="dd/mm/yyyy")
+cal_fim.grid(row=1, column=1)
 
-tk.Label(janela, text="Mínimo de dias seguidos:").pack()
-entrada_minimo = tk.Entry(janela)
-entrada_minimo.insert(0, "3")
-entrada_minimo.pack()
+ttk.Label(root, text="Mínimo dias seguidos").grid(row=2, column=0)
+entry_min = ttk.Entry(root)
+entry_min.insert(0, "3")
+entry_min.grid(row=2, column=1)
 
-tk.Button(janela, text="Iniciar", command=lambda: threading.Thread(target=rodar, daemon=True).start()).pack(pady=10)
+btn_executar = ttk.Button(root, text="Executar", command=executar)
+btn_executar.grid(row=3, columnspan=2, pady=10)
 
-janela.mainloop()
+root.mainloop()

@@ -1,129 +1,152 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
-import numpy as np
 import os
-from tqdm import tqdm  # Importar tqdm
+import unicodedata
+from tqdm import tqdm  # barra de progresso
 
-# Função para abrir o arquivo .xlsx
+# === Abrir arquivo via Tkinter ===
 def abrir_arquivo():
     root = tk.Tk()
-    root.withdraw()  # Ocultar a janela principal
-    arquivo = filedialog.askopenfilename(title="Selecione o arquivo .xlsx", filetypes=[("Arquivos Excel", "*.xlsx")])
+    root.withdraw()
+    arquivo = filedialog.askopenfilename(
+        title="Selecione o arquivo .xlsx",
+        filetypes=[("Arquivos Excel", "*.xlsx")]
+    )
     return arquivo
 
-# Carregar a planilha
-def carregar_planilha(arquivo):
-    # Usando pandas para ler o arquivo Excel
-    return pd.read_excel(arquivo)
+# === Normalizar colunas ===
+def normalizar_colunas(df):
+    def normalizar(texto):
+        texto = str(texto).strip().lower()
+        texto = unicodedata.normalize('NFKD', texto).encode('ascii', 'ignore').decode('utf-8')
+        texto = texto.replace(' ', '').replace('_', '')
+        return texto
+    df.columns = [normalizar(col) for col in df.columns]
+    return df
 
-# Processar os dados
-def processar_dados(df):
-    total_linhas = len(df)
+# === Calcular assertividade e ciclos ===
+def calcular_assertividade_progressiva(df, tipo='100'):
+    resultados = []
+    col_prob = f'probabilidade{tipo}'
 
-    # Agrupar pelas combinações de Probabilidade 100 e Probabilidade 50
-    agrupado = df.groupby(['Probabilidade 100', 'Probabilidade 50']).size().reset_index(name='Contagem')
+    if col_prob not in df.columns:
+        print(f"⚠️ Coluna {col_prob} não encontrada — pulando {tipo}.")
+        return pd.DataFrame()
 
-    # Contar as cores nas jogadas seguintes (primeira, segunda, até a décima entrada)
-    for i in range(1, 11):
-        df[f'Proxima Cor {i}'] = df['Cor'].shift(-i)  # Jogadas seguintes até a décima jogada
+    tamanho_janela = int(tipo)
 
-    # Contagem de acertos para cada cor nas jogadas seguintes (até 10 entradas)
-    for i in range(1, 11):
-        df[f'Acertos White {i}'] = (df[f'Proxima Cor {i}'] == 'white').astype(int)
-        df[f'Acertos Black {i}'] = (df[f'Proxima Cor {i}'] == 'black').astype(int)
-        df[f'Acertos Red {i}'] = (df[f'Proxima Cor {i}'] == 'red').astype(int)
+    for i in tqdm(range(len(df) - tamanho_janela), desc=f"🔹 Janela {tipo}", ncols=80):
+        prob = df.iloc[i][col_prob]
+        janela = df.iloc[i + 1:i + 1 + tamanho_janela]
 
-    # Se houver acerto em uma entrada, contará nas entradas subsequentes
-    for i in range(1, 10):  # Para cada jogada de 1 a 9, acumula os acertos
-        for color in ['White', 'Black', 'Red']:
-            df[f'Acertos {color} {i+1}'] += df[f'Acertos {color} {i}']
+        # === Calcular ciclos de preto e vermelho ===
+        cores = janela['cor'].tolist()
+        ciclo_preto = 0
+        ciclo_vermelho = 0
+        cor_anterior = None
 
-    # Garantir que não haja valores negativos
-    for i in range(1, 11):
-        for color in ['White', 'Black', 'Red']:
-            df[f'Acertos {color} {i}'] = df[f'Acertos {color} {i}'].clip(upper=1)
+        for cor in cores:
+            if cor != cor_anterior:
+                if cor == 'black':
+                    ciclo_preto += 1
+                elif cor == 'red':
+                    ciclo_vermelho += 1
+            cor_anterior = cor
 
-    # Agrupar os acertos de acordo com as combinações
-    acertos_white = [df.groupby(['Probabilidade 100', 'Probabilidade 50'])[f'Acertos White {i}'].sum().reset_index(name=f'Acertos White {i}') for i in range(1, 11)]
-    acertos_black = [df.groupby(['Probabilidade 100', 'Probabilidade 50'])[f'Acertos Black {i}'].sum().reset_index(name=f'Acertos Black {i}') for i in range(1, 11)]
-    acertos_red = [df.groupby(['Probabilidade 100', 'Probabilidade 50'])[f'Acertos Red {i}'].sum().reset_index(name=f'Acertos Red {i}') for i in range(1, 11)]
+        # === Calcular acertos progressivos (até 3 jogadas seguintes) ===
+        proximas = janela.iloc[:3]
+        acertos = {'Black': [0, 0, 0], 'Red': [0, 0, 0], 'White': [0, 0, 0]}
 
-    # Combinar as informações de acertos com as contagens
-    resultado = agrupado
-    for i in range(1, 11):
-        resultado = pd.merge(resultado, acertos_white[i-1], on=['Probabilidade 100', 'Probabilidade 50'], how='left')
-        resultado = pd.merge(resultado, acertos_black[i-1], on=['Probabilidade 100', 'Probabilidade 50'], how='left')
-        resultado = pd.merge(resultado, acertos_red[i-1], on=['Probabilidade 100', 'Probabilidade 50'], how='left')
+        for j in range(len(proximas)):
+            cor_jogada = proximas.iloc[j]['cor']
+            if cor_jogada.lower() in ['black', 'red', 'white']:
+                for l in range(j, 3):
+                    acertos[cor_jogada.title()][l] = 1
 
-    # Preencher valores nulos com 0 (caso não haja "white", "black" ou "red" nas jogadas seguintes)
-    resultado = resultado.fillna(0)
+        resultados.append({
+            f'Prob{tipo}': prob,
+            f'Ciclo Preto {tipo}': ciclo_preto,
+            f'Ciclo Vermelho {tipo}': ciclo_vermelho,
+            **{f'Acertos Black {j+1}': acertos['Black'][j] for j in range(3)},
+            **{f'Acertos Red {j+1}': acertos['Red'][j] for j in range(3)},
+            **{f'Acertos White {j+1}': acertos['White'][j] for j in range(3)},
+        })
 
-    # Calcular os percentuais de acertos para até dez jogadas seguintes
-    for i in range(1, 11):
-        for color in ['White', 'Black', 'Red']:
-            resultado[f'Percentual Acertos {color} {i}'] = ((resultado[f'Acertos {color} {i}'] / resultado['Contagem']) * 100).round(2)
+    if not resultados:
+        return pd.DataFrame()
 
-    return resultado, acertos_white, acertos_black, acertos_red
+    df_resultado = pd.DataFrame(resultados)
 
-# Função para salvar o arquivo no desktop com abas separadas por cor
-def salvar_arquivo(resultado, acertos_white, acertos_black, acertos_red):
-    # Obter o caminho do desktop
-    caminho_desktop = os.path.join(os.path.expanduser('~'), 'Desktop')
-    
-    # Definir o caminho completo para o novo arquivo
-    arquivo_saida = os.path.join(caminho_desktop, "resultado_analisado_separado_por_cor.xlsx")
-    
-    # Salvar o DataFrame no arquivo .xlsx com diferentes abas para cada cor
+    # === Agrupar por probabilidade ===
+    cols_black = [f'Acertos Black {i+1}' for i in range(3)]
+    cols_red   = [f'Acertos Red {i+1}' for i in range(3)]
+    cols_white = [f'Acertos White {i+1}' for i in range(3)]
+
+    resumo = df_resultado.groupby(f'Prob{tipo}').agg(
+        Contagem=('Prob{tipo}', 'count'),
+        Media_Ciclo_Preto=(f'Ciclo Preto {tipo}', 'mean'),
+        Media_Ciclo_Vermelho=(f'Ciclo Vermelho {tipo}', 'mean'),
+        **{col: (col, 'sum') for col in cols_black + cols_red + cols_white}
+    ).reset_index()
+
+    # === Calcular percentuais progressivos ===
+    for idx, col in enumerate(cols_black):
+        resumo[f'Percentual Black {idx+1}'] = (resumo[col] / resumo['Contagem'] * 100).round(2)
+    for idx, col in enumerate(cols_red):
+        resumo[f'Percentual Red {idx+1}'] = (resumo[col] / resumo['Contagem'] * 100).round(2)
+    for idx, col in enumerate(cols_white):
+        resumo[f'Percentual White {idx+1}'] = (resumo[col] / resumo['Contagem'] * 100).round(2)
+
+    return resumo
+
+# === Salvar resultado no Desktop com abas separadas ===
+def salvar_resultado(resumos):
+    desktop = os.path.join(os.path.expanduser("~"), "Desktop")
+    arquivo_saida = os.path.join(desktop, "resultado_prob_completo.xlsx")
+
     with pd.ExcelWriter(arquivo_saida) as writer:
-        resultado.to_excel(writer, sheet_name='Resultado Geral', index=False)
+        for tipo, resumo in resumos.items():
+            if resumo.empty:
+                continue
 
-        # Criar a aba "Branco" (White) e salvar os percentuais de White
-        branco = pd.DataFrame()  # Inicializar o DataFrame vazio para branco
-        branco['Probabilidade 100'] = resultado['Probabilidade 100']
-        branco['Probabilidade 50'] = resultado['Probabilidade 50']
-        branco['Contagem'] = resultado['Contagem']
+            resumo.to_excel(writer, index=False, sheet_name=f"Resumo {tipo}")
 
-        for i in range(1, 11):  # Para as 10 jogadas
-            branco[f'Percentual Acertos White {i}'] = resultado[f'Percentual Acertos White {i}']
+            for cor in ['Black', 'Red', 'White']:
+                cols = [f'Prob{tipo}', 'Contagem', f'Media_Ciclo_Preto', f'Media_Ciclo_Vermelho'] + \
+                       [f'Acertos {cor} {i+1}' for i in range(3)] + \
+                       [f'Percentual {cor} {i+1}' for i in range(3)]
 
-        branco.to_excel(writer, sheet_name='Branco', index=False)
+                cols_existentes = [c for c in cols if c in resumo.columns]
+                resumo[cols_existentes].to_excel(
+                    writer, index=False, sheet_name=f'{cor} {tipo}'
+                )
 
-        # Criar a aba "Preto" (Black) e salvar os percentuais de Black
-        preto = pd.DataFrame()  # Inicializar o DataFrame vazio para preto
-        preto['Probabilidade 100'] = resultado['Probabilidade 100']
-        preto['Probabilidade 50'] = resultado['Probabilidade 50']
-        preto['Contagem'] = resultado['Contagem']
+    print(f"\n✅ Resultado salvo com sucesso em:\n{arquivo_saida}")
 
-        for i in range(1, 11):  # Para as 10 jogadas
-            preto[f'Percentual Acertos Black {i}'] = resultado[f'Percentual Acertos Black {i}']
-
-        preto.to_excel(writer, sheet_name='Preto', index=False)
-
-        # Criar a aba "Vermelho" (Red) e salvar os percentuais de Red
-        vermelho = pd.DataFrame()  # Inicializar o DataFrame vazio para vermelho
-        vermelho['Probabilidade 100'] = resultado['Probabilidade 100']
-        vermelho['Probabilidade 50'] = resultado['Probabilidade 50']
-        vermelho['Contagem'] = resultado['Contagem']
-
-        for i in range(1, 11):  # Para as 10 jogadas
-            vermelho[f'Percentual Acertos Red {i}'] = resultado[f'Percentual Acertos Red {i}']
-
-        vermelho.to_excel(writer, sheet_name='Vermelho', index=False)
-    
-    print(f"Arquivo salvo com sucesso em: {arquivo_saida}")
-
-# Função principal para rodar o processo
+# === Função principal ===
 def main():
-    arquivo = abrir_arquivo()  # Abrir arquivo .xlsx
-    df = carregar_planilha(arquivo)  # Carregar a planilha
-    
-    # Criar a barra de progresso no terminal
-    for _ in tqdm(range(100), desc="Processando dados", unit="%", ncols=100, bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{rate_fmt}] {elapsed}"):
-        pass  # Só para simular uma progressão, será removido com o real cálculo de progresso
+    arquivo = abrir_arquivo()
+    if not arquivo:
+        print("❌ Nenhum arquivo selecionado.")
+        return
 
-    resultado, acertos_white, acertos_black, acertos_red = processar_dados(df)  # Processar os dados
-    salvar_arquivo(resultado, acertos_white, acertos_black, acertos_red)  # Salvar o arquivo no desktop
+    df = pd.read_excel(arquivo)
+    df = normalizar_colunas(df)
+
+    tipos = ['200', '100', '50', '25']
+    colunas_necessarias = ['cor'] + [f'probabilidade{t}' for t in tipos]
+
+    for col in colunas_necessarias:
+        if col not in df.columns:
+            print(f"⚠️ Aviso: coluna '{col}' não encontrada.")
+
+    resumos = {}
+    for tipo in tipos:
+        resumo = calcular_assertividade_progressiva(df, tipo=tipo)
+        resumos[tipo] = resumo
+
+    salvar_resultado(resumos)
 
 if __name__ == "__main__":
     main()
